@@ -57,6 +57,26 @@ function disp(selettore){
 		{% endif %}
 		{% endfor %}
 	{% endfor %}
+	{% for d in turno.turno_disponibilita.all %}
+	 {% if persona = d.persona and d.mansione.id != mansione.id and d.tipo = "Disponibile" %}
+	  <script type="text/javascript">
+		  $(document).ready(function(){
+			  var s = $('#sel-{{persona.id}}');
+			  $("#sel-{{persona.id}} option:first").remove();
+			  s.prepend("<option value=''>Gia Impeganto come {{mansione}}</option>");
+			  $("#sel-{{persona.id}} option:first").attr('selected', true);}
+			);
+	  </script> 
+	 {% endif %}
+	 {% if persona = d.persona and d.mansione.id = mansione.id %}
+	  <script type="text/javascript">
+		$(document).ready(function(){
+			$('#sel-{{persona.id}} option').filter(function() { return this.text == '{{d.tipo}}'; }).attr('selected', true);
+			}
+		);
+	  </script> 
+	 {% endif %}
+	{% endfor %}
 	<tr class="persona {% cycle 'riga1' 'riga2' %} stato-{{persona.stato}}" id="persona-{{persona.id}}">
 	<td class="nome">{{persona}}</td>
 	<td class="mansioni">{% for m in persona.competenze.all %}<span class="competenza">{{m}}</span>  {% endfor %}</td>
