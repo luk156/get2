@@ -1,9 +1,15 @@
 {% load dajaxice_templatetags %}
 {% load static %}
-<html>
+<!DOCTYPE html>
+<html lang="it">
 <head>
+	<meta charset="utf-8">
 	<title>{% block title %}Get 2.0{% endblock %}</title>
-	<link rel="stylesheet" type="text/css" href="{% static "style.css" %}" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
+	
+	<script src="/static/bootstrap/js/jquery.min.js"></script>
+	<script src="/static/bootstrap/js/bootstrap.js"></script>
 	{% dajaxice_js_import %}
 	<script src="/static/jquery.min.js"></script>
 	<script src="/static/jquery-ui.min.js"></script>
@@ -29,37 +35,51 @@
 </script>
 </head>
 <body>
-	<div id="user">	{% if request.user.id%}<div id="nome"><span class="salve">Salve, <b>{{request.user.get_profile}} </b></span><a href="/accounts/logout"><input type="submit" value=" Esci " class=""></a></div>	
-	{%else%}
-	<div id="login_up">
-		<form method="post" action="{% url django.contrib.auth.views.login %}">{% csrf_token %} <input type="hidden" name="next" value="/calendario/" /> utente: <input id="id_username" type="text" name="username" maxlength="30">  password: <input type="password" name="password" id="id_password" > <input type="submit" value=" Accedi " class=""></form></div>
-	{% endif %}</div>
-	<menu id='menu1'>
-	<ul>
-	<li class="calendario"><a href="/calendario/">Calendario</a></li>
-	<li class="persone staff"><a href="/persone/">Persone</a></li>
-	<li class="statistiche user"><a href="/statistiche/">Statistiche</a></li>
-	<li class="utenti staff"><a href="/utenti/">Utenti</a></li>
+	<div class="navbar navbar-static-top">
+		<div class="navbar-inner">	
+			<a class="brand" href="#"> GeT 2.0</a>
+				{% if request.user.id%}
+					<div class="btn-group pull-right">
+						{% if request.user.get_profile.notifiche_non_lette %}
+						<button class="btn">Notifiche <span class="badge badge-important">{{request.user.get_profile.notifiche_non_lette}}</span></button>
+						{% endif %}
+						<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+						{{request.user.get_profile}}
+						<span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a href="/accounts/logout">Esci</a></li>
+						</ul>
+					</div>
+				{%else%}
+					<form method="post" action="{% url django.contrib.auth.views.login %}" class="navbar-form pull-right">{% csrf_token %}
+					<input type="hidden" name="next" value="/calendario/" />
+					<input id="id_username" type="text" name="username" class="input" placeholder="Utente">
+					<input type="password" name="password" id="id_password" class="input" placeholder="Password">
+					<input type="submit" value=" Accedi " class="btn btn-primary"></form>
+				{% endif %}
+		</div>
+	</div>
 	
-	{% if request.user.get_profile.notifiche_non_lette %}
-	<li id="menu-notifiche" class="notifiche staff notifiche"><a href="/notifiche/">Notifiche</a>
-		<span class="notifiche_nonlette">{{request.user.get_profile.notifiche_non_lette}}</span>
-	{% else %}
-	<li id="menu-notifiche" class="notifiche-ok staff notifiche"><a href="/notifiche/">Notifiche</a>
-		<span class="notifiche_nonlette hide"></span>
-	{% endif %}	
-	</li>
-	<li class="impostazioni staff"><a href="/impostazioni/">Ipostazioni</a></li>
-	</ul>
-	<script>
-	var url="{{request.path}}";
-	$("li."+url.split("/")[1]).addClass("pulsante_selezionato")
-	</script>
-	</menu >
-	<div id="main">
-	<menu id="menu2">{% block menu2 %}{% endblock %}</menu>
-	<div id="contenuto">{% block main %}{% endblock %}</div>
-	
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="span1">
+				{% include "menu.html" %}
+			</div>
+			<div class="span6">
+				<div class="row-fluid">
+					<div class="span3">
+					{% block menu2s %}{% endblock %}
+					</div>
+					<div class="span4">
+					{% block menu2d %}{% endblock %}
+					</div>
+				</div>
+				<div class="row-fluid">				
+					{% block main %}{% endblock %}
+				</div>
+			</div>
+		</div>
 	</div>
 </body>
 </html>

@@ -1,19 +1,15 @@
 {% extends "base.html" %} 
 
 
-{% block menu2 %}
-<ul>
-<li class="nuovo-turno staff"><a href="/calendario/turno/nuovo">Nuovo Turno</a></li>
-<li class="avanti"><a href="/calendario/settavanti">Avanti</a></li>
-<li class="oggi"><a href="/calendario/oggi">Oggi</a></li>
-<li class="indietro"><a href="/calendario/settindietro">Indietro</a></li>
+{% block menu2s %}
+    <ul class="breadcrumb">
+    <li class="active">Calendario</li>
+    </ul>
+{% endblock %}
 
-</ul>
-
-<div id="navigazione">
-<div class="nav-solo nav"><span class="calendario-nav"> Calendario</span></div>
-</div>
-
+{% block menu2d  %}
+		<a href="/calendario/turno/nuovo" class="btn pull-right">Nuovo Turno</a>
+		
 {% endblock %}
 
 {% block main %}
@@ -31,42 +27,32 @@
 <!--<div class="menu-main">-->
 <!--	<span class="persona-draggable"> Matteo Lucchesi </span>-->
 <!--</div>-->
+	<div class="span7">
+    <ul class="pager">
+    <li class="previous">
+    <a href="#">&larr; Indietro</a>
+    </li>
+    <li><a href="#">Oggi</a></li>
+    <li class="next">
+    <a href="#">Avanti &rarr;</a>
+    </li>
+    </div>
+</div>
 
-
-
+<div class="row-fluid">
   {% if error_message %}
     <p><strong>{{ error_message }}</strong></p>
   {% endif %}
 
 {% for giorno, turno in calendario %}
-    <div id="giorno-{{forloop.counter}}" class="giorno droppable" >
+    <div id="giorno-{{forloop.counter}}" class="giorno span1" >
     <span class="titolo-giorno {% cycle 'giorno1' 'giorno2' %}">{{giorno|date:"D d M"}}</span>
-    
+    xxx
 	{% for t in turno%}
 		{% include "turno.html" %}
 	{% endfor %}
-<div style="clear: both;"></div>
 	</div>
 {% endfor %}
 
-<script>	
-$(document).ready(function(){
-var maxHeight = Math.max.apply(null, $(".giorno").map(function () {return $(this).height();}).get());
-$(".giorno").height(maxHeight);
-
-var DimContenuto = $('#contenuto').width();
-$(".giorno").width((DimContenuto-8)/7.1);
-
-});
-
-$(window).resize(function() {
-var maxHeight = Math.max.apply(null, $(".giorno").map(function () {return $(this).height();}).get());
-$(".giorno").height(maxHeight);
-
-var DimContenuto = $('#contenuto').width();
-$(".giorno").width((DimContenuto-8)/7.1);
-});
-
-</script>
 
 {% endblock %}
