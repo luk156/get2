@@ -1,15 +1,12 @@
-<div class="sidebar-nav">
-<ul class="nav nav-tabs nav-stacked main-menu">
-	<li class="calendario">
-		<a href="/calendario/">Calendario</a>
-	</li>
-	<li class="persone staff"><a href="/persone/">Persone</a></li>
-	<li class="statistiche user"><a href="/statistiche/">Statistiche</a></li>
-	<li class="utenti staff"><a href="/utenti/">Utenti</a></li>
-	</li>
-	<li class="impostazioni staff"><a href="/impostazioni/">Ipostazioni</a></li>
+
+<ul class="nav">
+	<li class="calendario"><a href="/calendario/"><i class="i-menu calendario"></i></br>Calendario</a></li>
+	<li class="persone staff"><a href="/persone/"><i class="i-menu persone"></i></br>Persone</a></li>
+	<li class="statistiche user"><a href="/statistiche/"><i class="i-menu statistiche"></i></br>Statistiche</a></li>
+	<li class="utenti staff"><a href="/utenti/"><i class="i-menu utenti"></i></br>Utenti</a></li>
+	<li class="impostazioni staff"><a href="/impostazioni/"><i class="i-menu impostazioni"></i></br>Impostazioni</a></li>
 </ul>
-</div>
+
 <script>
 	var url="{{request.path}}";
 	$("li."+url.split("/")[1]).addClass("active");

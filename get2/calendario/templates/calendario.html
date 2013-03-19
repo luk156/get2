@@ -1,16 +1,13 @@
 {% extends "base.html" %} 
 
-
-{% block menu2s %}
-    <ul class="breadcrumb">
-    <li class="active">Calendario</li>
-    </ul>
+{% block header %}
+	{% if request.user.is_staff %}
+		<a class="btn pull-right" data-toggle="modal" href="/calendario/turno/nuovo"><i class="icon-plus"> </i> Nuovo Turno</a><h4 class="header">
+			Calendario
+		</h4>
+	{% endif %}
 {% endblock %}
 
-{% block menu2d  %}
-		<a href="/calendario/turno/nuovo" class="btn pull-right">Nuovo Turno</a>
-		
-{% endblock %}
 
 {% block main %}
 <!--<script>-->
@@ -30,11 +27,11 @@
 	<div class="span7">
     <ul class="pager">
     <li class="previous">
-    <a href="#">&larr; Indietro</a>
+    <a href="/calendario/settindietro">&larr; Indietro</a>
     </li>
-    <li><a href="#">Oggi</a></li>
+    <li><a href="/calendario/oggi">Oggi</a></li>
     <li class="next">
-    <a href="#">Avanti &rarr;</a>
+    <a href="/calendario/settavanti">Avanti &rarr;</a>
     </li>
     </div>
 </div>
