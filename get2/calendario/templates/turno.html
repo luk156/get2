@@ -7,7 +7,20 @@
 	<div class="titolo-turno titolo-turno-{{t.coperto}}" id="titolo-turno-{{t.id}}">
 		
 		<h5><i class="icon-time icon-white"></i> {{t.inizio|time:"H:i"}} - {{t.fine|time:"H:i"}}</h5><h6> {{t.identificativo}}</h6>
-			<a href="#" class="btn btn-mini" id="modifica-turno-{{t.id}}"><i class="icon-edit"></i></a>
+			<div class="dropdown edit-turno">
+				<a href="#" data-toggle="dropdown" class="btn btn-mini dropdown-toggle pull-right" id="modifica-turno-{{t.id}}"><i class="icon-edit"></i></a>
+				<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
+					<li class="dropdown-submenu pull-left"">
+					<a tabindex="-1" href="#">Aggiungi gruppo</a>
+					 <ul class="dropdown-menu">
+						{%for g in gruppi%}
+							<li><a href="/calendario/disponibilita_gruppo/{{t.id}}/{{g.id}}">{{g}}</a></li>
+						{%endfor%}
+					</ul>
+					</li>
+					<li><a href="#">Modifica</a></li>
+					<li><a href="#">Elimina</a></li>
+			</div>
 	</div>
 
 	{% for requisito in t.tipo.req_tipo_turno.all %}

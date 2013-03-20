@@ -109,7 +109,7 @@ h5,h6 {
 
 .giorno {
 	padding:3px;
-	min-width:150px;
+	min-width:200px;
 }
 
 div.calendario header {
@@ -134,7 +134,6 @@ div.turno {
 .titolo-turno {
 	border-radius: 4px 4px 4px 4px;
 	box-shadow: 0px 0px 2px rgba(255, 255, 255, 0.5) inset;
-	z-index:100;
 	margin-bottom:10px;
 	padding:1px;
 	cursor:pointer;
@@ -154,7 +153,7 @@ div.turno {
 	background: none repeat scroll 0% 0% #4b9d38;
 }
 
-div .titolo-turno .btn {
+div .titolo-turno .edit-turno {
 	position:absolute;
 	top:2px;
 	right:5px;
