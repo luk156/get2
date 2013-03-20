@@ -24,32 +24,51 @@
 <!--<div class="menu-main">-->
 <!--	<span class="persona-draggable"> Matteo Lucchesi </span>-->
 <!--</div>-->
+<div class="row-fluid">	
 	<div class="span7">
     <ul class="pager">
     <li class="previous">
-    <a href="/calendario/settindietro">&larr; Indietro</a>
+    <a href="/calendario/settindietro"><i class="icon-chevron-left"></i> Indietro</a>
     </li>
-    <li><a href="/calendario/oggi">Oggi</a></li>
+    <li><a href="/calendario/oggi"><i class="icon-home"></i> Oggi</a></li>
     <li class="next">
-    <a href="/calendario/settavanti">Avanti &rarr;</a>
+    <a href="/calendario/settavanti">Avanti <i class="icon-chevron-right"></i></a>
     </li>
     </div>
 </div>
 
-<div class="row-fluid">
+<div class="row-fluid calendario">
   {% if error_message %}
     <p><strong>{{ error_message }}</strong></p>
   {% endif %}
 
 {% for giorno, turno in calendario %}
     <div id="giorno-{{forloop.counter}}" class="giorno span1" >
-    <span class="titolo-giorno {% cycle 'giorno1' 'giorno2' %}">{{giorno|date:"D d M"}}</span>
-    xxx
+		<div class="row">
+			<div class="span7 titolo-giorno {% cycle 'giorno1' 'giorno2' %}">
+				<header><h4>{{giorno|date:"D d M"}}</h4></header>
+			</div>
+		</div>
 	{% for t in turno%}
-		{% include "turno.html" %}
+		<div class="row">
+			{% include "turno.html" %}
+		</div>
 	{% endfor %}
 	</div>
 {% endfor %}
+</div>
 
+<div class="row-fluid">	
+	<div class="span7">
+    <ul class="pager">
+    <li class="previous">
+    <a href="/calendario/settindietro"><i class="icon-chevron-left"></i> Indietro</a>
+    </li>
+    <li><a href="/calendario/oggi"><i class="icon-home"></i> Oggi</a></li>
+    <li class="next">
+    <a href="/calendario/settavanti">Avanti <i class="icon-chevron-right"></i></a>
+    </li>
+    </div>
+</div>
 
 {% endblock %}

@@ -1,8 +1,19 @@
 
+@font-face {
+	font-family: Ubuntu;
+	src: url(Ubuntu-M.ttf);
+	font-weight: bold;
+}
+
+body {
+background-color: #ddd;
+
+}
 
 #menu1 {
-    background-color: rgb(51, 51, 51);
+    background-color: rgb(71,71, 71);
     box-shadow: 0px 0px 10px rgb(17, 17, 17) inset;
+    padding-bottom:10px;
 }
 
 
@@ -25,7 +36,7 @@
     min-height: 56px;
     min-width: 64px;
     margin: 10px 10px 10px;
-    color: #ddd;
+    color: #eee;
     font-weight: 100;
 }
 
@@ -54,6 +65,10 @@ i.impostazioni{
 	background-image: url("32/impostazioni.png");
 }
 
+i.notifiche{
+	background-image: url("32/notifiche.png");
+}
+
 i.i-menu{
 	display: inline-block;
 	height: 32px;
@@ -62,11 +77,20 @@ i.i-menu{
 
 body h1, body h2, body h3, body h4, body h5, body h6 {
     text-transform: uppercase;
-    font-weight: 300;
+    font-weight: 400;
+}
+
+h5,h6 {
+ margin: 3px 0px;
 }
 
 .page {
-	padding:1%;
+	margin:10px;
+	margin-top:-10px;
+	border-radius: 6px 6px 6px 6px;
+	background-color: #fff;
+	padding:5px;
+	box-shadow: 0px 0px 5px #444;
 }
 
 
@@ -78,7 +102,78 @@ body h1, body h2, body h3, body h4, body h5, body h6 {
 }
 
 .pager {
-    margin: 0px 0px;
+    margin: 5px 0px;
     list-style: none outside none;
     text-align: center;
+}
+
+.giorno {
+	padding:3px;
+	min-width:150px;
+}
+
+div.calendario header {
+	background: rgb(71, 71, 71);
+	margin-left: 10%;
+	margin-right: 10%;
+	border-radius: 6px 6px 6px 6px;
+	text-align: center;
+	color: rgb(238, 238, 238);
+	box-shadow: 2px 2px 3px #666;
+}
+
+div.turno {
+	border:1px solid #aaa;
+	margin-bottom: 8px;
+	padding-top: 0px;
+	background-color: rgb(242, 240, 237);
+	border-radius: 4px 4px 4px 4px;
+	box-shadow: 0px 1px 0px 0px rgba(255, 255, 255, 0.5) inset;
+}
+
+.titolo-turno {
+	border-radius: 4px 4px 4px 4px;
+	box-shadow: 0px 0px 2px rgba(255, 255, 255, 0.5) inset;
+	z-index:100;
+	margin-bottom:10px;
+	padding:1px;
+	cursor:pointer;
+	position:relative;
+	margin-top:-3px;
+	text-align:center;
+	color: #ffffff;
+}
+
+.titolo-turno-False{
+	border: 1px solid rgb(185, 74, 72);
+	background: none repeat scroll 0% 0% #e55858;
+}
+
+.titolo-turno-True{
+	border: 1px solid rgb(70, 136, 71);
+	background: none repeat scroll 0% 0% #4b9d38;
+}
+
+div .titolo-turno .btn {
+	position:absolute;
+	top:2px;
+	right:5px;
+}
+
+div.mansione-calendario h6 {
+    padding-bottom: 3px;
+    padding-left:10px;
+    padding-right:10px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #bbb;
+    color: #444;
+	box-shadow: 0px 3px 3px 0px #dedede;
+}
+
+.persona-turno {
+color: #222;
+margin-left: 3px;
+font-size:15px;
+list-style-type: none;
+
 }

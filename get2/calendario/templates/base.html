@@ -11,13 +11,7 @@
 	<script src="/static/bootstrap/js/jquery.min.js"></script>
 	<script src="/static/bootstrap/js/bootstrap.js"></script>
 	{% dajaxice_js_import %}
-	<script src="/static/jquery.min.js"></script>
-	<script src="/static/jquery-ui.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="{% static "css/smoothness/jquery-ui-1.10.1.custom.css" %}" />
 	<script type="text/javascript" src="{% static "dajax/jquery.dajax.core.js" %}"></script>
-	<script type="text/javascript" src="/static/js/noty/jquery.noty.js"></script>
-	<script type="text/javascript" src="/static/js/noty/layouts/bottomRight.js"></script>
-	<script type="text/javascript" src="/static/js/noty/themes/default.js"></script>
 
 	{% block head %}{% endblock %}
 	<script>	
@@ -40,9 +34,6 @@
 			<a class="brand" href="#"> GeT 2.0</a>
 				{% if request.user.id%}
 					<div class="btn-group pull-right">
-						{% if request.user.get_profile.notifiche_non_lette %}
-						<button class="btn">Notifiche <span class="badge badge-important">{{request.user.get_profile.notifiche_non_lette}}</span></button>
-						{% endif %}
 						<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
 						{{request.user.get_profile}}
 						<span class="caret"></span>
@@ -78,9 +69,9 @@
 							{% block header %}{% endblock %}
 						</div>
 					</div>
-					<div class="row-fluid">				
+								
 						{% block main %}{% endblock %}
-					</div>
+					
 				</div>
 			</div>
 		</div>

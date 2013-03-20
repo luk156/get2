@@ -1,0 +1,194 @@
+
+{% if request.user.get_profile and  not request.user.is_staff %}
+
+	<script type="text/javascript">
+	$(document).ready(function(){$('.turno').css('cursor', 'pointer');});
+	</script>
+
+	{% if t|turno_intervallo_disponibilita %}
+
+		{% if not request.user.get_profile|gia_disponibile:t %}
+			<div id="disponibilita-{{t.id}}" title="Nuova disponibilita">
+				Seleziona la mansione che vuoi ricoprire per il turno del {{t.inizio|date:"d M"}}, ore {{t.inizio|time:"H:i"}} - {{t.fine|time:"H:i"}}:
+				</br>
+				</br>
+				<select>
+				<option value="">seleziona mansione
+				{% for requisito in t.tipo.req_tipo_turno.all %}
+					{% if requisito.mansione in request.user.get_profile.competenze.all %}
+						{% if not requisito.operatore = "=" or not t|verifica_requisito:requisito  %}
+							<option value="{{requisito.mansione.id}}">{{requisito.mansione}}
+						{% endif %}
+					{% endif %}
+				{% endfor %}
+				</select>
+			</div>
+			<script type="text/javascript">
+
+			$(document).ready(function(){
+				$( "#disponibilita-{{t.id}}" ).dialog({
+					resizable: false,
+					modal: true,
+					autoOpen: false,
+					buttons: {
+						"Applica": function() {
+							//Dajaxice.get2.calendario.disponibilita_turno(Dajax.process,{'turno_id':{{t.id}}});
+							mansione=$("#disponibilita-{{t.id}} select option:selected").val();
+							persona="{{request.user.get_profile.id}}"
+							if (mansione!=""){url="/calendario/disponibilita/{{t.id}}/" +mansione+ "/" +persona+ "/Disponibile/";}
+							window.location = url;
+							$( this ).dialog( "close" );
+						},
+						"Annulla": function() {
+							$( this ).dialog( "close" );
+						}
+					}
+				});
+				$('#turno-{{t.id}}').click(function () {$("#disponibilita-{{t.id}}" ).dialog("open");});
+				});
+			</script>
+			
+
+		{% else %}
+			<div id="disponibilita-{{t.id}}" title="Cancella disponibilita">
+				Vuoi cancellarti dal turno del {{t.inizio|date:"d M"}}, ore {{t.inizio|time:"H:i"}} - {{t.fine|time:"H:i"}}?
+			</div>
+			<script type="text/javascript">
+
+			$(document).ready(function(){
+				$( "#disponibilita-{{t.id}}" ).dialog({
+					resizable: false,
+					modal: true,
+					autoOpen: false,
+					buttons: {
+						"Cancella Disponibilita": function() {
+							var url="/calendario/rimuovi_disponibilita/{{request.user.get_profile|gia_disponibile:t.id}}";
+							window.location = url;
+							$( this ).dialog( "close" );
+						},
+						"Annulla": function() {
+							$( this ).dialog( "close" );
+						}
+					}
+				});
+			$('#turno-{{t.id}}').click(function () {$("#disponibilita-{{t.id}}" ).dialog("open");});
+			});
+			</script>
+		{% endif %}
+
+	{% else %}
+		
+		<div id="disponibilita-{{t.id}}" title="Errore">
+		Non puoi modificare la tua disponibilita per questo turno:</br>
+		<span class="emblem-important">{{t|errore_turno_intervallo_disponibilita}}</span>
+		</div>
+		<script type="text/javascript">
+
+			$(document).ready(function(){
+				$( "#disponibilita-{{t.id}}" ).dialog({
+					resizable: false,
+					modal: true,
+					autoOpen: false,
+					buttons: {
+						"Annulla": function() {
+							$( this ).dialog( "close" );
+						}
+					}
+				});
+			$('#turno-{{t.id}}').click(function () {$("#disponibilita-{{t.id}}" ).dialog("open");});
+			});
+			</script>
+
+	{% endif %}
+	
+{% endif %}
+
+{% if request.user.is_staff %}
+	<script>
+	function aggiungi_gruppo(selettore){
+	url = "/calendario/disponibilita_gruppo/{{t.id}}/"+selettore.value;
+	window.location = url;
+	}
+	</script>
+	<div id="modifica-{{t.id}}" title="Turno {{t.id}}">
+	<span class="aggiungigruppo_turno bottone-modifica_turno">
+	aggiungi gruppo: 
+		<select onchange="aggiungi_gruppo(this)">
+			<option value="NULL">----
+			{%for g in gruppi%}
+				<option value="{{g.id}}">{{g}}
+			{%endfor%}
+		</select>
+	</span>
+	<a href="/calendario/turno/modifica/{{t.id}}"><span class="modifica_turno bottone-modifica_turno">modifica</span></a>
+	<span class="elimina_turno bottone-modifica_turno" onclick="$('#elimina-turno-{{t.id}}' ).dialog('open');">elimina</span>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$( "#modifica-{{t.id}}" ).dialog({
+				resizable: false,
+				modal: true,
+				autoOpen: false,
+				buttons: {
+					"Annulla": function() {
+						$( this ).dialog( "close" );
+					}
+				}
+			});
+		
+		});
+		</script>
+
+{% endif %}
+
+	<div id="elimina-turno-{{t.id}}" title="elimina turno">
+		Vuoi eliminare il turno del {{t.inizio|date:"d M"}}, ore {{t.inizio|time:"H:i"}} - {{t.fine|time:"H:i"}}?</br>
+		{% if t.occorrenza %}
+			<span class="emblem-generic" onclick="$('#occorrenze-{{t.id}}').slideDown()">Il turno fa parte di una occorrenza</span>
+			<div id="occorrenze-{{t.id}}"><ul>		
+			{% for o in t|occorrenze:t.occorrenza %}
+				<li class="occorrenze-{{o|turno_futuro}}">{{o.inizio|date:"d M"}}, ore {{o.inizio|time:"H:i"}} - {{o.fine|time:"H:i"}}</li>
+			{% endfor %}
+			</ul></div>
+		{% endif %}
+	</div>
+
+
+<script type="text/javascript">
+
+	$(document).ready(function(){
+			$( "#elimina-turno-{{t.id}}" ).dialog({
+				resizable: false,
+				modal: true,
+				autoOpen: false,
+				buttons: {
+					{% if t.occorrenza %}
+					"Elimina Turno e tutte le successive occorrenze": function() {
+						var url="/calendario/turno/elimina_occorrenza/{{t.occorrenza.id}}";
+						window.location = url;
+						$( this ).dialog( "close" );
+					},
+						{% if request.user.is_superuser %}				
+					"Elimina Turno e TUTTE le occorrenze": function() {
+						var url="/calendario/turno/elimina_occorrenza_tot/{{t.occorrenza.id}}";
+						window.location = url;
+						$( this ).dialog( "close" );
+					},
+
+						{% endif %}
+					{% endif %}
+					"Elimina Turno": function() {
+						var url="/calendario/turno/elimina/{{t.id}}";
+						window.location = url;
+						$( this ).dialog( "close" );
+					},
+					"Annulla": function() {
+						$( this ).dialog( "close" );
+					}
+				}
+			});
+		$("#occorrenze-{{t.id}}").hide();
+		$('.img_rimuovi').hide();
+		$('.persona-turno').hover(	function () {$(this).find('.img_rimuovi').show();}, 	function () {$(this).find('.img_rimuovi').hide();});
+		});
+	</script>
