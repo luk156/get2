@@ -3,20 +3,13 @@
 {% load static %}
 {% load template_filters %}
 
-{% block head %}
-<script type="text/javascript" src="/static/js/time/jquery.ui.timepicker.js" %}" ></script>
-	<link type="text/css" href="/static/js/time/jquery.ui.timepicker.css" rel="stylesheet" />
+
+{% block header %}
+	{% if request.user.is_staff %}
+		<h4 class="header"><a href="/calendario/">Calendario</a> / {{azione}} turno
+	{% endif %}
 {% endblock %}
 
-
-{% block menu2 %}
-
-<div id="navigazione">
-<div class="nav-inizio nav"><a href="/calendario"><span class="calendario-nav"> Calendario</span></a></div>
-<div class="nav-fine nav">{{azione}} turno</div>
-</div>
-
-{% endblock %}
 
 {% block main %}
 

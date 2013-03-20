@@ -2,7 +2,7 @@
 
 {% block header %}
 	{% if request.user.is_staff %}
-		<a class="btn pull-right" data-toggle="modal" href="/calendario/turno/nuovo"><i class="icon-plus"> </i> Nuovo Turno</a><h4 class="header">
+		<a class="btn pull-right" href="/calendario/turno/nuovo"><i class="icon-plus"> </i> Nuovo Turno</a><h4 class="header">
 			Calendario
 		</h4>
 	{% endif %}
