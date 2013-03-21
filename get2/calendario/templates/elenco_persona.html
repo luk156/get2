@@ -21,7 +21,7 @@ function cerca_persone(){
 	<div class="span7">
 		<div class="box">
 			<div class="box-header">
-				<a href="/persone/gruppo/nuovo" class="btn btn-small pull-right"><i class="icon-plus"> </i> Aggiungi gruppo</a>
+				<a href="/persone/gruppo/nuovo" class="btn pull-right"><i class="icon-plus"> </i> Aggiungi gruppo</a>
 				<h5><i class="icon-group"></i> Gruppi</h5>
 			</div>
 			<div class="box-content">
@@ -31,13 +31,13 @@ function cerca_persone(){
 				</tr></thead>
 				{% for gruppo in gruppi %}
 					<tr id="gruppo-{{gruppo.id}}">
-						<td>{{gruppo}} <span class="badge badge-important">{{gruppo.numero_componenti}}</span></td>
+						<td>{{gruppo}} <span class="badge">{{gruppo.numero_componenti}}</span></td>
 						<td>{{gruppo.note}}
 						</td>
 						<td>
 							<div class="btn-group">
 							  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-								Azioni
+								<i class="icon-cog"></i> Azioni
 								<span class="caret"></span>
 							  </a>
 							  <ul class="dropdown-menu">
@@ -60,7 +60,7 @@ function cerca_persone(){
 	<div class="span1">
 		<div class="box">
 			<div class="box-header">
-			<a href="#" class="pull-right"><i class="icon-refresh"></i></a>
+			<a href="#" class="pull-right btn"><i class="icon-refresh"></i></a>
 			<h5>Filtra</h5>
 			</div>
 			<div class="box-content">
@@ -84,7 +84,7 @@ function cerca_persone(){
 			<div class="span7">
 				<div class="box">
 					<div class="box-header">
-						<a href="/persone/nuovo" class="btn btn-small pull-right"><i class="icon-plus"> </i> Aggiungi persona</a>
+						<a href="/persone/nuovo" class="btn pull-right"><i class="icon-plus"> </i> Aggiungi persona</a>
 						<h5><i class="icon-user"></i> Persone</h5>
 					</div>
 					<div class="box-content">

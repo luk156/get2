@@ -28,7 +28,7 @@ function persona_stato(selettore){
 	
 <div class="span7">
 
-<table class="table table-striped">
+<table id="no-more-tables" class="table table-striped">
 	<script type="text/javascript">
 		var select_enable;
 		var select_gruppi;
@@ -69,20 +69,20 @@ function persona_stato(selettore){
 {% for persona in persone %}
 	<tr id="persona-{{persona.id}}">
 		<td><input type="checkbox" name="persone_id" value="{{persona.id}}"></td>
-		<td ><a href="/persone/visualizza/{{persona.id}}"><i class="icon-search"></i> {{persona}}</a></td>
-		<td >{% for m in persona.competenze.all %} <span class="badge-mansione">{{m}}</span> {% endfor %}</td>
-		<td >{% for g in persona.componenti_gruppo.all %} <span class="badge-gruppo">{{g}}</span> {% endfor %}</td>
-		<td ><SELECT NAME="stato"  ONCHANGE="persona_stato(this)" id="sel-{{persona.id}}">
+		<td data-title="Nome"><a href="/persone/visualizza/{{persona.id}}"><i class="icon-search"></i> {{persona}}</a></td>
+		<td data-title="Mansioni">{% for m in persona.competenze.all %} <span class="badge-mansione">{{m}}</span> {% endfor %}</td>
+		<td data-title="Gruppi">{% for g in persona.componenti_gruppo.all %} <span class="badge-gruppo">{{g}}</span> {% endfor %}</td>
+		<td data-title="Stato"><SELECT NAME="stato"  class="span5" ONCHANGE="persona_stato(this)" id="sel-{{persona.id}}">
 			{%for key,value in stati %}
 			<OPTION VALUE="{{key}}-{{persona.id}}">{{value}}
 			{% endfor%}
 			</SELECT></td>
-		<td>{{persona.note}}
+		<td data-title="Note">{{persona.note}}
 		</td>
-		<td >
+		<td data-title="Operazioni">
 			<div class="btn-group">
 			  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-				Azioni
+				<i class="icon-cog"></i> Azioni
 				<span class="caret"></span>
 			  </a>
 			  <ul class="dropdown-menu pull-right">
@@ -101,36 +101,9 @@ function persona_stato(selettore){
 </div>
 <div class="modal-footer">
 <button class="btn" data-dismiss="modal" aria-hidden="true">Annulla</button>
-<button class="btn btn-primary">Elimina</button>
+<button class="btn btn-primary" data-dismiss="modal" onclick="Dajaxice.get2.calendario.elimina_persona(Dajax.process,{'persona_id':{{persona.id}}});">Elimina</button>
 </div>
 </div>
-<!--
-	<script>
-	$(function() {
-		$( "#elimina-persona-{{persona.id}}" ).dialog({
-			resizable: false,
-			modal: true,
-			autoOpen: false,
-			buttons: {
-				"Elimina": function() {
-					Dajaxice.get2.calendario.elimina_persona(Dajax.process,{'persona_id':{{persona.id}}});
-					$( this ).dialog( "close" );
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			}
-		});
-	});
-	
-	</script>
-	<div id="elimina-persona-{{persona.id}}" title="Elimina {{persona}}">
-	<p>
-		<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 50px 0;"></span>
-		Vuoi veramente eliminare {{persona}}?
-	</p>
-	</div>
--->
 
 {% endfor %}
 
