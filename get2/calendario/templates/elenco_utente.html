@@ -1,17 +1,13 @@
 {% extends "base.html" %}
 
 
-{% block menu2 %}
-<ul>
-<li class="nuovo-persona staff"><a href="/utenti/nuovo">Nuovo Utente</a></li>
-</ul>
 
-<div id="navigazione">
-<div class="nav-solo nav"><span class="utenti-nav"> Utenti</span></div>
-</div>
-
+{% block header %}
+	{% if request.user.is_staff %}
+		<h4 class="header">Utenti</h4>
+		
+	{% endif %}
 {% endblock %}
-
 
 {% block main %}
 
@@ -30,6 +26,14 @@ function utente_staff(selettore){
 </script>
 <script src="/static/sorttable.js"></script>
 </br>
+<div class="row-fluid">
+	<div class="span7">
+		<div class="box">
+			<div class="box-header">
+				<a href="/persone/gruppo/nuovo" class="btn pull-right"><i class="icon-plus"> </i> Aggiungi gruppo</a>
+				<h5><i class="icon-group"></i> Utenti</h5>
+			</div>
+			<div class="box-content">
 <table class="sortable cento">
 <tr class="intestazione">
 <th>Username</th><th>E-mail</th><th>Persona associata</th><th>Privilegi di Staff</th><th class="sorttable_nosort">Operazioni</th>
