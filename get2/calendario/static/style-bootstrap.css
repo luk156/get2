@@ -168,8 +168,14 @@ div.turno {
 
 div .titolo-turno .edit-turno {
 	position:absolute;
-	top:2px;
+	top:3px;
 	right:5px;
+}
+
+div .titolo-turno .gruppo-turno {
+	position:absolute;
+	top:3px;
+	right:32px;
 }
 
 div.mansione-calendario h6 {

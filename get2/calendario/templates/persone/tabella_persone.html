@@ -85,13 +85,25 @@ function persona_stato(selettore){
 				Azioni
 				<span class="caret"></span>
 			  </a>
-			  <ul class="dropdown-menu">
+			  <ul class="dropdown-menu pull-right">
 				<li><a href="/persone/modifica/{{persona.id}}"><i class="icon-edit"></i> modifica</a></li>
-				<li><a href="#" onclick='$("#elimina-persona-{{persona.id}}" ).dialog("open");'><i class="icon-trash"></i> elimina</a></li>
+				<li><a href="#elimina-persona-{{persona.id}}" data-toggle="modal"><i class="icon-trash"></i> elimina</a></li>
 			  </ul>
 			</div>
 		</td>
 	</tr>
+	
+<div id="elimina-persona-{{persona.id}}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-body">
+	<div class="alert alert-error">
+		<h5><i class="icon-warning-sign icon-2x"></i> Vuoi veramente eliminare {{persona}}?</h5>
+	</div>
+</div>
+<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">Annulla</button>
+<button class="btn btn-primary">Elimina</button>
+</div>
+</div>
 <!--
 	<script>
 	$(function() {

@@ -8,18 +8,19 @@
 		
 		<h5><i class="icon-time icon-white"></i> {{t.inizio|time:"H:i"}} - {{t.fine|time:"H:i"}}</h5><h6> {{t.identificativo}}</h6>
 			<div class="dropdown edit-turno">
-				<a data-toggle="dropdown" class="dropdown-toggle pull-right " id="modifica-turno-{{t.id}}"><i class="icon-edit icon-white"></i></a>
+				<a data-toggle="dropdown" class="dropdown-toggle pull-right " id="modifica-turno-{{t.id}}"><i class="icon-edit icon-white" style="color:white"></i></a>
 				<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
-					<li class="dropdown-submenu">
-					<a tabindex="-1" >Aggiungi gruppo</a>
-					 <ul class="dropdown-menu">
-						{%for g in gruppi%}
-							<li><a href="/calendario/disponibilita_gruppo/{{t.id}}/{{g.id}}">{{g}}</a></li>
-						{%endfor%}
-					</ul>
-					</li>
 					<li><a href="/calendario/turno/modifica/{{t.id}}">Modifica</a></li>
 					<li><a href="#">Elimina</a></li>
+				</ul>
+			</div>
+			<div class="dropdown gruppo-turno">
+				<a data-toggle="dropdown" class="dropdown-toggle pull-right " id="gruppo-turno-{{t.id}}"><i class="icon-group" style="color:white"></i></a>
+				<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
+					{%for g in gruppi%}
+						<li><a href="/calendario/disponibilita_gruppo/{{t.id}}/{{g.id}}">{{g}}</a></li>
+					{%endfor%}
+				</ul>
 			</div>
 	</div>
 
