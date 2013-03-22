@@ -1,15 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block title %} Impostazioni {% endblock %}
 
-
-{% block menu2 %}
-
-<div id="navigazione">
-<div class="nav-solo nav"><span class="impostazioni-nav"> Impostazioni</span></div>
-</div>
-
+{% block header %}
+		<h4 class="header">Impostazioni</h4>
 {% endblock %}
+
 {% block main %}
 
 <script>
@@ -22,154 +19,127 @@ giorni[4] = "Venerdì";
 giorni[5] = "Sabato";
 giorni[6] = "Domenica";
 </script>
-<script>
-	 $(function() {
-$( "#tabs" ).tabs();
-});
-	
-	</script>
-<div id="tabs" class="bordo">
-	<ul>
-		<li><a href="#tabs-mansioni">Mansioni</a></li>
-		<li><a href="#tabs-tipo-turno">Tipo di turno</a></li>
-		<li><a href="#tabs-notifiche">Notifiche</a></li>
-		<li><a href="#tabs-persone">Campi aggiuntivi</a></li>
-		
-	</ul>
 
-<div id="tabs-mansioni">
+<div class="row-fluid">
+	<div class="span3">
+		<div class="row-fluid">
+		<div class="box">
+			<div class="box-header">
+				<a href="/impostazioni/mansione/nuovo" class="pull-right btn"><i class="icon-plus"></i> aggiungi mansione</a>
+				<h5>Mansioni</h5>
+			</div>
+			<div class="box-content">
+				<table class="table table-striped">
+				{% for mansione in mansioni %}
+					<tr class="" id="mansione-{{mansione.id}}">
+					<td class="mansioni">{{mansione}}</td>
+					<td class="operazioni">
+						<div class="btn-group pull-right">
+						  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+							<i class="icon-cog"></i> Azioni
+							<span class="caret"></span>
+						  </a>
+						  <ul class="dropdown-menu">
+							<li><a href="/impostazioni/mansione/modifica/{{mansione.id}}"><i class="icon-edit"></i> modifica</a></li>
+							<li><a href="#" onclick='$("#elimina-gruppo-{{gruppo.id}}" ).dialog("open");' ><i class="icon-trash"></i> elimina</a></li>
+						  </ul>
+						</div>
+					</td></tr>
+				{% endfor %}
+				</table>
+			</div>
+		</div>
+		</div>
+		<div class="row-fluid">
+		<div class="box">
+			<div class="box-header">
+				<a href="/impostazioni/notifica/nuovo" class="pull-right btn"><i class="icon-plus"></i> aggiungi regola</a>
+				<h5>Notifiche</h5>
+			</div>
+			<div class="box-content">
+				<table class="table table-striped">
+				<thead>
+				<tr>
+				<th>Destinatario</th><th>Giorni</th><th>Tipo di turno</th><th>Operazioni</th>
+				</tr></thead>
+				{% for i in impostazioni_notifica_utente %}
+				
+					<tr id="impostazioni_notifica_utente-{{i.id}}">
+						<td>{{i.utente}}</td>
+						<td>
+						{% for g in i.giorni %}
+						<script>document.write(giorni[{{ g }}]);</script>
+						{% endfor%}
+						</td>
+						<td>
+						{% for t in i.tipo_turno.all %}
+						{{t}}
+						{% endfor%}		
+						</td>
+						<td>
+							<div class="btn-group pull-right">
+							  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+								<i class="icon-cog"></i> Azioni
+								<span class="caret"></span>
+							  </a>
+							  <ul class="dropdown-menu">
+								<li><a href="/impostazioni/notifica/modifica/{{i.id}}"><i class="icon-edit"></i> modifica</a></li>
+								<li><a href="/impostazioni/notifica/elimina/{{i.id}}"><i class="icon-trash"></i> elimina</a></li>
+							  </ul>
+							</div>
+						</td>
+					</tr>
 
-
-	<script>
-	
-	$(document).ready(function(){
-		
-		$( ".dettagli_requisito").hide();});
-	
-	function send_form_requisiti(form_id){
-    	Dajaxice.get2.calendario.requisito_form(Dajax.process,{'form':$(form_id).serialize(true),'form_id':form_id});
-	}
-	
-	function dettagli(tipo_turno_id,azione){
-	if (azione=="apri"){
-		$("#dettagli_requisito-"+tipo_turno_id).show();}
-	else {
-		$("#dettagli_requisito-"+tipo_turno_id).hide();}
-	}
-	</script>
-	
-
-
-
-	<div id="mansioni">
-	<span class="titolo impostazioni">Mansioni</span>
-	<menu class="impostazioni">
-	<ul>
-	<li class="aggiungi superuser"><a href="/impostazioni/mansione/nuovo">Aggiungi mansione</a></li>
-	</ul>
-	</menu>
-	<table>
-
-	{% for mansione in mansioni %}
-	
-		<tr class="mansioni {% cycle 'riga1' 'riga2' %}" id="mansione-{{mansione.id}}">
-		<td class="mansioni">{{mansione}}</td>
-		<td class="operazioni"><a href="/impostazioni/mansione/modifica/{{mansione.id}}"><span class="img_modifica superuser"></span></a>
-			<a href="/impostazioni/mansione/elimina/{{mansione.id}}"><span class="img_elimina superuser"></span></a>
-
-		</td></tr>
-
-	{% endfor %}
-	</table>
-
+				{% endfor %}
+				</table>
+			</div>
+		</div>	
+		</div>
+		<div class="row-fluid">
+		<div class="box">
+			<div class="box-header">
+				<a href="/impostazioni/campo_persone/nuovo" class="pull-right btn"><i class="icon-plus"></i> aggiungi campo</a>
+				<h5>Campi personalizzati</h5>
+			</div>
+			<div class="box-content">
+				<table class="table table-striped">
+				{% for campo_persone in campi_persone %}
+				
+					<tr id="mansione-{{campo_persone.id}}">
+					<td >{{campo_persone.name}}</td>
+					<td >
+						<div class="btn-group pull-right">
+						  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+							<i class="icon-cog"></i> Azioni
+							<span class="caret"></span>
+						  </a>
+						  <ul class="dropdown-menu">
+							<li><a href="/impostazioni/campo_persone/modifica/{{campo_persone.id}}"><i class="icon-edit"></i> modifica</a></li>
+							<li><a href="/impostazioni/campo_persone/elimina/{{campo_persone.id}}"><i class="icon-trash"></i> elimina</a></li>
+						  </ul>
+						</div>
+					</td></tr>
+				{% endfor %}
+				</table>
+			</div>
+		</div>	
+		</div>
+	</div>
+	<div class="span4">
+		<div class="box">
+			<div class="box-header">
+				<a href="/impostazioni/tipo_turno/nuovo" class="pull-right btn"><i class="icon-plus"></i> aggiungi tipo</a>
+				<h5>Tipi di turno</h5>
+			</div>
+			<div class="box-content">			
+					{% for tipo_turno in tipi_turno %}
+						 {% include "elenco_tipo_turno/dettagli.html" %}
+					{% endfor %}
+			</div>
+		</div>
 	</div>
 </div>
 
-<div id="tabs-tipo-turno">
-	<div id="tipo_turno">
-	<span class="titolo impostazioni">Tipi di turno</span>
-	<menu class="impostazioni">
-	<ul>
-	<li class="aggiungi superuser"><a href="/impostazioni/tipo_turno/nuovo">Aggiungi Tipo Turno</a></li>
-	</ul>
-	</menu>
-	<table>
-	{% for tipo_turno in tipi_turno %}
-		 <!-- {% cycle 'riga1' 'riga2' as riga %} --> {% include "elenco_tipo_turno/dettagli.html" %}
-	{% endfor %}
-	</table>
-	</div>
-</div>
-
-<div id="tabs-notifiche">
-	<div id="notifiche">
-	<span class="titolo impostazioni">Impostazioni Notifiche</span>
-	<menu class="impostazioni">
-	<ul>
-	<li class="aggiungi superuser"><a href="/impostazioni/notifica/nuovo">Aggiungi regola notifica</a></li>
-	</ul>
-	</menu>
-	
-	<table class="cento">
-	<tr class="intestazione">
-	<th>Destinatario</th><th>Giorni</th><th>Tipo di turno</th><th>Operazioni</th>
-	</tr>
-	{% for i in impostazioni_notifica_utente %}
-	
-		<tr class="impostazioni_notifica_utente {% cycle 'riga1' 'riga2' %}" id="impostazioni_notifica_utente-{{i.id}}">
-			<td>{{i.utente}}</td>
-			<td>
-			{% for g in i.giorni %}
-			<script>document.write(giorni[{{ g }}]);</script>
-			{% endfor%}
-			</td>
-			<td>
-			{% for t in i.tipo_turno.all %}
-			{{t}}
-			{% endfor%}		
-			</td>
-			<td>
-				<a href="/impostazioni/notifica/modifica/{{i.id}}"><span class="img_modifica superuser"></span></a>
-				<a href="/impostazioni/notifica/elimina/{{i.id}}"><span class="img_elimina superuser"></span></a>
-			</td>
-		</tr>
-
-	{% endfor %}
-	</table>
-	
-	
-	</div>
-
-</div>
-
-<div id="tabs-persone">
-
-	<div id="persone">
-	<span class="titolo impostazioni">Persona</span>
-	<menu class="impostazioni">
-	<ul>
-	<li class="aggiungi superuser"><a href="/impostazioni/campo_persone/nuovo">Aggiungi campo</a></li>
-	</ul>
-	</menu>
-	<table>
-
-	{% for campo_persone in campi_persone %}
-	
-		<tr class="mansioni {% cycle 'riga1' 'riga2' %}" id="mansione-{{campo_persone.id}}">
-		<td class="mansioni">{{campo_persone.name}}</td>
-		<td class="operazioni"><a href="/impostazioni/campo_persone/modifica/{{campo_persone.id}}"><span class="img_modifica superuser"></span></a>
-			<a href="/impostazioni/campo_persone/elimina/{{campo_persone.id}}"><span class="img_elimina superuser"></span></a>
-
-		</td></tr>
-
-	{% endfor %}
-	</table>
-
-	</div>
-
-</div>
-
-</div>
 
 
 {% endblock %}

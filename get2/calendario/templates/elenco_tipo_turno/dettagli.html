@@ -1,38 +1,37 @@
 
 {% load template_filters %}
 
-<tr class="mansioni {{riga}}" id="tipo_turno-{{tipo_turno.id}}">
+<div class="well well-small">
+	<div class="row-fluid" id="tipo_turno-{{tipo_turno.id}}">
+		
+		<h5><i class="icon-th-list"></i> {{tipo_turno}}</h5>
+			<div class="btn-group pull-right">
+				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+				<i class="icon-cog"></i> Azioni
+				<span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu pull-right">
+					<li><a href="/impostazioni/tipo_turno/aggiungi_requisito/{{tipo_turno.id}}"><i class="icon-plus"></i> aggiungi requisito</a></li>
+					<li><a href="/impostazioni/tipo_turno/modifica/{{tipo_turno.id}}"><i class="icon-edit"></i> modifica</a></li>
+					<li><a href="/impostazioni/tipo_turno/elimina/{{tipo_turno.id}}" data-toggle="modal"><i class="icon-trash"></i> elimina</a></li>
+				</ul>
+			</div>
 
-	<td class="tipo_turno"><b>{{tipo_turno}}</b></td>
-	<td class="operazioni">
-	<a href="/impostazioni/tipo_turno/elimina/{{tipo_turno.id}}"><span class="img_elimina superuser" style="float:right;"></span></a>
-	<a href="/impostazioni/tipo_turno/modifica/{{tipo_turno.id}}"><span class="img_modifica superuser" style="float:right;"></span></a>
-	
-	</td>
-</tr>
-<tr class="">
-	<td class="" colspan="1">Requisiti:
-	</td>
-	<td>
+	</div>
+	<div class="row-fluid">
+		<h6>Requisiti:</h6>
+	</div>
+	<div class="row-fluid">
+			<table class="table table-striped no-more-tables">
+				<thead>
+				<tr><th>Mansione</th><th>Operatore</th><th>Valore</th><th>Necessario</th><th>sufficiente</th><th>Extra</th><th>Operazioni</th></tr>
+				</thead>
+				{% for requisito in tipo_turno.req_tipo_turno.all %}
+					<tr class="requisiti-elenco">
+					{{requisito|stampa_requisito|safe }}
 
-	</td>
-</tr>
-<tr class="tr_dettagli_requisito">
-	<td class="" colspan="2">
-		<table>
-		<tr class="requisiti"><th>Mansione</th><th>Operatore</th><th>Valore</th><th>Necessario</th><th>sufficiente</th><th>Extra</th><th>Operazioni</th></tr>
-		{% for requisito in tipo_turno.req_tipo_turno.all %}
-			<tr class="requisiti-elenco">
-			{{requisito|stampa_requisito|safe }}
-
-   			</tr>
-		{% endfor %}
-		</table>
-	</td>
-</tr>
-<tr>
-<td></td>
-<td>	<a href="/impostazioni/tipo_turno/aggiungi_requisito/{{tipo_turno.id}}"><span class="aggiungi_requisito superuser">aggiungi requisito<span class="img_aggiungi superuser"></span></span></a></br></br></td>
-
-</tr>
-
+					</tr>
+				{% endfor %}
+			</table>
+	</div>
+</div>

@@ -107,31 +107,21 @@ def notifiche(request,option,url):
         if (option == 'letto'):
             m.letto=True
             m.save()
-            dajax.remove_css_class(selector,'letto-False')
-            dajax.add_css_class(selector,'letto-True')
+            dajax.remove_css_class(selector,'warning')
         if (option == 'nonletto'):
             m.letto=False
             m.save()
-            dajax.remove_css_class(selector,'letto-True')
-            dajax.add_css_class(selector,'letto-False')
+            dajax.add_css_class(selector,'warning')
         if (option == 'cancella'):
             m.delete()
             dajax.remove(selector)
             dajax.remove('#not-inv-'+not_id)
             #dajax.alert(request.user.get_profile().nonletti())
     non=request.user.get_profile().notifiche_non_lette()
-    selector='#menu-notifiche'
     if non >0:
-    	dajax.remove_css_class(selector,'notifiche-ok')
-        dajax.add_css_class(selector,'notifiche')
-        dajax.remove_css_class('.notifiche_nonlette','hide')
-    	dajax.assign('.notifiche_nonlette','innerHTML',non)
-    	
-    	
+    	dajax.assign('#notifiche-badge','innerHTML',non)
     else:
-    	dajax.remove_css_class(selector,'notifiche')
-        dajax.add_css_class(selector,'notifiche-ok')
-        dajax.add_css_class('.notifiche_nonlette','hide')
+		dajax.assign('#notifiche-badge','innerHTML','')
     dajax.clear('.ch','checked')
     return dajax.json()
 

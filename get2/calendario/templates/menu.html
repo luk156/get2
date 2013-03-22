@@ -5,7 +5,10 @@
 	<li class="statistiche user"><a href="/statistiche/"><i class="i-menu statistiche"></i></br>Statistiche</a></li>
 	<li class="utenti staff"><a href="/utenti/"><i class="i-menu utenti"></i></br>Utenti</a></li>
 	<li class="impostazioni staff"><a href="/impostazioni/"><i class="i-menu impostazioni"></i></br>Impostazioni</a></li>
-	<li class="notifiche staff"><a href="/notifiche/"><i class="i-menu notifiche"></i></br>Notifiche</a></li>
+	<li class="notifiche staff"><a href="/notifiche/">
+		<span class="badge badge-important" id="notifiche-badge">{%if request.user.get_profile.notifiche_non_lette > 0 %}{{request.user.get_profile.notifiche_non_lette}}{% endif %}</span>
+		<i class="i-menu notifiche"></i></br>Notifiche</a>
+	 	</li>
 </ul>
 
 <script>
