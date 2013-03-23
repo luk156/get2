@@ -2,63 +2,47 @@
 {% extends "base.html" %}
 {% load static %}
 {% load template_filters %}
+{% load crispy_forms_tags %}
 
+{% block head %}
+	<link href="/static/css/datetimepicker.css" rel="stylesheet">
+	<script src="/static/js/bootstrap-datetimepicker.min.js"></script>
+	<script src="/static/js/locales/bootstrap-datetimepicker.it.js"></script>
+{% endblock%}
 
 {% block header %}
-	{% if request.user.is_staff %}
 		<h4 class="header"><a href="/calendario/">Calendario</a> / {{azione}} turno
-	{% endif %}
 {% endblock %}
 
 
 {% block main %}
 
 <script type="text/javascript">
-jQuery(function()
-    { 
-      $('#id_inizio_1').timepicker({showPeriodLabels: false, hourText: 'Ora', minuteText: 'Minuto',});
-      $('#id_fine_1').timepicker({showPeriodLabels: false, hourText: 'Ora', minuteText: 'Minuto',});
-    });
+     function ripeti_toggle(){
+		if ($('#ripeti').is(":visible")){
+			$('#ripeti').slideUp();
+			$('input[name=ripeti]').attr('checked', false);
+			$('#ripeti-switch i').removeClass('icon-chevron-up');
+			$('#ripeti-switch i').addClass('icon-chevron-down');
+			
+		}
+		else {
+			$('#ripeti').slideDown();
+			$('input[name=ripeti]').attr('checked', true);
+			$('#ripeti-switch i').removeClass('icon-chevron-down');
+			$('#ripeti-switch i').addClass('icon-chevron-up');
+			
+
+		}
+     };
 
 window.onload = function() 
 { 
-     document.getElementById("id_tipo").onchange = function() 
-     { 
-         Dajaxice.get2.calendario.nuovo_turno(Dajax.process,{'tipo':this.value}); 
-     }; 
+     $(".datetimeinput").datetimepicker({format: 'dd/mm/yyyy hh:ii:ss',autoclose: true,minuteStep: 15,language: 'it'});
+     $(".dateinput").datetimepicker({format: 'dd/mm/yyyy',autoclose: true,minView:2,language: 'it'});
+     $("#ripeti").hide();
+	$('input[name=ripeti]').hide();
      
-     
-	$(function() {
-		var dates = $( "#id_ripeti_da, #id_ripeti_al" ).datepicker({
-			defaultDate: "+1w",
-			dateFormat: "dd-mm-yy",
-			changeMonth: true,
-			numberOfMonths: 3,
-			onSelect: function( selectedDate ) {
-				var option = this.id == "id_ripeti_da" ? "minDate" : "maxDate",
-					instance = $( this ).data( "datepicker" ),
-					date = $.datepicker.parseDate(
-						instance.settings.dateFormat ||
-						$.datepicker._defaults.dateFormat,
-						selectedDate, instance.settings );
-				dates.not( this ).datepicker( "option", option, date );
-			}
-		});
-	});
-    
-     $("#id_fine_0").hide();
-     $('#id_ripeti_al').prop('disabled', true);
-     $('#id_ripeti_da').prop('disabled', true);
-     $(':checkbox[name=ripeti_il_giorno]').prop('disabled', true);
-        
-     document.getElementById("id_inizio_0").onchange = function() 
-     { 
-         id_fine_0.value = id_inizio_0.value;
-     };
-     
-     $(function() {
-		$( "#id_inizio_0" ).datepicker({ dateFormat: "dd-mm-yy" });
-		
 	{%if not request.user.is_superuser %} 
 		$('#id_inizio_0').hide();
 		$('#id_tipo').prop('disabled', true);
@@ -68,25 +52,6 @@ window.onload = function()
 		    });
 		});
 	{% endif %}
-	
-	});
-
-     
-     document.getElementById("id_ripeti").onchange = function() 
-     { 
-     	if (document.getElementById("id_ripeti").checked) {
-     		$('#id_ripeti_al').prop('disabled', false);
-     		$('#id_ripeti_da').prop('disabled', false);
-     		$(':checkbox[name=ripeti_il_giorno]').prop('disabled', false);
-     		
-    	} else {
-        	$('#id_ripeti_al').prop('disabled', true);
-        	$('#id_ripeti_da').prop('disabled', true);
-        	$(':checkbox[name=ripeti_il_giorno]').prop('disabled', true);
-    	}    
-     };
-	
-
 }; 
 
 </script>
@@ -104,7 +69,7 @@ window.onload = function()
   <form action="/calendario/turno/modifica/{{ turno.id }}/" method="post">{% csrf_token %}
   {% endifequal %}
   <table id="form_turno">
-  {{form.as_table}}
+	{% crispy form %}
   {% if turno.occorrenza %}
   	<tr><td colspan="2">
   	<span class="emblem-generic">Il turno fa parte di una occorrenza</span>
@@ -117,7 +82,7 @@ window.onload = function()
   	<tr><th ><label>Modifica occorrenze successive</label></th><td><input type="checkbox" name="modifica_futuri" ></td></tr>
   	<tr class="superuser"><th ><label>Modifica tutte le occorrenze</label></th><td><input type="checkbox" name="modifica_tutti" ></td></tr>
   {% endif %}
-  <tr><td></td><td><input type="submit" value="invia" /></td></tr>
+  
   </table>
   </form>
 </div>

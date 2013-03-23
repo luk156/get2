@@ -28,10 +28,6 @@ jQuery(function()
   {% if error_message %}
     <p><strong>{{ error_message }}</strong></p>
   {% endif %}
-  <div id="div_form_mansione"><form action="" method="post" id="form_mansione" accept-charset="utf-8">{% csrf_token %}
-    {{ mansione_form.as_p }}
-	</form>
-  </div>
   <script>
   	window.onload = function() 
 	{ 
@@ -50,9 +46,6 @@ jQuery(function()
 			}
 		});
 	});
-  	function send_form(){
-    	Dajaxice.get2.calendario.mansione_form(Dajax.process,{'form':$('#form_mansione').serialize(true)});
-	}
 	$(function() {
 		$( "#id_nascita" ).datepicker({
             changeMonth: true,

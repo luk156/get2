@@ -157,6 +157,56 @@ def aggiungilista(request):
 
 #####   calendario   ####
 
+def pasqua(anno):
+  if anno<1583 or anno>2499: return None
+  tabella={15:(22, 2), 16:(22, 2), 17:(23, 3), 18:(23, 4), 19:(24, 5),
+           20:(24, 5), 21:(24, 6), 22:(25, 0), 23:(26, 1), 24:(25, 1)}
+  m, n = tabella[anno//100]
+  a=anno%19
+  b=anno%4
+  c=anno%7
+  d=(19*a+m)%30
+  e=(2*b+4*c+6*d+n)%7
+  giorno=d+e
+  if (d+e<10):
+    giorno+=22
+    mese=3
+  else:
+    giorno-=9
+    mese=4
+    if ((giorno==26) or ((giorno==25) and (d==28) and (e==6) and (a>10))):
+      giorno-=7
+  return giorno, mese
+
+def festivo(giorno):
+	feste=(
+		(1,1),
+		(1,6),
+		(4,25),
+		(5,1),
+		(06,02),
+		(8,15),
+		(11,01),
+		(12,8),
+		(12,25),
+		(12,26),
+	)
+	if (giorno.weekday() == 6) or ((giorno.month,giorno.day) in feste):
+		return True
+	p_g,p_m=pasqua(giorno.year)
+	if (giorno.day == p_g and giorno.month == p_m):
+		return True
+	precedente=giorno-datetime.timedelta(days=1)
+	if (precedente.day == p_g and precedente.month == p_m):
+		return True
+	return False
+
+def prefestivo(giorno):
+	successivo=giorno+datetime.timedelta(days=1)
+	if festivo(successivo) and not festivo(giorno):
+		return True
+	return False
+
 def calendario(request):
 	if request.COOKIES.has_key('anno'):
 		anno=int(request.COOKIES['anno'])
@@ -530,17 +580,14 @@ def nuovo_turno(request):
 				data['occorrenza']=o.id
 				#pdb.set_trace()
 				while (start.date()<=stop):
-					data['inizio_0']=start.date()
-					data['fine_0']=(start+durata).date()
-					data['inizio_1']=start.time()
-					data['fine_1']=(start+durata).time()
+					data['inizio']=start
+					data['fine']=(start+durata)
 					f=TurnoFormRipeti(data)
-					if str(start.weekday()) in giorno and f.is_valid():
+					if ((str(start.weekday()) in giorno) or ('p' in giorno and prefestivo(start)) or ('f' in giorno and festivo(start))) and f.is_valid():
 						t=f.save()
 						t.occorrenza=o
 						t.save()
 					start+=delta
-				
 			return HttpResponseRedirect('/calendario/') # Redirect after POST
 	else:
 		form = TurnoFormRipeti()
