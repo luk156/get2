@@ -129,7 +129,7 @@ class Persona(models.Model):
 	cognome = models.CharField('Cognome',max_length=200)
 	#caratteristiche della persona
 	stato = models.CharField('Stato',max_length=40, choices=STATI, default='disponibile' )
-	competenze = models.ManyToManyField(Mansione, blank=True, null=True, )
+	competenze = models.ManyToManyField(Mansione, blank=True, null=True)
 	note = models.TextField( blank=True, null=True, )
 	def notifiche_non_lette(self):
 		n=0
@@ -151,7 +151,7 @@ class PersonaForm(BaseDynamicEntityForm):
 			if attributo.datatype == 'date':
 	       			self.fields[attributo.slug].widget.attrs['class'] = 'campo_tipo_data'
 	class Meta:
-		model = Persona
+		model = Persona		
 		widgets = {'competenze': forms.CheckboxSelectMultiple}
 
 eav.register(Persona) #registro il Model Persona come associazione a eav

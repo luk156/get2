@@ -52,6 +52,7 @@ def modifica_persona(request,persona_id):
 		form = PersonaForm(request.POST, instance=per)  # necessario per modificare la riga preesistente
 		if form.is_valid():
 			form.save()
+			form.save_m2m()
 			return HttpResponseRedirect('/persone') # Redirect after POST
 	else:
 		form = PersonaForm(instance=per)
