@@ -2,81 +2,110 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block menu2 %}
 
-<div id="navigazione">
-<div class="nav-inizio nav"><a href="/calendario"><span class="calendario-nav"> Calendario</span></a></div>
-<div class="nav-centro nav">Turno del {{turno.inizio|date}} delle ore {{turno.inizio|time:"H:i"}} - {{turno.fine|time:"H:i"}}</div>
-<div class="nav-fine nav">Aggiungi Gruppo ({{gruppo}})</div>
-</div>
-
+{% block header %}
+		<h4 class="header">
+			<a href="/calendario/">Calendario</a>
+			<i class="icon-angle-right"></i>
+			{{t.inizio|date}} ({{t.inizio|time:"H:i"}} - {{t.fine|time:"H:i"}})
+			<i class="icon-angle-right"></i>
+			Aggiungi Gruppo ({{gruppo}})
+		</h4>
 {% endblock %}
 
 {% block main %}
 
-<div class="menu-main">
-	<div id="disponibili">Gia' Disponibili per questo turno:
-	{% for d in turno.turno_disponibilita.all %}
-		{% if d.tipo = "Disponibile" %}
-		<span id="disponibile-{{d.id}}" class="disponibile">{{d.persona}} ({{d.mansione}})</span>
-		{% endif %}
-	{% endfor %}
-	</div>
-</div>
 
 <script type="text/javascript">
 function disp(selettore){
 	value=selettore.options[selettore.selectedIndex].value;
-	classe=selettore.className;
-	if (selettore.options[0].value==''){
-		selettore.remove(0);}
 	dati=value.split("/");
 	Dajaxice.get2.calendario.disp(Dajax.process,{'turno_id':dati[0],'mansione_id':dati[1],'persona_id':dati[2],'disp':dati[3]});
 }
 </script>
 
+<div class="row-fluid">
+	<div class="span1">
+		<div class="box">
+			<div class="box-header">
+				<h5>Anteprima</h5>
+			</div>
+			<div class="box-content" id="anteprima">
+				{% include "turno.html" %}
+				<div style="clear:both;"></div>
+			</div>
+		</div>
+	</div>
+	<div class="span6">
+		<div class="box">
+			<div class="box-header">
+					<h5><i class="icon-group"></i> Membri del gruppo</h5>
+			</div>
+			<div class="box-content">
+				<table class="table table-striped no-more-tables">
+				<thead>
+					<tr>
+					<th>Nome</th><th>Mansione da ricoprire</th>
+					</tr>
+				</thead>
+				{%for persona in gruppo.componenti.all %}
+					{%for c in t.contemporanei.all %}
+						{% for d in c.turno_disponibilita.all %}
+						{% if persona = d.persona %}
+						<script type="text/javascript">
+						$(document).ready(function(){
+							var s = $('#sel-{{persona.id}}');
+							//s.remove(0);
+							if('{{d.mansione.id}}'!='{{mansione.id}}'){
+								if('{{d.tipo}}'=='Disponibile'){s.empty(); s.append("<option value=''>Gia Impegnato</option>");}
+								}
+							}
+						);
+						</script>
+						{% endif %}
+						{% endfor %}
+					{% endfor %}
+					{% for d in t.turno_disponibilita.all %}
+						 {% if persona = d.persona and d.tipo = "Disponibile" %}
+						  <script type="text/javascript">
+							$(document).ready(function(){
+								$('#sel-{{persona.id}} option').filter(function() { return this.text == '{{d.mansione}}'; }).attr('selected', true);
+								
+								}
+							);
+						  </script> 
+						 {% endif %}
+					{% endfor %}
+					<tr class="persona stato-{{persona.stato}}" id="persona-{{persona.id}}">
+					<td class="nome">{{persona}}</td>
+					<td class="mansioni_da_ricoprire">
+						<SELECT NAME="stato"  ONCHANGE="disp(this);" id="sel-{{persona.id}}">
+						<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/-">----
+						{% for m in persona.competenze.all %}
+							{% for r in t.tipo.req_tipo_turno.all %}
+							{% if m == r.mansione %}
+								<OPTION VALUE="{{t.id}}/{{m.id}}/{{persona.id}}/Disponibile">{{m}}
+							{% endif %}
+							{% endfor %}
+						{% endfor %}
+						</SELECT>
+					</td>
+					</tr>
 
-<table>
-<tr class="intestazione">
-<td>Nome</td><td>Mansione da ricoprire</td>
-</tr>
-{%for persona in gruppo.componenti.all %}
-	{%for c in turno.contemporanei.all %}
-		{% for d in c.turno_disponibilita.all %}
-		{% if persona = d.persona %}
-		<script type="text/javascript">
-		$(document).ready(function(){
-			var s = $('#sel-{{persona.id}}');
-			//s.remove(0);
-			if('{{d.mansione.id}}'!='{{mansione.id}}'){
-				if('{{d.tipo}}'=='Disponibile'){s.empty(); s.append("<option value=''>Gia Impegnato</option>");}
-				}
-			}
-		);
-		</script>
-		{% endif %}
-		{% endfor %}
-	{% endfor %}
-	<tr class="persona {% cycle 'riga1' 'riga2' %} stato-{{persona.stato}}" id="persona-{{persona.id}}">
-	<td class="nome">{{persona}}</td>
-	<td class="mansioni_da_ricoprire">
-		<SELECT NAME="stato"  ONCHANGE="disp(this);" id="sel-{{persona.id}}">
-		<OPTION VALUE="{{turno.id}}/{{m.id}}/{{persona.id}}/Disponibile">----
-		{% for m in persona.competenze.all %}<OPTION VALUE="{{turno.id}}/{{m.id}}/{{persona.id}}/Disponibile">{{m}}{% endfor %}</td>
-		</SELECT>
-	</td>
-	</tr>
+				<script>
+				$(document).ready(function() {
+					if('disponibile'!='{{persona.stato}}'){
+					$("#sel-{{persona.id}}").hide();
+					$("#persona-{{persona.id}} td.disponibilita").html("{{persona.get_stato_display}}")
+					}
+				});
+				</script>
 
-<script>
-$(document).ready(function() {
-	if('disponibile'!='{{persona.stato}}'){
-	$("#sel-{{persona.id}}").hide();
-	$("#persona-{{persona.id}} td.disponibilita").html("{{persona.get_stato_display}}")
-	}
-});
-</script>
-
-{% endfor%}
-</table>
+				{% endfor%}
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
 
 {% endblock %}

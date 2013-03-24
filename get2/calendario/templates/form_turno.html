@@ -41,7 +41,7 @@ window.onload = function()
      $(".datetimeinput").datetimepicker({format: 'dd/mm/yyyy hh:ii:ss',autoclose: true,minuteStep: 15,language: 'it'});
      $(".dateinput").datetimepicker({format: 'dd/mm/yyyy',autoclose: true,minView:2,language: 'it'});
      $("#ripeti").hide();
-	$('input[name=ripeti]').hide();
+	$('label[for=id_ripeti]').hide();
      
 	{%if not request.user.is_superuser %} 
 		$('#id_inizio_0').hide();
@@ -56,34 +56,6 @@ window.onload = function()
 
 </script>
 
-<div style="margin:10px;">
-  {% if error_message %}
-    <p><strong>{{ error_message }}</strong></p>
-  {% endif %}
+{% crispy form %}
 
-  {% ifequal azione 'Aggiungi' %}
-  <form action="/calendario/turno/nuovo/" method="post">{% csrf_token %}
-  {% endifequal %}
-
-  {% ifequal azione 'Modifica' %}
-  <form action="/calendario/turno/modifica/{{ turno.id }}/" method="post">{% csrf_token %}
-  {% endifequal %}
-  <table id="form_turno">
-	{% crispy form %}
-  {% if turno.occorrenza %}
-  	<tr><td colspan="2">
-  	<span class="emblem-generic">Il turno fa parte di una occorrenza</span>
-			<div id="occorrenze-{{turno.id}}"><ul>		
-			{% for o in turno|occorrenze:turno.occorrenza %}
-				<li class="occorrenze-{{o|turno_futuro}}">{{o.inizio|date:"d M"}}, ore {{o.inizio|time:"H:i"}} - {{o.fine|time:"H:i"}}</li>
-			{% endfor %}
-			</ul></div>
-  	</td></tr>
-  	<tr><th ><label>Modifica occorrenze successive</label></th><td><input type="checkbox" name="modifica_futuri" ></td></tr>
-  	<tr class="superuser"><th ><label>Modifica tutte le occorrenze</label></th><td><input type="checkbox" name="modifica_tutti" ></td></tr>
-  {% endif %}
-  
-  </table>
-  </form>
-</div>
 {% endblock %}

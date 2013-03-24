@@ -148,11 +148,20 @@ i.i-menu{
 	width: 32px;
 }
 
+.btn-menu{
+	display:block;
+	padding:5px;
+	margin:2px;
+	text-align:center;
+	color: #ddd;
+}
+
+a.btn-menu:hover,a.btn-menu:active{ color: #ddd; cursor:pointer;}
+
 #notifiche-badge{
 position:absolute;
 top: 10px;
 right:20px;
-
 }
 
 body h1, body h2, body h3, body h4, body h5, body h6 {
@@ -190,7 +199,7 @@ h5,h6 {
 
 .giorno {
 	padding:2px;
-	min-width:150px;
+	min-width:195px;
 }
 
 .festivo {
@@ -233,6 +242,10 @@ div.turno {
 	margin-right: -1px;
 }
 
+.titolo-turno h6{
+	text-align:center;
+}
+
 .titolo-turno-False{
 	border: 1px solid rgb(185, 74, 72);
 	background: none repeat scroll 0% 0% #e55858;
@@ -246,13 +259,25 @@ div.turno {
 div .titolo-turno .edit-turno {
 	position:absolute;
 	top:3px;
-	right:5px;
+	right:3px;
 }
 
 div .titolo-turno .gruppo-turno {
 	position:absolute;
 	top:3px;
 	right:32px;
+}
+
+@media (max-width: 767px) {
+	div .titolo-turno .gruppo-turno {
+		position:absolute;
+		top:3px;
+		right:48px;
+	}
+	
+	.titolo-turno {
+	padding-bottom: 8px;
+	}
 }
 
 div.mansione-calendario h6 {
@@ -271,6 +296,23 @@ margin-left: 3px;
 font-size:15px;
 list-style-type: none;
 
+}
+
+.footer-turno {
+	border-radius: 0px 0px 4px 4px;
+	box-shadow: 0px 0px 2px rgba(255, 255, 255, 0.5) inset;
+	margin-bottom:10px;
+	padding:1px;
+	position:relative;
+	margin-bottom:-3px;
+	padding-right: 6px;
+	color: #777;
+	margin-left: -1px;
+	margin-right: -1px;
+	background-color: #ddd;
+	border: 1px solid #999;
+	font-size:12px;
+	text-align:right;
 }
 
 div.box{
@@ -324,3 +366,12 @@ span.badge-gruppo {
 	text-align:center;
 	box-shadow: 0px 3px 3px 0px #dedede;
 }
+
+.mansione-sel {
+		background-color: #F5DA81;
+		border-radius: 4px 4px 4px 4px;
+		font-weight:bold;
+		padding-top:3px;
+		
+}
+

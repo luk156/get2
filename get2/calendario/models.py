@@ -5,7 +5,7 @@ import operator, datetime
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 import pdb
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Field, MultiField
+from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Field, MultiField, HTML
 from crispy_forms.bootstrap import *
 
 #############################################################
@@ -203,6 +203,7 @@ class RequisitoForm(forms.ModelForm):
 		exclude = ('tipo_turno')
 
 GIORNO = (
+  ('q', 'qualsiasi'),
   (0, 'lunedi'),
   (1, 'martedi'),
   (2, 'mercoledi'),
@@ -258,26 +259,22 @@ class Turno(models.Model):
 		return Mansione.objects.filter(req_mansione__tipo_turno=self.tipo)
 
 class TurnoForm(forms.ModelForm):
+	modifica_futuri=forms.BooleanField(label="modifica occorrenze future",required=False)
+	modifica_tutti=forms.BooleanField(label="modifica tutte le occorrenze",required=False)
 	def __init__(self, *args, **kwargs):
 		self.helper = FormHelper()
 		self.helper.layout = Layout(
-			MultiField(
-				'',
-				'identificativo'
-			),
+			Field('identificativo'),
 			AppendedText(
 				'inizio', '<i class="icon-calendar"></i>'
 			),
 			AppendedText(
 				'fine', '<i class="icon-calendar"></i>'
 			),
-			MultiField(
-				'',
-				'tipo',
-				'valore'
-			),
+			Field('tipo'),
+			Field('valore'),
 			FormActions(
-				Submit('save', 'save', css_class="btn-primary")
+				Submit('save', 'Modifica', css_class="btn-primary")
 			)
 		)
 		super(TurnoForm, self).__init__(*args, **kwargs)
@@ -299,21 +296,15 @@ class TurnoFormRipeti(TurnoForm):
 	def __init__(self, *args, **kwargs):
 		self.helper = FormHelper()
 		self.helper.layout = Layout(
-			MultiField(
-				'',
-				'identificativo'
-			),
+			Field('identificativo'),
 			AppendedText(
 				'inizio', '<i class="icon-calendar"></i>'
 			),
 			AppendedText(
 				'fine', '<i class="icon-calendar"></i>'
 			),
-			MultiField(
-				'',
-				'tipo',
-				'valore'
-			),
+			Field('tipo'),
+			Field('valore'),
 			Fieldset(
 				'<span id="ripeti-switch" onclick="ripeti_toggle()"><i class="icon-chevron-down"></i> Ripeti turno</span>'
 			),

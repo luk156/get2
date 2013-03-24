@@ -270,7 +270,7 @@ def cerca_persona(request, turno_id, mansione_id):
 	mansione=Mansione.objects.get(id=mansione_id)
 	persone=Persona.objects.filter(competenze=mansione)
 	turno=Turno.objects.get(id=turno_id)
-	return render_to_response('cerca_persona.html',{'persone':persone,'turno':turno,'mansione':mansione,'DISPONIBILITA':DISPONIBILITA,'request':request})
+	return render_to_response('cerca_persona.html',{'persone':persone,'t':turno,'mansione':mansione,'DISPONIBILITA':DISPONIBILITA,'request':request})
 
 
 ####   fine calendario   ####
@@ -362,7 +362,7 @@ def disponibilita_url(request, turno_id, mansione_id, persona_id, disponibilita)
 def disponibilita_gruppo(request,turno_id,gruppo_id):
 	turno=Turno.objects.get(id=turno_id)
 	gruppo=Gruppo.objects.get(id=gruppo_id)
-	return render_to_response('disponibilita_gruppo.html',{'turno':turno,'gruppo':gruppo,'request':request})
+	return render_to_response('disponibilita_gruppo.html',{'t':turno,'gruppo':gruppo,'request':request})
 
 ####   fine disponibilita   ####
 
@@ -563,10 +563,12 @@ def nuovo_turno(request):
 	azione = 'Aggiungi'
 	if request.method == 'POST': # If the form has been submitted...
 		form = TurnoFormRipeti(request.POST) # A form bound to the POST data
+		form.helper.form_action = '/calendario/turno/nuovo/'
 		if form.is_valid():
 			data = form.cleaned_data
-			form.save()
-			if data.get('ripeti'):
+			if not data.get('ripeti'):
+				form.save()
+			else:
 				o=Occorrenza()
 				o.save()
 				start=data.get('ripeti_da')
@@ -583,7 +585,7 @@ def nuovo_turno(request):
 					data['inizio']=start
 					data['fine']=(start+durata)
 					f=TurnoFormRipeti(data)
-					if ((str(start.weekday()) in giorno) or ('p' in giorno and prefestivo(start)) or ('f' in giorno and festivo(start))) and f.is_valid():
+					if ((str(start.weekday()) in giorno) or ('p' in giorno and prefestivo(start)) or ('f' in giorno and festivo(start)) or ('q' in giorno)) and f.is_valid():
 						t=f.save()
 						t.occorrenza=o
 						t.save()
@@ -591,6 +593,7 @@ def nuovo_turno(request):
 			return HttpResponseRedirect('/calendario/') # Redirect after POST
 	else:
 		form = TurnoFormRipeti()
+		form.helper.form_action = '/calendario/turno/nuovo/'
 	return render_to_response('form_turno.html',{'form': form,'azione': azione,'request':request}, RequestContext(request))
 	
 @user_passes_test(lambda u:u.is_staff)
@@ -599,6 +602,7 @@ def modifica_turno(request, turno_id):
 	turno = Turno.objects.get(id=turno_id)
 	if request.method == 'POST': # If the form has been submitted...
 		form = TurnoForm(request.POST, instance=turno) # necessario per modificare la riga preesistente
+		form.helper.form_action = '/calendario/turno/modifica/'+str(turno.id)+'/' 
 		if form.is_valid():
 			data = form.cleaned_data
 			form.save()
@@ -623,6 +627,12 @@ def modifica_turno(request, turno_id):
 			return HttpResponseRedirect('/calendario/') # Redirect after POST
 	else:
 		form = TurnoForm(instance=turno)
+		form.helper.form_action = '/calendario/turno/modifica/'+str(turno.id)+'/'
+		if turno.occorrenza:
+			form.helper.layout[4].append(Fieldset("Il turno fa parte di una occorrenza","modifica_futuri"))
+			form.helper.layout[4].append(HTML('{% load template_filters %}<div id="occorrenze-{{turno.id}}"><ul>{% for o in  turno|occorrenze:turno.occorrenza %}<li class="occorrenze-{{o|turno_futuro}}">{{o.inizio|date:"d M"}}, ore {{o.inizio|time:"H:i"}} - {{o.fine|time:"H:i"}}</li>{% endfor %}</ul></div>'))
+		if request.user.is_superuser:
+			form.helper.layout[4][1].append("modifica_tutti")
 	return render_to_response('form_turno.html',{'form': form,'azione': azione, 'turno': turno,'request':request}, RequestContext(request))
 
 @user_passes_test(lambda u:u.is_staff)
