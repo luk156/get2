@@ -630,8 +630,8 @@ def modifica_turno(request, turno_id):
 		form.helper.form_action = '/calendario/turno/modifica/'+str(turno.id)+'/'
 		if turno.occorrenza:
 			form.helper.layout[4].append(Fieldset("Il turno fa parte di una occorrenza","modifica_futuri"))
-		if request.user.is_superuser:
-			form.helper.layout[4][1].append("modifica_tutti")
+			if request.user.is_superuser:
+				form.helper.layout[4][1].append("modifica_tutti")
 	return render_to_response('form_turno.html',{'form': form,'azione': azione, 'turno': turno,'request':request}, RequestContext(request))
 
 @user_passes_test(lambda u:u.is_staff)
