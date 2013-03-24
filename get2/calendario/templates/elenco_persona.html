@@ -31,7 +31,7 @@ function cerca_persone(){
 				</tr></thead>
 				{% for gruppo in gruppi %}
 					<tr id="gruppo-{{gruppo.id}}">
-						<td>{{gruppo}} <span class="badge">{{gruppo.numero_componenti}}</span></td>
+						<td>{{gruppo}} ({{gruppo.numero_componenti}})</td>
 						<td>{{gruppo.note}}
 						</td>
 						<td>

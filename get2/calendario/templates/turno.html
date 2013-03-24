@@ -96,12 +96,10 @@
 		<div class="alert alert-error">
 			<h5><i class="icon-warning-sign icon-2x"></i> Vuoi eliminare il turno del {{t.inizio|date:"d M"}}, ore {{t.inizio|time:"H:i"}} - {{t.fine|time:"H:i"}}?</h5>
 			{% if t.occorrenza %}
-				<span class="emblem-generic" onclick="$('#occorrenze-{{t.id}}').slideDown()">Il turno fa parte di una occorrenza</span>
-				<div id="occorrenze-{{t.id}}"><ul>		
-				{% for o in t|occorrenze:t.occorrenza %}
-					<li class="occorrenze-{{o|turno_futuro}}">{{o.inizio|date:"d M"}}, ore {{o.inizio|time:"H:i"}} - {{o.fine|time:"H:i"}}</li>
-				{% endfor %}
-				</ul></div>
+				<span onclick="Dajaxice.get2.calendario.occorrenze(Dajax.process,{'occ_id':{{t.occorrenza.id}},'turno_id':{{t.id}}});">Il turno fa parte di una occorrenza <i class="icon-chevron-down"></i></span>
+				<ul>
+				<div id="occorrenze-{{t.id}}" class="hide"></div>
+				</ul>
 			{% endif %}</div>
 	</div>
 	<div class="modal-footer">

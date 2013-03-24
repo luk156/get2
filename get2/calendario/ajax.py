@@ -170,13 +170,17 @@ def disp(request, turno_id, mansione_id, persona_id, disp):
 @dajaxice_register
 def aggiorna_statistiche(request,da,al):
 	dajax=Dajax()
-	if (da!="" and al!=""):
+	if (da=="0"):
+		dati=statistiche_intervallo(request,datetime.date(2000,1,1),datetime.datetime.now().date())
+		html_statistiche = render_to_string( 'statistiche/statistiche.html', { 'dati': dati, 'elenco_statistiche': elenco_statistiche, 'request':request } )
+		dajax.assign('div #stat', 'innerHTML', html_statistiche)
+	elif (da!="" and al!=""):
 		data_da=datetime.datetime.strptime(da, "%d/%m/%Y").date()
 		data_al=datetime.datetime.strptime(al, "%d/%m/%Y").date()
 		dati=statistiche_intervallo(request,data_da,data_al)
 		html_statistiche = render_to_string( 'statistiche/statistiche.html', { 'dati': dati, 'elenco_statistiche': elenco_statistiche, 'request':request } )
 		dajax.assign('div #stat', 'innerHTML', html_statistiche)
-		#dajax.alert("ciao")
+		#dajax.alert()
 	return dajax.json()
 
 @dajaxice_register
@@ -196,3 +200,14 @@ def persona_stato(request,stato,persona):
 	per.save()
 	dajax.script('$(".bottom-right").notify({ message: { text: "Modifiche apportate con successo" }}).show();')
 	return dajax.json()	
+
+@dajaxice_register
+def occorrenze(request,occ_id,turno_id):
+	dajax=Dajax()
+	html=''
+	for t in Turno.objects.filter(occorrenza_id=occ_id):
+		html+='<li>'+str(t.inizio)+'</li>'
+	dajax.assign("div#occorrenze-"+str(turno_id), "innerHTML", html)
+	dajax.script('$("div#occorrenze-'+str(turno_id)+'").slideDown();')
+	return dajax.json()	
+

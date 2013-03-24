@@ -630,7 +630,6 @@ def modifica_turno(request, turno_id):
 		form.helper.form_action = '/calendario/turno/modifica/'+str(turno.id)+'/'
 		if turno.occorrenza:
 			form.helper.layout[4].append(Fieldset("Il turno fa parte di una occorrenza","modifica_futuri"))
-			form.helper.layout[4].append(HTML('{% load template_filters %}<div id="occorrenze-{{turno.id}}"><ul>{% for o in  turno|occorrenze:turno.occorrenza %}<li class="occorrenze-{{o|turno_futuro}}">{{o.inizio|date:"d M"}}, ore {{o.inizio|time:"H:i"}} - {{o.fine|time:"H:i"}}</li>{% endfor %}</ul></div>'))
 		if request.user.is_superuser:
 			form.helper.layout[4][1].append("modifica_tutti")
 	return render_to_response('form_turno.html',{'form': form,'azione': azione, 'turno': turno,'request':request}, RequestContext(request))

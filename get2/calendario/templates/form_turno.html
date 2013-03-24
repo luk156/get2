@@ -38,11 +38,11 @@
 
 window.onload = function() 
 { 
-     $(".datetimeinput").datetimepicker({format: 'dd/mm/yyyy hh:ii:ss',autoclose: true,minuteStep: 15,language: 'it'});
-     $(".dateinput").datetimepicker({format: 'dd/mm/yyyy',autoclose: true,minView:2,language: 'it'});
-     $("#ripeti").hide();
+	$(".datetimeinput").datetimepicker({format: 'dd/mm/yyyy hh:ii:ss',autoclose: true,minuteStep: 15,language: 'it'});
+	$(".dateinput").datetimepicker({format: 'dd/mm/yyyy',autoclose: true,minView:2,language: 'it'});
+	$("#ripeti").hide();
 	$('label[for=id_ripeti]').hide();
-     
+
 	{%if not request.user.is_superuser %} 
 		$('#id_inizio_0').hide();
 		$('#id_tipo').prop('disabled', true);
@@ -55,7 +55,28 @@ window.onload = function()
 }; 
 
 </script>
-
+{% if turno.occorrenza %}
+<div class="row">
+	<div class="span6">
+{% endif %}
 {% crispy form %}
 
+{% if turno.occorrenza %}
+	</div>
+	<div class="span1">
+		<div class="box">
+			<div class="box-header">Occorrenze</div>
+			<div class="box-content">
+				<div id="occorrenze-{{turno.id}}">
+					<ul>
+						{% for o in  turno|occorrenze:turno.occorrenza %}
+						<li class="occorrenze-{{o|turno_futuro}}">{{o.inizio|date:"d M"}}, {{o.inizio|time:"H:i"}} - {{o.fine|time:"H:i"}}</li>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endif %}
 {% endblock %}
