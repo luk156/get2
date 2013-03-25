@@ -664,7 +664,6 @@ def elimina_turno_occorrenza(request, occorrenza_id):
 #### inizio statistiche ####
 elenco_statistiche=("Turni totali",
 				"Punteggi totali",
-				"Mansioni",
 			)
 
 def statistiche(request):
@@ -691,7 +690,6 @@ def statistiche_intervallo(request, inizio, fine):
 	stat=[]
 	stat.append(Persona.objects.filter(persona_disponibilita__tipo="Disponibile", persona_disponibilita__turno__inizio__gte=inizio, persona_disponibilita__turno__fine__lte=fine ).annotate(tot_turni=Count('persona_disponibilita')).order_by("-tot_turni"))
 	stat.append(Persona.objects.filter(persona_disponibilita__tipo="Disponibile", persona_disponibilita__turno__inizio__gte=inizio, persona_disponibilita__turno__fine__lte=fine ).annotate(tot_punti=Sum('persona_disponibilita__turno__valore')).order_by("-tot_punti"))
-	stat.append([("x",2),("y",4),("z",8)])
 	#pdb.set_trace()
 	dati.append(stat)
 	dati=zip(*dati)

@@ -66,46 +66,6 @@
 		</table>
 	{% endif %}
 
-	{% if statistica = "Mansioni" %}
-		<script type="text/javascript">
-		
-		
-		$(document).ready(function() {
-		var data = [
-			{% for d in dati|slice:":10"%}
-			{label: "{{d.0}}", data:{{d.1}}},
-			{% endfor %}
-		];
-		
-		function labelFormatter(label, series) {
-			return "<div style='font-size:8pt; text-align:center; padding:2px; color:white;'>" + label + "<br/>" + Math.round(series.percent) + "%</div>";
-		};
-		
-		$.plot($("#placeholder-{{ forloop.counter }}"), data, {
-
-		series: {
-			pie: {
-				show: true,
-				radius: 1,
-				label: {
-					show: true,
-					radius: 3/4,
-					formatter: labelFormatter,
-					background: {
-						opacity: 0.5
-					}
-				}
-			}
-		},
-		legend: {
-			show: false
-		}
-	});
-		});
-		</script>
-
-	{% endif %}
-
 	</div>
 	{% endfor %}
 </div>

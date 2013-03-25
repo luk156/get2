@@ -348,7 +348,7 @@ padding:3px;
 
 span.badge-mansione {
 	display: block;
-	padding:2px;
+	padding:1px;
 	margin:2px;
 	border: 1px solid #ccc;
 	border-radius: 4px 4px 4px 4px;
@@ -359,7 +359,7 @@ span.badge-mansione {
 
 span.badge-gruppo {
 	display: block;
-	padding:2px;
+	padding:1px;
 	margin:2px;
 	border: 1px solid #ccc;
 	border-radius: 4px 4px 4px 4px;
