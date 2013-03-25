@@ -314,6 +314,7 @@ def rimuovi_disponibilita(request, disp_id):
 	d=Disponibilita.objects.get(id=disp_id)
 	d.tipo='Indisponibile'
 	d.save()
+	notifica_disponibilita(request,d.persona,d.turno,'Non piu disponibile',d.mansione)
 	return HttpResponseRedirect('/calendario')
 
 def disponibilita_risolvi_contemporaneo(request,persona_id,contemporaneo):

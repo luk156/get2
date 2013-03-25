@@ -62,7 +62,7 @@
 		<td data-title="Nome"><a href="/persone/visualizza/{{persona.id}}"><i class="icon-search"></i> {{persona}}</a></td>
 		<td data-title="Mansioni">{% for m in persona.competenze.all %} <span class="badge-mansione">{{m}}</span> {% endfor %}</td>
 		<td data-title="Gruppi">{% for g in persona.componenti_gruppo.all %} <span class="badge-gruppo">{{g}}</span> {% endfor %}</td>
-		<td data-title="Stato"><SELECT NAME="stato" class="span5" ONCHANGE="persona_stato(this)" id="sel-{{persona.id}}">
+		<td data-title="Stato"><SELECT NAME="stato" class="span7" ONCHANGE="persona_stato(this)" id="sel-{{persona.id}}">
 			{%for key,value in stati %}
 			<OPTION VALUE="{{key}}-{{persona.id}}">{{value}}
 			{% endfor%}

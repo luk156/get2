@@ -1,73 +1,19 @@
 {% extends "base.html" %}
 {% load static %}
-{% block head %}
-<script type="text/javascript" src="/static/js/time/jquery.ui.timepicker.js" %}" ></script>
-	<link type="text/css" href="/static/js/time/jquery.ui.timepicker.css" rel="stylesheet" />
-{% endblock %}
+
 {% block title %} Inserimento/Modifica di una persona {% endblock %}	
 
 
-{% block menu2 %}
-
-<div id="navigazione">
-<div class="nav-inizio nav"><a href="/persone"><span class="persone-nav"> Persone</span></a></div>
-<div class="nav-fine nav">Nuova persona</div>
-</div>
-
+{% block header %}
+		<h4 class="header"><a href="/persone/">Persone</a> / {{azione}} persona
 {% endblock %}
 
 {% block main %}
-<script type="text/javascript">
-jQuery(function()
-    { 
-      $('.campo_tipo_data').datepicker({defaultDate: "+1w", dateFormat: "dd-mm-yy", changeMonth: true, 	numberOfMonths: 1});
-    });
-</script>
 
 <div style="margin:10px;">
   {% if error_message %}
     <p><strong>{{ error_message }}</strong></p>
   {% endif %}
-  <script>
-  	window.onload = function() 
-	{ 
-  	$(function() {
-		$( "#form_mansione" ).dialog({
-			resizable: false,
-			modal: true,
-			autoOpen: false,
-			buttons: {
-				"Invia": function() {
-					send_form();
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			}
-		});
-	});
-	$(function() {
-		$( "#id_nascita" ).datepicker({
-            changeMonth: true,
-            changeYear: true,
-            defaultDate: "-18y",
-            maxDate: "-15y",
-            yearRange: "1900:2012",
-	    dateFormat: "dd/mm/yy",
-        });
-	});
-	$(function() {
-		$( ".vDateField" ).datepicker({
-            changeMonth: true,
-            changeYear: true,
-            defaultDate: "-18y",
-            maxDate: "-15y",
-            yearRange: "1900:2012",
-	    dateFormat: "dd/mm/yy",
-        });
-	});
-	};
-  </script>
 
   {% ifequal azione 'nuovo' %}
   <form action="/persone/nuovo/" method="post">{% csrf_token %}

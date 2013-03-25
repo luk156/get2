@@ -292,8 +292,8 @@ div.mansione-calendario h6 {
 
 .persona-turno {
 color: #222;
-margin-left: 3px;
-font-size:15px;
+margin-left: 1px;
+font-size:14px;
 list-style-type: none;
 
 }
@@ -318,9 +318,10 @@ list-style-type: none;
 div.box{
 	margin: 10px 5px;
 	padding:0px;
-	border: 1px solid #999;
-	border-radius: 4px 4px 4px 4px;
+	border: 1px solid #777;
+	border-radius: 5px 5px 5px 5px;
 	background-color: #fff;
+	box-shadow: 0px 3px 3px 0px #dedede;
 }
 
 legend {
@@ -333,7 +334,7 @@ div.box-header {
     padding-left:10px;
     padding-right:5px;
     margin-bottom: 5px;
-    border-bottom: 1px solid #aaa;
+    border-bottom: 1px solid #999;
     color: #444;
 	box-shadow: 0px 3px 3px 0px #dedede;
 	background-color: #E2DFD9;
@@ -346,7 +347,7 @@ padding:3px;
 }
 
 span.badge-mansione {
-	display: inline;
+	display: block;
 	padding:2px;
 	margin:2px;
 	border: 1px solid #ccc;
@@ -357,7 +358,7 @@ span.badge-mansione {
 }
 
 span.badge-gruppo {
-	display: inline;
+	display: block;
 	padding:2px;
 	margin:2px;
 	border: 1px solid #ccc;

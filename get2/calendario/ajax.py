@@ -184,12 +184,12 @@ def aggiorna_statistiche(request,da,al):
 	return dajax.json()
 
 @dajaxice_register
-def elenco_cerca_persone(request,cerca):
+def elenco_cerca_persone(request,testo,mansioni):
 	#pdb.set_trace()
 	dajax=Dajax()
-	persone=Persona.objects.filter(Q(nome__icontains=cerca) | Q(cognome__icontains=cerca))
+	persone=Persona.objects.filter(Q(nome__icontains=testo) | Q(cognome__icontains=testo)).filter(competenze__in = mansioni)
 	html_persona=render_to_string( 'persone/tabella_persone.html', { 'persone': persone, 'stati':STATI, 'request':request } )
-	dajax.assign("div#tabella_persone", "innerHTML", html_persona)
+	dajax.assign("div#tabella-persone", "innerHTML", html_persona)
 	return dajax.json()
 
 @dajaxice_register

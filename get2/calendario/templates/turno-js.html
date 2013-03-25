@@ -82,6 +82,7 @@
 		Non puoi modificare la tua disponibilita per questo turno:</br>
 		<span class="emblem-important">{{t|errore_turno_intervallo_disponibilita}}</span>
 		</div>
+		
 		<script type="text/javascript">
 
 			$(document).ready(function(){
@@ -102,93 +103,3 @@
 	{% endif %}
 	
 {% endif %}
-
-{% if request.user.is_staff %}
-	<script>
-	function aggiungi_gruppo(selettore){
-	url = "/calendario/disponibilita_gruppo/{{t.id}}/"+selettore.value;
-	window.location = url;
-	}
-	</script>
-	<div id="modifica-{{t.id}}" title="Turno {{t.id}}">
-	<span class="aggiungigruppo_turno bottone-modifica_turno">
-	aggiungi gruppo: 
-		<select onchange="aggiungi_gruppo(this)">
-			<option value="NULL">----
-			{%for g in gruppi%}
-				<option value="{{g.id}}">{{g}}
-			{%endfor%}
-		</select>
-	</span>
-	<a href="/calendario/turno/modifica/{{t.id}}"><span class="modifica_turno bottone-modifica_turno">modifica</span></a>
-	<span class="elimina_turno bottone-modifica_turno" onclick="$('#elimina-turno-{{t.id}}' ).dialog('open');">elimina</span>
-	</div>
-	<script type="text/javascript">
-		$(document).ready(function(){
-			$( "#modifica-{{t.id}}" ).dialog({
-				resizable: false,
-				modal: true,
-				autoOpen: false,
-				buttons: {
-					"Annulla": function() {
-						$( this ).dialog( "close" );
-					}
-				}
-			});
-		
-		});
-		</script>
-
-{% endif %}
-
-	<div id="elimina-turno-{{t.id}}" title="elimina turno">
-		Vuoi eliminare il turno del {{t.inizio|date:"d M"}}, ore {{t.inizio|time:"H:i"}} - {{t.fine|time:"H:i"}}?</br>
-		{% if t.occorrenza %}
-			<span class="emblem-generic" onclick="$('#occorrenze-{{t.id}}').slideDown()">Il turno fa parte di una occorrenza</span>
-			<div id="occorrenze-{{t.id}}"><ul>		
-			{% for o in t|occorrenze:t.occorrenza %}
-				<li class="occorrenze-{{o|turno_futuro}}">{{o.inizio|date:"d M"}}, ore {{o.inizio|time:"H:i"}} - {{o.fine|time:"H:i"}}</li>
-			{% endfor %}
-			</ul></div>
-		{% endif %}
-	</div>
-
-
-<script type="text/javascript">
-
-	$(document).ready(function(){
-			$( "#elimina-turno-{{t.id}}" ).dialog({
-				resizable: false,
-				modal: true,
-				autoOpen: false,
-				buttons: {
-					{% if t.occorrenza %}
-					"Elimina Turno e tutte le successive occorrenze": function() {
-						var url="/calendario/turno/elimina_occorrenza/{{t.occorrenza.id}}";
-						window.location = url;
-						$( this ).dialog( "close" );
-					},
-						{% if request.user.is_superuser %}				
-					"Elimina Turno e TUTTE le occorrenze": function() {
-						var url="/calendario/turno/elimina_occorrenza_tot/{{t.occorrenza.id}}";
-						window.location = url;
-						$( this ).dialog( "close" );
-					},
-
-						{% endif %}
-					{% endif %}
-					"Elimina Turno": function() {
-						var url="/calendario/turno/elimina/{{t.id}}";
-						window.location = url;
-						$( this ).dialog( "close" );
-					},
-					"Annulla": function() {
-						$( this ).dialog( "close" );
-					}
-				}
-			});
-		$("#occorrenze-{{t.id}}").hide();
-		$('.img_rimuovi').hide();
-		$('.persona-turno').hover(	function () {$(this).find('.img_rimuovi').show();}, 	function () {$(this).find('.img_rimuovi').hide();});
-		});
-	</script>

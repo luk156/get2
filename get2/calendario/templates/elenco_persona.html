@@ -12,9 +12,24 @@
 {% block main %}
 
 <script>
-function cerca_persone(){
-	Dajaxice.get2.calendario.elenco_cerca_persone(Dajax.process,{'cerca':$("#cerca").val()});
-}
+$(document).ready(function(){
+	$("#cerca").keyup(function () {
+		var testo=$("#cerca").val();
+		var mansioni = $.map($('input[name=filtra_mansioni]:checkbox:checked'), function(e,i) {
+			return +e.value;
+		});
+		Dajaxice.get2.calendario.elenco_cerca_persone(Dajax.process,{'testo':testo,'mansioni':mansioni,});
+	});
+	$.each($("input[name=filtra_mansioni]"), function(){
+		$(this).change(function () {
+		var testo=$("#cerca").val();
+		var mansioni = $.map($('input[name=filtra_mansioni]:checkbox:checked'), function(e,i) {
+			return +e.value;
+		});
+		Dajaxice.get2.calendario.elenco_cerca_persone(Dajax.process,{'testo':testo,'mansioni':mansioni,});
+	});
+	});
+});
 </script>
 
 <div class="row-fluid">
@@ -67,11 +82,11 @@ function cerca_persone(){
 				<form class="form-search">
 				<fieldset>
 				<legend>Nome:</legend>
-				<input type="text" class="span7" onchange="cerca_persone()">
+				<input id="cerca" type="text" class="span7" autocomplete="off" >
 				<legend>Mansioni:</legend>
 				{%for m in mansioni %}
-				 <label class="checkbox">
-					<input type="checkbox"> {{m}}
+				 <label class="checkbox" id="filtra-mansioni">
+					<input type="checkbox" value="{{m.id}}" name="filtra_mansioni" checked> {{m}}
 				</label>
 				{% endfor %}
 				</fieldset>
@@ -87,7 +102,7 @@ function cerca_persone(){
 						<a href="/persone/nuovo" class="btn pull-right"><i class="icon-plus"> </i> Aggiungi persona</a>
 						<h5><i class="icon-user"></i> Persone</h5>
 					</div>
-					<div class="box-content">
+					<div class="box-content" id="tabella-persone">
 						{% include "persone/tabella_persone.html" %}
 					</div>
 				</div>
