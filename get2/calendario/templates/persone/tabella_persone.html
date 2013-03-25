@@ -18,37 +18,37 @@
 	
 <div class="span7">
 
-<table id="no-more-tables" class="table table-striped no-more-tables">
-	<script type="text/javascript">
-		var select_enable;
-		var select_gruppi;
-		var select_mansioni;
-		$(document).ready(function(){
-			select_enable = $("select[name='default_select']");
-			select_gruppi = $("<select>").attr("name", "gruppo_id").append($("<option value=''>---</option>"));
-			{% for gruppo in gruppi %}
-				select_gruppi.append($("<option>").attr("value", "{{gruppo.id}}").text("{{gruppo.nome}}"));
-			{% endfor %}
-			select_mansioni = $("<select>").attr("name", "mansione_id").append($("<option value=''>---</option>"));
-			{% for mansione in mansioni %}
-				select_mansioni.append($("<option>").attr("value", "{{mansione.id}}").text("{{mansione.nome}}"));
-			{% endfor %}
-		
+<script type="text/javascript">
+	var select_enable;
+	var select_gruppi;
+	var select_mansioni;
+	$(document).ready(function(){
+		select_enable = $("select[name='default_select']");
+		select_gruppi = $("<select>").attr("name", "gruppo_id").append($("<option value=''>---</option>"));
+		{% for gruppo in gruppi %}
+			select_gruppi.append($("<option>").attr("value", "{{gruppo.id}}").text("{{gruppo.nome}}"));
+		{% endfor %}
+		select_mansioni = $("<select>").attr("name", "mansione_id").append($("<option value=''>---</option>"));
+		{% for mansione in mansioni %}
+			select_mansioni.append($("<option>").attr("value", "{{mansione.id}}").text("{{mansione.nome}}"));
+		{% endfor %}
+	
 
-			$("select[name='azione']").change(function(){
-				if($(this).val() == "aggiungi_g" || $(this).val() == "rimuovi_g"){
-					$(select_enable).replaceWith(select_gruppi);
-					select_enable = select_gruppi;
-				}
-				else{
-					$(select_enable).replaceWith(select_mansioni);
-					select_enable = select_mansioni;
-				}
-			});
+		$("select[name='azione']").change(function(){
+			if($(this).val() == "aggiungi_g" || $(this).val() == "rimuovi_g"){
+				$(select_enable).replaceWith(select_gruppi);
+				select_enable = select_gruppi;
+			}
+			else{
+				$(select_enable).replaceWith(select_mansioni);
+				select_enable = select_mansioni;
+			}
 		});
-		
-	</script>
+	});
+	
+</script>
 
+<table id="no-more-tables" class="table table-striped no-more-tables">
 
 <thead>	
 	<tr>
@@ -84,27 +84,16 @@
 	</tr>
 	
 <div id="elimina-persona-{{persona.id}}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-<div class="modal-body">
-	<div class="alert alert-error">
-		<h5><i class="icon-warning-sign icon-2x"></i> Vuoi veramente eliminare {{persona}}?</h5>
+	<div class="modal-body">
+		<div class="alert alert-error">
+			<h5><i class="icon-warning-sign icon-2x"></i> Vuoi veramente eliminare {{persona}}?</h5>
+		</div>
+	</div>
+	<div class="modal-footer">
+	<button class="btn" data-dismiss="modal" aria-hidden="true">Annulla</button>
+	<button class="btn btn-primary" data-dismiss="modal" onclick="Dajaxice.get2.calendario.elimina_persona(Dajax.process,{'persona_id':{{persona.id}}});">Elimina</button>
 	</div>
 </div>
-<div class="modal-footer">
-<button class="btn" data-dismiss="modal" aria-hidden="true">Annulla</button>
-<button class="btn btn-primary" data-dismiss="modal" onclick="Dajaxice.get2.calendario.elimina_persona(Dajax.process,{'persona_id':{{persona.id}}});">Elimina</button>
-</div>
-</div>
-
-<script type="text/javascript">
-function persona_stato(selettore){
-	value=selettore.options[selettore.selectedIndex].value;
-	dati=value.split("-");
-	Dajaxice.get2.calendario.persona_stato(Dajax.process,{'stato':dati[0],'persona':dati[1]});
-	}
-	
-	$('#sel-{{persona.id}} option').filter(function(){return this.text=='{{persona.get_stato_display}}';}).attr('selected', true);
-
-</script>
 
 {% endfor %}
 
@@ -114,4 +103,16 @@ function persona_stato(selettore){
 </form>
 </div>
 
-
+{% for persona in persone %}
+<script type="text/javascript">	
+	$(document).ready(function(){
+function persona_stato(selettore){
+	value=selettore.options[selettore.selectedIndex].value;
+	dati=value.split("-");
+	Dajaxice.get2.calendario.persona_stato(Dajax.process,{'stato':dati[0],'persona':dati[1]});
+	}
+	
+	$('#sel-{{persona.id}} option').filter(function(){return this.text=='{{persona.get_stato_display}}';}).attr('selected', true);
+});
+</script>
+{% endfor %}

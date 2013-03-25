@@ -12,7 +12,19 @@
 {% block main %}
 
 <script>
+	
+	function reset_filtro(){
+		$("input[name=filtra_mansioni]").attr('checked', true);
+		$("#cerca").val('');
+		var testo=$("#cerca").val();
+		var mansioni = $.map($('input[name=filtra_mansioni]:checkbox:checked'), function(e,i) {
+			return +e.value;
+		});
+		Dajaxice.get2.calendario.elenco_cerca_persone(Dajax.process,{'testo':testo,'mansioni':mansioni,});
+	};
+	
 $(document).ready(function(){
+	$("input[name=filtra_mansioni]").attr('checked', true);
 	$("#cerca").keyup(function () {
 		var testo=$("#cerca").val();
 		var mansioni = $.map($('input[name=filtra_mansioni]:checkbox:checked'), function(e,i) {
@@ -75,7 +87,7 @@ $(document).ready(function(){
 	<div class="span1">
 		<div class="box">
 			<div class="box-header">
-			<a href="#" class="pull-right btn"><i class="icon-refresh"></i></a>
+			<button class="pull-right btn" onclick="reset_filtro();"><i class="icon-refresh"></i></button>
 			<h5>Filtra</h5>
 			</div>
 			<div class="box-content">
@@ -86,7 +98,7 @@ $(document).ready(function(){
 				<legend>Mansioni:</legend>
 				{%for m in mansioni %}
 				 <label class="checkbox" id="filtra-mansioni">
-					<input type="checkbox" value="{{m.id}}" name="filtra_mansioni" checked> {{m}}
+					<input type="checkbox" value="{{m.id}}" name="filtra_mansioni"> {{m}}
 				</label>
 				{% endfor %}
 				</fieldset>
