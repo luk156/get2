@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 
-
+{% block head %}
+	<script src="/static/js/jquery.tablesorter.min.js"></script>
+	<script src="/static/js/jquery.tablesorter.widgets.min.js"></script>
+	<script src="/static/js/jquery.tablesorter.widgets-filter-formatter.min.js"></script>
+	<link href="/static/css/theme.bootstrap.css" rel="stylesheet">
+{% endblock%}
 
 {% block header %}
 	{% if request.user.is_staff %}
@@ -34,7 +39,7 @@ function utente_staff(selettore){
 				<h5><i class="icon-user"> </i> Utenti</h5>
 			</div>
 			<div class="box-content">
-<table class="table table-striped no-more-tables">
+<table class="table table-striped no-more-tables" id="tabella_utenti">
 <thead>
 <tr>
 <th>Username</th><th>E-mail</th><th>Persona associata</th><th>Privilegi di Staff</th><th class="sorttable_nosort">Operazioni</th>
@@ -85,6 +90,17 @@ function utente_staff(selettore){
 
 {% endfor %}
 </table>
+
+<script type="text/javascript">	
+	$("table#tabella_utenti").tablesorter({
+		headers: {
+			2: { sorter: false, filter:false },
+			4: { sorter: false, filter:false },
+			},
+		theme : "bootstrap",widthFixed: true,headerTemplate : '{content} {icon}',widgets : [ "uitheme", "filter", "zebra" ],
+		widgetOptions : {zebra : ["even", "odd"], filter_reset : ".reset",}
+		});
+</script>
 
 {% for utente in utenti %}
 

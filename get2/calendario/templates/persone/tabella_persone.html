@@ -48,7 +48,7 @@
 	
 </script>
 
-<table id="no-more-tables" class="table table-striped no-more-tables">
+<table id="tabella_persone" class="table table-striped no-more-tables tablesorter">
 
 <thead>	
 	<tr>
@@ -103,6 +103,19 @@
 </form>
 </div>
 
+<script type="text/javascript">	
+	$("table#tabella_persone").tablesorter({
+		headers: {
+			0: { sorter: false, filter:false },
+			4: { sorter: false, filter:false },
+			5: { sorter: false, filter:false },
+			6: { sorter: false, filter:false },
+			},
+		theme : "bootstrap",widthFixed: true,headerTemplate : '{content} {icon}',widgets : [ "uitheme", "filter", "zebra" ],
+		widgetOptions : {zebra : ["even", "odd"], filter_reset : ".reset",}
+		});
+</script>
+
 {% for persona in persone %}
 <script type="text/javascript">	
 	$(document).ready(function(){
@@ -113,6 +126,7 @@ function persona_stato(selettore){
 	}
 	
 	$('#sel-{{persona.id}} option').filter(function(){return this.text=='{{persona.get_stato_display}}';}).attr('selected', true);
+	
 });
 </script>
 {% endfor %}

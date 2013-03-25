@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 
+{% block head %}
+	<script src="/static/js/jquery.tablesorter.min.js"></script>
+	<script src="/static/js/jquery.tablesorter.widgets.min.js"></script>
+	<script src="/static/js/jquery.tablesorter.widgets-filter-formatter.min.js"></script>
+	<link href="/static/css/theme.bootstrap.css" rel="stylesheet">
+{% endblock%}
 
 {% block header %}
 	{% if request.user.is_staff %}
@@ -11,38 +17,6 @@
 
 {% block main %}
 
-<script>
-	
-	function reset_filtro(){
-		$("input[name=filtra_mansioni]").attr('checked', true);
-		$("#cerca").val('');
-		var testo=$("#cerca").val();
-		var mansioni = $.map($('input[name=filtra_mansioni]:checkbox:checked'), function(e,i) {
-			return +e.value;
-		});
-		Dajaxice.get2.calendario.elenco_cerca_persone(Dajax.process,{'testo':testo,'mansioni':mansioni,});
-	};
-	
-$(document).ready(function(){
-	$("input[name=filtra_mansioni]").attr('checked', true);
-	$("#cerca").keyup(function () {
-		var testo=$("#cerca").val();
-		var mansioni = $.map($('input[name=filtra_mansioni]:checkbox:checked'), function(e,i) {
-			return +e.value;
-		});
-		Dajaxice.get2.calendario.elenco_cerca_persone(Dajax.process,{'testo':testo,'mansioni':mansioni,});
-	});
-	$.each($("input[name=filtra_mansioni]"), function(){
-		$(this).change(function () {
-		var testo=$("#cerca").val();
-		var mansioni = $.map($('input[name=filtra_mansioni]:checkbox:checked'), function(e,i) {
-			return +e.value;
-		});
-		Dajaxice.get2.calendario.elenco_cerca_persone(Dajax.process,{'testo':testo,'mansioni':mansioni,});
-	});
-	});
-});
-</script>
 
 <div class="row-fluid">
 	<div class="span7">
@@ -81,32 +55,8 @@ $(document).ready(function(){
 	</div>
 </div>
 
-
-
 <div class="row-fluid">
-	<div class="span1">
-		<div class="box">
-			<div class="box-header">
-			<button class="pull-right btn" onclick="reset_filtro();"><i class="icon-refresh"></i></button>
-			<h5>Filtra</h5>
-			</div>
-			<div class="box-content">
-				<form class="form-search">
-				<fieldset>
-				<legend>Nome:</legend>
-				<input id="cerca" type="text" class="span7" autocomplete="off" >
-				<legend>Mansioni:</legend>
-				{%for m in mansioni %}
-				 <label class="checkbox" id="filtra-mansioni">
-					<input type="checkbox" value="{{m.id}}" name="filtra_mansioni"> {{m}}
-				</label>
-				{% endfor %}
-				</fieldset>
-				</form>
-			</div>
-		</div>
-	</div>
-	<div class="span6">
+	<div class="span7">
 		<div class="row-fluid">
 			<div class="span7">
 				<div class="box">
