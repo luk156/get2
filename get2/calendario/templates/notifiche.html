@@ -2,13 +2,11 @@
 
 
 {% block title %} Notifiche {% endblock %}
-{% block menu2 %}
 
-<div id="navigazione">
-<div class="nav-solo nav"><span class="notifiche-nav"> Notifiche</span></div>
-</div>
-
+{% block header %}
+		<h4 class="header">Notifiche</h4>
 {% endblock %}
+
 {% block main %}
 
 <script type="text/javascript">
@@ -48,43 +46,44 @@ function uncheckAll() {
 
 
 {% if notifiche %}
-<div style="margin:10px;">
-<table class="cento">
 
-      <form action="/notifica/letto/" method="get">
-      <tr><td colspan="3">
-		Se selezionati:
-      	<select id="sele" name="letto" onchange="notifiche(this.options[this.selectedIndex].value)">
-      		<option value="">---
-      		<option value="letto">segna come letto
-      		<option value="nonletto">segna come NON letto
-      		<option value="cancella">Elimina
-      </select>
-      </td>
-      <td>
-      	<input type="button" name="CheckAll" value="Seleziona tutto" onClick="checkAll()">
-		<input type="button" name="UnCheckAll" value="Annulla selezione" onClick="uncheckAll()">
-      </td>
-      </tr>
-
-
-<tr >
-      <td></td>
-      <td><b>Data</b></td>
-      <td><b>testo</b></td>
-      <td></td>
-</tr>
-
-{% for notifica in notifiche %}
-<tr id='not-{{notifica.id}}' class="letto-{{notifica.letto}}">
-      <td><input type="checkbox" name="not_id" value="{{notifica.id}}" class="ch"></td>
-      <td>{{notifica.data|date:"D d M G:i"}}</td>
-      <td>{{notifica.testo|safe}}</td>
-      <td><a href="/notifiche/elimina/{{notifica.id}}"><span class="img_elimina"></span></a></td>
-</tr>
-{% endfor %}
-</table></form>
-</div>
+<div class="row-fluid">
+	<div class="span3">
+		<form action="/notifica/letto/" method="get" class="form-inline">
+			<a class="btn" name="CheckAll" onClick="checkAll()"><i class="icon-check"></i> Seleziona tutto</a>
+			<a class="btn" name="UnCheckAll" onClick="uncheckAll()"><i class="icon-check-empty"></i> Annulla selezione</a>
+	</div>
+	<div class="span4">
+		<div class=" pull-right">
+			Se selezionati:
+			<select id="sele" name="letto" onchange="notifiche(this.options[this.selectedIndex].value)">
+			<option value="">---
+			<option value="letto">segna come letto
+			<option value="nonletto">segna come NON letto
+			<option vlibsoup-gnomealue="cancella">Elimina
+			</select>
+		</div>
+	</div>
+	<div class="span7">
+		<table class="table table-striped no-more-tables">
+			<thead>
+				<tr >
+				  <th></th>
+				  <th>Data</th>
+				  <th>testo</th>
+				  <th></th>
+				</tr>
+			</thead>
+			{% for notifica in notifiche %}
+			<tr id='not-{{notifica.id}}' class="{%if not notifica.letto%} warning {%endif%}">
+				  <td><input type="checkbox" name="not_id" value="{{notifica.id}}" class="ch"></td>
+				  <td>{{notifica.data|date:"D d M G:i"}}</td>
+				  <td>{{notifica.testo|safe}}</td>
+				  <td><a href="/notifiche/elimina/{{notifica.id}}"><span class="img_elimina"></span></a></td>
+			</tr>
+			{% endfor %}
+		</table></form>
+	</div>
 {% else %}
     <p>Nessuna notifica ricevuta</p>
 {% endif %}

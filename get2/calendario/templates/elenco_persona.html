@@ -1,30 +1,15 @@
 {% extends "base.html" %}
 
 
-
-{% block menu2 %}
-<script>
-$(document).ready(function(){ $("div.menu-main").hide(); });
-</script>
-<div id="navigazione">
-<div class="nav-solo nav"><span class="persone-nav"> Persone</span></div>
-</div>
-
-<ul>
-<li class="cerca" onclick="$('div.menu-main').slideDown()"><a href="#">Cerca persona</a></li>
-
-</ul>
-
+{% block header %}
+	{% if request.user.is_staff %}
+		<h4 class="header">Persone e gruppi</h4>
+		
+	{% endif %}
 {% endblock %}
 
-{% block main %}
 
-<div class="menu-main">
-	<span class="img_chiudi destra"  onclick="$('div.menu-main').slideUp()" ></span>
-	<label for="cerca">Nome o cognome: </label>
-	<input type="text" id="cerca" name="cerca" /> 
-	<input type="submit" value="Cerca" onclick="cerca_persone()"/>
-</div>
+{% block main %}
 
 <script>
 function cerca_persone(){
@@ -32,37 +17,84 @@ function cerca_persone(){
 }
 </script>
 
-<span class="titolo impostazioni">Gruppi</span>
-<menu class="impostazioni">
-<ul>
-<li class="aggiungi staff"><a href="/persone/gruppo/nuovo">Aggiungi gruppo</a></li>
-</ul>
-</menu>
-<table class="cento">
-<tr class="intestazione">
-	<th>Nome</th><th>Note</th><th>Operazioni</th>
-</tr>
-	{% for gruppo in gruppi %}
-	
-		<tr class="gruppi {% cycle 'riga1' 'riga2' %}" id="gruppo-{{gruppo.id}}">
-		<td class="gruppi">{{gruppo}} ({{gruppo.numero_componenti}})</td>
-		<td>{{gruppo.note}}
-		</td>
-		<td class="operazioni"><a href="/persone/gruppo/modifica/{{gruppo.id}}"><span class="img_modifica staff"></span></a>
-			<a href="/persone/gruppo/elimina/{{gruppo.id}}"><span class="img_elimina staff"></span></a>
-		</td></tr>
-
-	{% endfor %}
-</table>
-
-<span class="titolo impostazioni">Persone</span>
-<menu class="impostazioni">
-<ul>
-<li class="aggiungi staff"><a href="/persone/nuovo">Aggiungi persona</a></li>
-</ul>
-</menu>
-<script src="/static/sorttable.js"></script>
-<div id="tabella_persone">
-{% include "persone/tabella_persone.html" %}
+<div class="row-fluid">
+	<div class="span7">
+		<div class="box">
+			<div class="box-header">
+				<a href="/persone/gruppo/nuovo" class="btn pull-right"><i class="icon-plus"> </i> Aggiungi gruppo</a>
+				<h5><i class="icon-group"></i> Gruppi</h5>
+			</div>
+			<div class="box-content">
+				<table  class="table table-striped no-more-tables" >
+				<thead><tr>
+				<th>Nome</th><th>Note</th><th>Operazioni</th>
+				</tr></thead>
+				{% for gruppo in gruppi %}
+					<tr id="gruppo-{{gruppo.id}}">
+						<td>{{gruppo}} ({{gruppo.numero_componenti}})</td>
+						<td>{{gruppo.note}}
+						</td>
+						<td>
+							<div class="btn-group">
+							  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+								<i class="icon-cog"></i> Azioni
+								<span class="caret"></span>
+							  </a>
+							  <ul class="dropdown-menu">
+								<li><a href="/persone/gruppo/modifica/{{gruppo.id}}"><i class="icon-edit"></i> modifica</a></li>
+								<li><a href="#" onclick='$("#elimina-gruppo-{{gruppo.id}}" ).dialog("open");'><i class="icon-trash"></i> elimina</a></li>
+							  </ul>
+							</div>
+						</td>
+					</tr>
+				{% endfor %}
+				</table>
+			</div>
+		</div>
+	</div>
 </div>
+
+
+
+<div class="row-fluid">
+	<div class="span1">
+		<div class="box">
+			<div class="box-header">
+			<a href="#" class="pull-right btn"><i class="icon-refresh"></i></a>
+			<h5>Filtra</h5>
+			</div>
+			<div class="box-content">
+				<form class="form-search">
+				<fieldset>
+				<legend>Nome:</legend>
+				<input type="text" class="span7" onchange="cerca_persone()">
+				<legend>Mansioni:</legend>
+				{%for m in mansioni %}
+				 <label class="checkbox">
+					<input type="checkbox"> {{m}}
+				</label>
+				{% endfor %}
+				</fieldset>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="span6">
+		<div class="row-fluid">
+			<div class="span7">
+				<div class="box">
+					<div class="box-header">
+						<a href="/persone/nuovo" class="btn pull-right"><i class="icon-plus"> </i> Aggiungi persona</a>
+						<h5><i class="icon-user"></i> Persone</h5>
+					</div>
+					<div class="box-content">
+						{% include "persone/tabella_persone.html" %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</div>
+
 {% endblock %}

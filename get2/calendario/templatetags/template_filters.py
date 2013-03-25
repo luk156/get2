@@ -43,10 +43,19 @@ def stampa_requisito(instance):
 		for campo in f.fields.keys():
 			val=str(f.cleaned_data[campo])
 			if val=="True":
-				val="<div class='si'></div>"
+				val="<i class='icon-check'></i> "
 			elif val=="False":
-				val="<div class='no'></div>"
-			s+="<td>"+val+"</td>"
-		s+='<td class="operazioni superuser"><a href="/impostazioni/requisito/modifica/'+str(instance.id)+'/"><span class="img_modifica"></span></a><a href="/impostazioni/requisito/elimina/'+str(instance.id)+'/"><span class="img_elimina"></span></a></td>'
+				val="<i class='icon-check-empty'></i> "
+			s+='<td data-title='+str(campo)+'>'+val+'</td>'
+		s+='<td><div class="btn-group"><a class="btn dropdown-toggle btn-small" data-toggle="dropdown" href="#"><i class="icon-cog"></i> Azioni <span class="caret"></span></a><ul class="dropdown-menu pull-right"><li><a href="/impostazioni/requisito/modifica/'+str(instance.id)+'/"><i class="icon-edit"></i> modifica</a></li><li><a href="/impostazioni/requisito/elimina/'+str(instance.id)+'/"><i class="icon-trash"></i> elimina</a></li></ul></div></td>'
 	return s
 stampa_requisito.is_safe = True
+
+@register.filter
+def data_festa(instance):
+	class_data=''
+	if festivo(instance):
+		class_data='festivo'
+	elif prefestivo(instance):
+		class_data='prefestivo'
+	return class_data

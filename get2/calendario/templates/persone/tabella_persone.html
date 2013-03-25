@@ -1,14 +1,24 @@
-<script type="text/javascript">
-function persona_stato(selettore){
-	value=selettore.options[selettore.selectedIndex].value;
-	dati=value.split("-");
-	Dajaxice.get2.calendario.persona_stato(Dajax.process,{'stato':dati[0],'persona':dati[1]});
-	
-}
+<script src="/static/sorttable.js"></script>
 
-</script>
-<form action="/persone/aggiungilista/" method="get">
-<table class="sortable cento">
+<div class="row-fluid">
+	<div class=" pull-right">
+		<form action="/persone/aggiungilista/" method="get"  class="form-inline">
+		Se selezionati: <select name="azione">
+			<option value="">---
+			<option value="aggiungi_g">aggiungi al gruppo
+			<option value="rimuovi_g">rimuovi dal gruppo
+			<option value="aggiungi_m">aggiungi mansione
+			<option value="rimuovi_m">rimuovi mansione
+		</select>
+		<select name="default_select">
+		<option value="">---  
+		</select>
+		<input type="submit" class="btn" value="applica">
+	</div>
+	
+<div class="span7">
+
+<table id="no-more-tables" class="table table-striped no-more-tables">
 	<script type="text/javascript">
 		var select_enable;
 		var select_gruppi;
@@ -39,76 +49,69 @@ function persona_stato(selettore){
 		
 	</script>
 
-<tr>
-	<td  class="sorttable_nosort" colspan="6">
-	
-	Se selezionati: <select name="azione">
-		<option value="">---
-		<option value="aggiungi_g">aggiungi al gruppo
-		<option value="rimuovi_g">rimuovi dal gruppo
-		<option value="aggiungi_m">aggiungi mansione
-		<option value="rimuovi_m">rimuovi mansione
-	</select>
-	<select name="default_select">
-	<option value="">---  
-	</select>
-	<input type="submit" value="applica">
-	</td>
-</tr>
 
-<tr class="intestazione">
-	<th></th><th>Nome</th><th class="sorttable_nosort">Mansioni</th><th>Gruppi</th><th>Stato</th><th class="sorttable_nosort">Note</th><th class="sorttable_nosort">Operazioni</th>
-</tr>
-{% for persona in persone %}
-
-
-	<tr class="persona {% cycle 'riga1' 'riga2' %}" id="persona-{{persona.id}}">
-	<td><input type="checkbox" name="persone_id" value="{{persona.id}}"></td>
-	<td class="nome">{{persona}}</td>
-	<td class="mansioni">{% for m in persona.competenze.all %} <span class="competenza">{{m}}</span> {% endfor %}</td>
-	<td class="gruppi">{% for g in persona.componenti_gruppo.all %} <span class="competenza">{{g}}</span> {% endfor %}</td>
-	<td class="stato"><SELECT NAME="stato"  ONCHANGE="persona_stato(this)" id="sel-{{persona.id}}">
-		{%for key,value in stati %}
-		<OPTION VALUE="{{key}}-{{persona.id}}">{{value}}
-		{% endfor%}
-		</SELECT></td>
-	<td>{{persona.note}}
-	</td>
-	<td class="operazioni"><a href="/persone/modifica/{{persona.id}}"><span class="img_modifica"></span></a>
-			       <a href="/persone/visualizza/{{persona.id}}"><span class="img_dettagli"></span></a>
-		<a href="#" onclick='$("#elimina-persona-{{persona.id}}" ).dialog("open");'><span class="img_elimina superuser"></span></a>
-	</td>
-
-	
+<thead>	
+	<tr>
+		<th></th><th>Nome</th><th>Mansioni</th><th>Gruppi</th><th>Stato</th><th>Note</th><th>Operazioni</th>
 	</tr>
-	<script>
-	$(function() {
-		$( "#elimina-persona-{{persona.id}}" ).dialog({
-			resizable: false,
-			modal: true,
-			autoOpen: false,
-			buttons: {
-				"Elimina": function() {
-					Dajaxice.get2.calendario.elimina_persona(Dajax.process,{'persona_id':{{persona.id}}});
-					$( this ).dialog( "close" );
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			}
-		});
-	});
-	
-	</script>
-	<div id="elimina-persona-{{persona.id}}" title="Elimina {{persona}}">
-	<p>
-		<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 50px 0;"></span>
-		Vuoi veramente eliminare {{persona}}?
-	</p>
-	</div>
+</thead>
 
-<script>
-$('#sel-{{persona.id}} option').filter(function(){return this.text=='{{persona.get_stato_display}}';}).attr('selected', true);
+{% for persona in persone %}
+	<tr id="persona-{{persona.id}}">
+		<td><input type="checkbox" name="persone_id" value="{{persona.id}}"></td>
+		<td data-title="Nome"><a href="/persone/visualizza/{{persona.id}}"><i class="icon-search"></i> {{persona}}</a></td>
+		<td data-title="Mansioni">{% for m in persona.competenze.all %} <span class="badge-mansione">{{m}}</span> {% endfor %}</td>
+		<td data-title="Gruppi">{% for g in persona.componenti_gruppo.all %} <span class="badge-gruppo">{{g}}</span> {% endfor %}</td>
+		<td data-title="Stato"><SELECT NAME="stato" class="span5" ONCHANGE="persona_stato(this)" id="sel-{{persona.id}}">
+			{%for key,value in stati %}
+			<OPTION VALUE="{{key}}-{{persona.id}}">{{value}}
+			{% endfor%}
+			</SELECT></td>
+		<td data-title="Note">{{persona.note}}
+		</td>
+		<td data-title="Operazioni">
+			<div class="btn-group">
+			  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+				<i class="icon-cog"></i> Azioni
+				<span class="caret"></span>
+			  </a>
+			  <ul class="dropdown-menu pull-right">
+				<li><a href="/persone/modifica/{{persona.id}}"><i class="icon-edit"></i> modifica</a></li>
+				<li><a href="#elimina-persona-{{persona.id}}" data-toggle="modal"><i class="icon-trash"></i> elimina</a></li>
+			  </ul>
+			</div>
+		</td>
+	</tr>
+	
+<div id="elimina-persona-{{persona.id}}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-body">
+	<div class="alert alert-error">
+		<h5><i class="icon-warning-sign icon-2x"></i> Vuoi veramente eliminare {{persona}}?</h5>
+	</div>
+</div>
+<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">Annulla</button>
+<button class="btn btn-primary" data-dismiss="modal" onclick="Dajaxice.get2.calendario.elimina_persona(Dajax.process,{'persona_id':{{persona.id}}});">Elimina</button>
+</div>
+</div>
+
+<script type="text/javascript">
+function persona_stato(selettore){
+	value=selettore.options[selettore.selectedIndex].value;
+	dati=value.split("-");
+	Dajaxice.get2.calendario.persona_stato(Dajax.process,{'stato':dati[0],'persona':dati[1]});
+	}
+	
+	$('#sel-{{persona.id}} option').filter(function(){return this.text=='{{persona.get_stato_display}}';}).attr('selected', true);
+
 </script>
+
 {% endfor %}
-</table></form>
+
+</table>
+</div>
+
+</form>
+</div>
+
+

@@ -4,6 +4,9 @@ from django.contrib.auth.models import User
 import operator, datetime
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 import pdb
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Field, MultiField, HTML
+from crispy_forms.bootstrap import *
 
 #############################################################
 
@@ -141,7 +144,6 @@ class Persona(models.Model):
 		return '%s %s' % (self.nome,self.cognome)
 
 class PersonaForm(BaseDynamicEntityForm):
-	#nascita = forms.DateField(label='Data di nascita', required=False, widget=widgets.AdminDateWidget)
 	def __init__(self, *args, **kwargs):
 		super(PersonaForm, self).__init__(*args, **kwargs)
 		lista_attributi = eav.models.Entity(Persona).get_all_attributes()
@@ -199,14 +201,19 @@ class RequisitoForm(forms.ModelForm):
 	class Meta:
 		model = Requisito
 		exclude = ('tipo_turno')
+
 GIORNO = (
+  ('q', 'qualsiasi'),
   (0, 'lunedi'),
   (1, 'martedi'),
   (2, 'mercoledi'),
   (3, 'giovedi'),
   (4, 'venerdi'),
   (5, 'sabato'),
-  (6, 'domenica'),)
+  (6, 'domenica'),
+  ('p', 'prefestivi'),
+  ('f', 'festivi'),
+  )
 
 class Occorrenza(models.Model):
 	pass
@@ -252,20 +259,71 @@ class Turno(models.Model):
 		return Mansione.objects.filter(req_mansione__tipo_turno=self.tipo)
 
 class TurnoForm(forms.ModelForm):
+	modifica_futuri=forms.BooleanField(label="modifica occorrenze future",required=False)
+	modifica_tutti=forms.BooleanField(label="modifica tutte le occorrenze",required=False)
 	def __init__(self, *args, **kwargs):
+		self.helper = FormHelper()
+		self.helper.layout = Layout(
+			Field('identificativo'),
+			AppendedText(
+				'inizio', '<i class="icon-calendar"></i>'
+			),
+			AppendedText(
+				'fine', '<i class="icon-calendar"></i>'
+			),
+			Field('tipo'),
+			Field('valore'),
+			FormActions(
+				Submit('save', 'Modifica', css_class="btn-primary")
+			)
+		)
 		super(TurnoForm, self).__init__(*args, **kwargs)
 		self.fields['tipo'].required = True
-	inizio=forms.DateTimeField(widget=forms.SplitDateTimeWidget)
-	fine=forms.DateTimeField(widget=forms.SplitDateTimeWidget)
 	class Meta:
 		model = Turno
 		exclude = ('occorrenza')
-
+	def clean(self):
+		data = self.cleaned_data
+		if data.get('inizio')>data.get('fine'):
+			raise forms.ValidationError('Il turno termina prima di iniziare! controlla inizio e fine')
+		return data
+		
 class TurnoFormRipeti(TurnoForm):
 	ripeti = forms.BooleanField(required=False)
 	ripeti_da = forms.DateField(required=False)
 	ripeti_al = forms.DateField(required=False)
 	ripeti_il_giorno = forms.MultipleChoiceField(choices=GIORNO, widget=forms.CheckboxSelectMultiple(),required=False)
+	def __init__(self, *args, **kwargs):
+		self.helper = FormHelper()
+		self.helper.layout = Layout(
+			Field('identificativo'),
+			AppendedText(
+				'inizio', '<i class="icon-calendar"></i>'
+			),
+			AppendedText(
+				'fine', '<i class="icon-calendar"></i>'
+			),
+			Field('tipo'),
+			Field('valore'),
+			Fieldset(
+				'<span id="ripeti-switch" onclick="ripeti_toggle()"><i class="icon-chevron-down"></i> Ripeti turno</span>'
+			),
+			Div(
+				Field('ripeti'),
+				AppendedText(
+					'ripeti_da', '<i class="icon-calendar"></i>'
+				),
+				AppendedText(
+					'ripeti_al', '<i class="icon-calendar"></i>'
+				),
+				InlineCheckboxes('ripeti_il_giorno'), css_id="ripeti"
+			),
+			FormActions(
+				Submit('save', 'Aggiungi', css_class="btn-primary")
+			)
+		)
+		super(TurnoForm, self).__init__(*args, **kwargs)
+		self.fields['tipo'].required = True
 	def clean(self):
 		data = self.cleaned_data
 		ripeti=data.get('ripeti')

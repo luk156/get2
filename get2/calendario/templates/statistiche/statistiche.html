@@ -1,116 +1,111 @@
-	<script>
-	 $(function() {
-$( "#tabs" ).tabs();
-});
-	
-	</script>
-<div id="tabs" class="bordo">
-	<ul>
-		{% for statistica in elenco_statistiche %}
-		<li><a href="#tabs-{{ forloop.counter }}">{{statistica}}</a></li>
-		{% endfor %}
-	</ul>
-
-{% for statistica,dati in dati %}
-
-<div id="tabs-{{ forloop.counter }}">
-
-<div id="placeholder-{{ forloop.counter }}" style="width:800px;height:300px; margin:10px;"></div>
-
-
-{% if statistica = "Turni totali" %}
-	<script type="text/javascript">
-	$(document).ready(function() {
-		$.plot($("#placeholder-{{ forloop.counter }}"),   [ { label: "Turni totali", data: [
-	{% for d in dati|slice:":10"%}
-	[{{forloop.counter}}, {{d.tot_turni}}],
+<ul class="nav nav-tabs" id="myTab">
+	{% for statistica in elenco_statistiche %}
+		<li {%if forloop.first %} class="active" {% endif%}><a href="#tabs-{{ forloop.counter }}" data-toggle="tab" >{{statistica}}</a></li>
 	{% endfor %}
-	 ], bars: { show: true }}], {xaxis: { ticks:[
-	{% for d in dati|slice:":10"%}
-	[{{forloop.counter}}+0.5,"{{d}}"],
-	{% endfor%}
-	] }} );
-	});
-	</script>
-	<table >
-	<tr class="intestazione">
-	<th>Posizione</th><th>Persona</th><th>Turni effettuati</th>
-	</tr>
-	{% for d in dati %}
-	<tr class='{% cycle 'riga1' 'riga2' %}'>
-	<td>{{forloop.counter}}</td><td>{{d}}</td><td>{{d.tot_turni}}</td>
-	</tr>
-	{% endfor%}
-	</table>
-{% endif %}
+</ul>
 
-{% if statistica = "Punteggi totali" %}
-	<script type="text/javascript">
-	$(document).ready(function() {
-		$.plot($("#placeholder-{{ forloop.counter }}"),   [ { label: "Punteggi totali", data: [
-	{% for d in dati|slice:":10"%}
-	[{{forloop.counter}}, {{d.tot_punti}}],
-	{% endfor %}
-	 ], bars: { show: true }}], {xaxis: { ticks:[
-	{% for d in dati|slice:":10"%}
-	[{{forloop.counter}}+0.5,"{{d}}"],
-	{% endfor%}
-	] }} );
-	});
-	</script>
-	<table >
-	<tr class="intestazione">
-	<th>Posizione</th><th>Persona</th><th>Punteggio</th>
-	</tr>
-	{% for d in dati %}
-	<tr class='{% cycle 'riga1' 'riga2' %}'>
-	<td>{{forloop.counter}}</td><td>{{d}}</td><td>{{d.tot_punti}}</td>
-	</tr>
-	{% endfor%}
-	</table>
-{% endif %}
+<div class="tab-content">
+	{% for statistica,dati in dati %}
 
-{% if statistica = "Mansioni" %}
-	<script type="text/javascript">
-	
-	
-	$(document).ready(function() {
-	var data = [
+	<div class="tab-pane {%if forloop.first %} active{% endif%}" id="tabs-{{ forloop.counter }}">
+
+	<div id="placeholder-{{ forloop.counter }}" style="width:800px;height:300px; margin:10px;"></div>
+
+
+	{% if statistica = "Turni totali" %}
+		<script type="text/javascript">
+		$(document).ready(function() {
+			$.plot($("#placeholder-{{ forloop.counter }}"),   [ { label: "Turni totali", data: [
 		{% for d in dati|slice:":10"%}
-		{label: "{{d.0}}", data:{{d.1}}},
+		[{{forloop.counter}}, {{d.tot_turni}}],
 		{% endfor %}
-	];
-	
-	function labelFormatter(label, series) {
-		return "<div style='font-size:8pt; text-align:center; padding:2px; color:white;'>" + label + "<br/>" + Math.round(series.percent) + "%</div>";
-	};
-	
-	$.plot($("#placeholder-{{ forloop.counter }}"), data, {
+		 ], bars: { show: true }}], {xaxis: { ticks:[
+		{% for d in dati|slice:":10"%}
+		[{{forloop.counter}}+0.5,"{{d}}"],
+		{% endfor%}
+		] }} );
+		});
+		</script>
+		<table class="table table-striped" >
+		<thead>
+		<tr>
+		<th>Posizione</th><th>Persona</th><th>Turni effettuati</th>
+		</tr></thead>
+		{% for d in dati %}
+		<tr>
+		<td>{{forloop.counter}}</td><td>{{d}}</td><td>{{d.tot_turni}}</td>
+		</tr>
+		{% endfor%}
+		</table>
+	{% endif %}
 
-    series: {
-        pie: {
-            show: true,
-            radius: 1,
-            label: {
-                show: true,
-                radius: 3/4,
-                formatter: labelFormatter,
-                background: {
-                    opacity: 0.5
-                }
-            }
-        }
-    },
-    legend: {
-        show: false
-    }
-});
+	{% if statistica = "Punteggi totali" %}
+		<script type="text/javascript">
+		$(document).ready(function() {
+			$.plot($("#placeholder-{{ forloop.counter }}"),   [ { label: "Punteggi totali", data: [
+		{% for d in dati|slice:":10"%}
+		[{{forloop.counter}}, {{d.tot_punti}}],
+		{% endfor %}
+		 ], bars: { show: true }}], {xaxis: { ticks:[
+		{% for d in dati|slice:":10"%}
+		[{{forloop.counter}}+0.5,"{{d}}"],
+		{% endfor%}
+		] }} );
+		});
+		</script>
+		<table class="table table-striped" >
+		<thead>
+		<tr>
+		<th>Posizione</th><th>Persona</th><th>Punteggio</th>
+		</tr></thead>
+		{% for d in dati %}
+		<tr>
+		<td>{{forloop.counter}}</td><td>{{d}}</td><td>{{d.tot_punti}}</td>
+		</tr>
+		{% endfor%}
+		</table>
+	{% endif %}
+
+	{% if statistica = "Mansioni" %}
+		<script type="text/javascript">
+		
+		
+		$(document).ready(function() {
+		var data = [
+			{% for d in dati|slice:":10"%}
+			{label: "{{d.0}}", data:{{d.1}}},
+			{% endfor %}
+		];
+		
+		function labelFormatter(label, series) {
+			return "<div style='font-size:8pt; text-align:center; padding:2px; color:white;'>" + label + "<br/>" + Math.round(series.percent) + "%</div>";
+		};
+		
+		$.plot($("#placeholder-{{ forloop.counter }}"), data, {
+
+		series: {
+			pie: {
+				show: true,
+				radius: 1,
+				label: {
+					show: true,
+					radius: 3/4,
+					formatter: labelFormatter,
+					background: {
+						opacity: 0.5
+					}
+				}
+			}
+		},
+		legend: {
+			show: false
+		}
 	});
-	</script>
+		});
+		</script>
 
-{% endif %}
+	{% endif %}
 
-</div>
-{% endfor %}
-
+	</div>
+	{% endfor %}
 </div>

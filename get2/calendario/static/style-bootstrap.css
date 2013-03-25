@@ -1,0 +1,377 @@
+#placeholder table {
+    width: auto;
+}
+
+a {
+  color: #084B8A;
+  text-decoration: none;
+}
+
+ @media only screen and (max-width: 800px) {
+    /* Force table to not be like tables anymore */
+		.no-more-tables table,
+		.no-more-tables thead,
+		.no-more-tables tbody,
+		.no-more-tables th,
+		.no-more-tables td,
+		.no-more-tables tr {
+		display: block;
+    }
+     
+    /* Hide table headers (but not display: none;, for accessibility) */
+    .no-more-tables thead tr {
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+    }
+     
+    .no-more-tables tr { border: 1px solid #ccc; margin-bottom:5px; }
+     
+    .no-more-tables td {
+		/* Behave like a "row" */
+		border: none;
+		border-bottom: 1px solid #eee;
+		position: relative;
+		padding-left: 50%;
+		white-space: normal;
+		text-align:left;
+    }
+     
+    .no-more-tables td:before {
+		/* Now like a table header */
+		position: absolute;
+		/* Top/left values mimic padding */
+		top: 6px;
+		left: 6px;
+		width: 45%;
+		padding-right: 10px;
+		white-space: nowrap;
+		text-align:left;
+		font-weight: bold;
+    }
+     
+    /*
+    Label the data
+    */
+    .no-more-tables td:before { content: attr(data-title); }
+}
+
+
+
+
+@font-face {
+	font-family: Ubuntu;
+	src: url(Ubuntu-M.ttf);
+	font-weight: bold;
+}
+
+body {
+background-color: #ddd;
+
+}
+
+.well {background-color: #fff;}
+
+.pager li > a, .pager li > span {
+    display: inline-block;
+    background-color: rgb(242, 240, 237);
+    border: 1px solid rgb(221, 221, 221);
+    border-radius: 10px 10px 10px 10px;
+    padding: 5px 5px;
+}
+
+
+#menu1 {
+    background-color: rgb(71,71, 71);
+    box-shadow: 0px 0px 10px rgb(17, 17, 17) inset;
+    padding-bottom:10px;
+    width: 100%;
+}
+
+
+#menu1 ul {
+    text-align: center;
+    margin-bottom: 0px;
+}
+
+
+#menu1 li {
+    list-style-type: none;
+    display: inline-block;
+}
+
+
+#menu1 li a {
+    display: block;
+    border-radius: 6px 6px 6px 6px;
+    padding: 10px 10px;
+    min-height: 56px;
+    min-width: 64px;
+    margin: 10px 10px 10px;
+    color: #eee;
+    font-weight: 100;
+    position:relative;
+}
+
+#menu1 li a:hover, #menu1 li.active a {
+    background-color: rgb(85, 85, 85);
+    text-decoration: none;
+}
+
+i.calendario{
+	background-image: url("32/calendario.png");
+}
+
+i.persone{
+	background-image: url("32/persone.png");
+}
+
+i.statistiche{
+	background-image: url("32/statistiche.png");
+}
+
+i.utenti{
+	background-image: url("32/utenti.png");
+}
+
+i.impostazioni{
+	background-image: url("32/impostazioni.png");
+}
+
+i.notifiche{
+	background-image: url("32/notifiche.png");
+}
+
+i.i-menu{
+	display: inline-block;
+	height: 32px;
+	width: 32px;
+}
+
+.btn-menu{
+	display:block;
+	padding:5px;
+	margin:2px;
+	text-align:center;
+	color: #ddd;
+}
+
+a.btn-menu:hover,a.btn-menu:active{ color: #ddd; cursor:pointer;}
+
+#notifiche-badge{
+position:absolute;
+top: 10px;
+right:20px;
+}
+
+body h1, body h2, body h3, body h4, body h5, body h6 {
+    text-transform: uppercase;
+    font-weight: 400;
+}
+
+h5,h6 {
+ margin: 3px 0px;
+}
+
+.page {
+	margin:1%;
+	margin-top:-10px;
+	border-radius: 6px 6px 6px 6px;
+	background-color: #fff;
+	padding:5px;
+	box-shadow: 0px 0px 5px #444;
+}
+
+
+.page .header {
+    padding-bottom: 10px;
+    padding-left:0px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #999;
+    margin-right: 10px;
+}
+
+.pager {
+    margin: 5px 0px;
+    list-style: none outside none;
+    text-align: center;
+}
+
+.giorno {
+	padding:2px;
+	min-width:195px;
+}
+
+.festivo {
+	color: #F78181;
+}
+
+.prefestivo {
+	color: #F5DA81;
+}
+div.calendario header {
+	background: rgb(71, 71, 71);
+	margin-left: 1%;
+	margin-right: 1%;
+	border-radius: 6px 6px 6px 6px;
+	text-align: center;
+	color: rgb(238, 238, 238);
+	box-shadow: 2px 2px 3px #666;
+}
+
+div.turno {
+	border:1px solid #aaa;
+	margin-bottom: 8px;
+	padding-top: 0px;
+	background-color: rgb(242, 240, 237);
+	border-radius: 4px 4px 4px 4px;
+	box-shadow: 0px 1px 0px 0px rgba(255, 255, 255, 0.5) inset;
+}
+
+.titolo-turno {
+	border-radius: 4px 4px 0px 0px;
+	box-shadow: 0px 0px 2px rgba(255, 255, 255, 0.5) inset;
+	margin-bottom:10px;
+	padding:1px;
+	cursor:pointer;
+	position:relative;
+	margin-top:-3px;
+	padding-left: 3px;
+	color: #ffffff;
+	margin-left: -1px;
+	margin-right: -1px;
+}
+
+.titolo-turno h6{
+	text-align:center;
+}
+
+.titolo-turno-False{
+	border: 1px solid rgb(185, 74, 72);
+	background: none repeat scroll 0% 0% #e55858;
+}
+
+.titolo-turno-True{
+	border: 1px solid rgb(70, 136, 71);
+	background: none repeat scroll 0% 0% #4b9d38;
+}
+
+div .titolo-turno .edit-turno {
+	position:absolute;
+	top:3px;
+	right:3px;
+}
+
+div .titolo-turno .gruppo-turno {
+	position:absolute;
+	top:3px;
+	right:32px;
+}
+
+@media (max-width: 767px) {
+	div .titolo-turno .gruppo-turno {
+		position:absolute;
+		top:3px;
+		right:48px;
+	}
+	
+	.titolo-turno {
+	padding-bottom: 8px;
+	}
+}
+
+div.mansione-calendario h6 {
+    padding-bottom: 3px;
+    padding-left:10px;
+    padding-right:10px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #bbb;
+    color: #444;
+	box-shadow: 0px 3px 3px 0px #dedede;
+}
+
+.persona-turno {
+color: #222;
+margin-left: 3px;
+font-size:15px;
+list-style-type: none;
+
+}
+
+.footer-turno {
+	border-radius: 0px 0px 4px 4px;
+	box-shadow: 0px 0px 2px rgba(255, 255, 255, 0.5) inset;
+	margin-bottom:10px;
+	padding:1px;
+	position:relative;
+	margin-bottom:-3px;
+	padding-right: 6px;
+	color: #777;
+	margin-left: -1px;
+	margin-right: -1px;
+	background-color: #ddd;
+	border: 1px solid #999;
+	font-size:12px;
+	text-align:right;
+}
+
+div.box{
+	margin: 10px 5px;
+	padding:0px;
+	border: 1px solid #999;
+	border-radius: 4px 4px 4px 4px;
+	background-color: #fff;
+}
+
+legend {
+	font-size:14px;
+}
+
+div.box-header {
+    padding-bottom: 10px;
+    padding-top:4px;
+    padding-left:10px;
+    padding-right:5px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #aaa;
+    color: #444;
+	box-shadow: 0px 3px 3px 0px #dedede;
+	background-color: #E2DFD9;
+	line-height: 24px;
+}
+
+div.box-content {
+padding:3px;
+
+}
+
+span.badge-mansione {
+	display: inline;
+	padding:2px;
+	margin:2px;
+	border: 1px solid #ccc;
+	border-radius: 4px 4px 4px 4px;
+	background-color: rgb(242, 240, 237);
+	text-align:center;
+	box-shadow: 0px 3px 3px 0px #dedede;
+}
+
+span.badge-gruppo {
+	display: inline;
+	padding:2px;
+	margin:2px;
+	border: 1px solid #ccc;
+	border-radius: 4px 4px 4px 4px;
+	background-color: rgb(242, 240, 237);
+	text-align:center;
+	box-shadow: 0px 3px 3px 0px #dedede;
+}
+
+.mansione-sel {
+		background-color: #F5DA81;
+		border-radius: 4px 4px 4px 4px;
+		font-weight:bold;
+		padding-top:3px;
+		
+}
+

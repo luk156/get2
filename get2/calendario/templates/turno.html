@@ -1,237 +1,119 @@
 
 {% load template_filters %}
 
-{% if request.user.get_profile and  not request.user.is_staff %}
 
-	<script type="text/javascript">
-	$(document).ready(function(){$('.turno').css('cursor', 'pointer');});
-	</script>
-
-	{% if t|turno_intervallo_disponibilita %}
-
-		{% if not request.user.get_profile|gia_disponibile:t %}
-			<div id="disponibilita-{{t.id}}" title="Nuova disponibilita">
-				Seleziona la mansione che vuoi ricoprire per il turno del {{t.inizio|date:"d M"}}, ore {{t.inizio|time:"H:i"}} - {{t.fine|time:"H:i"}}:
-				</br>
-				</br>
-				<select>
-				<option value="">seleziona mansione
-				{% for requisito in t.tipo.req_tipo_turno.all %}
-					{% if requisito.mansione in request.user.get_profile.competenze.all %}
-						{% if not requisito.operatore = "=" or not t|verifica_requisito:requisito  %}
-							<option value="{{requisito.mansione.id}}">{{requisito.mansione}}
-						{% endif %}
-					{% endif %}
-				{% endfor %}
-				</select>
-			</div>
-			<script type="text/javascript">
-
-			$(document).ready(function(){
-				$( "#disponibilita-{{t.id}}" ).dialog({
-					resizable: false,
-					modal: true,
-					autoOpen: false,
-					buttons: {
-						"Applica": function() {
-							//Dajaxice.get2.calendario.disponibilita_turno(Dajax.process,{'turno_id':{{t.id}}});
-							mansione=$("#disponibilita-{{t.id}} select option:selected").val();
-							persona="{{request.user.get_profile.id}}"
-							if (mansione!=""){url="/calendario/disponibilita/{{t.id}}/" +mansione+ "/" +persona+ "/Disponibile/";}
-							window.location = url;
-							$( this ).dialog( "close" );
-						},
-						"Annulla": function() {
-							$( this ).dialog( "close" );
-						}
-					}
-				});
-				$('#turno-{{t.id}}').click(function () {$("#disponibilita-{{t.id}}" ).dialog("open");});
-				});
-			</script>
-			
-
-		{% else %}
-			<div id="disponibilita-{{t.id}}" title="Cancella disponibilita">
-				Vuoi cancellarti dal turno del {{t.inizio|date:"d M"}}, ore {{t.inizio|time:"H:i"}} - {{t.fine|time:"H:i"}}?
-			</div>
-			<script type="text/javascript">
-
-			$(document).ready(function(){
-				$( "#disponibilita-{{t.id}}" ).dialog({
-					resizable: false,
-					modal: true,
-					autoOpen: false,
-					buttons: {
-						"Cancella Disponibilita": function() {
-							var url="/calendario/rimuovi_disponibilita/{{request.user.get_profile|gia_disponibile:t.id}}";
-							window.location = url;
-							$( this ).dialog( "close" );
-						},
-						"Annulla": function() {
-							$( this ).dialog( "close" );
-						}
-					}
-				});
-			$('#turno-{{t.id}}').click(function () {$("#disponibilita-{{t.id}}" ).dialog("open");});
-			});
-			</script>
-		{% endif %}
-
-	{% else %}
+<div class="turno span7" id="turno-{{t.id}}" >
+	
+	<div class="titolo-turno titolo-turno-{{t.coperto}}" id="titolo-turno-{{t.id}}">
 		
-		<div id="disponibilita-{{t.id}}" title="Errore">
-		Non puoi modificare la tua disponibilita per questo turno:</br>
-		<span class="emblem-important">{{t|errore_turno_intervallo_disponibilita}}</span>
-		</div>
-		<script type="text/javascript">
-
-			$(document).ready(function(){
-				$( "#disponibilita-{{t.id}}" ).dialog({
-					resizable: false,
-					modal: true,
-					autoOpen: false,
-					buttons: {
-						"Annulla": function() {
-							$( this ).dialog( "close" );
-						}
-					}
-				});
-			$('#turno-{{t.id}}').click(function () {$("#disponibilita-{{t.id}}" ).dialog("open");});
-			});
-			</script>
-
-	{% endif %}
-	
-{% endif %}
-
-{% if request.user.is_staff %}
-	<script>
-	function aggiungi_gruppo(selettore){
-	url = "/calendario/disponibilita_gruppo/{{t.id}}/"+selettore.value;
-	window.location = url;
-	}
-	</script>
-	<div id="modifica-{{t.id}}" title="Turno {{t.id}}">
-	<span class="aggiungigruppo_turno bottone-modifica_turno">
-	aggiungi gruppo: 
-		<select onchange="aggiungi_gruppo(this)">
-			<option value="NULL">----
-			{%for g in gruppi%}
-				<option value="{{g.id}}">{{g}}
-			{%endfor%}
-		</select>
-	</span>
-	<a href="/calendario/turno/modifica/{{t.id}}"><span class="modifica_turno bottone-modifica_turno">modifica</span></a>
-	<span class="elimina_turno bottone-modifica_turno" onclick="$('#elimina-turno-{{t.id}}' ).dialog('open');">elimina</span>
+		<h5><i class="icon-time icon-white"></i> {{t.inizio|time:"H:i"}} - {{t.fine|time:"H:i"}}</h5>
+		{% if t.identificativo %}
+		<h6> {{t.identificativo}}</h6>
+		{% endif %}
+		{%if request.user.is_staff %}
+			<div class="dropdown edit-turno">
+				<a data-toggle="dropdown" class="dropdown-toggle pull-right " id="modifica-turno-{{t.id}}">
+					<i class="visible-phone icon-edit icon-2x" style="color:white"></i>
+					<i class="hidden-phone icon-edit" style="color:white"></i>
+				</a>
+				<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
+					<li><a href="/calendario/turno/modifica/{{t.id}}">Modifica</a></li>
+					<li><a href="#elimina-turno-{{t.id}}" data-toggle="modal">Elimina</a></li>
+				</ul>
+			</div>
+			<div class="dropdown gruppo-turno">
+				<a data-toggle="dropdown" class="dropdown-toggle pull-right " id="gruppo-turno-{{t.id}}">
+					<i class="visible-phone icon-group icon-2x" style="color:white"></i>
+					<i class="hidden-phone icon-group" style="color:white"></i>
+				</a>
+				<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
+					{%for g in gruppi%}
+						<li><a href="/calendario/disponibilita_gruppo/{{t.id}}/{{g.id}}">{{g}}</a></li>
+					{%endfor%}
+				</ul>
+			</div>
+		{% endif %}
 	</div>
-	<script type="text/javascript">
-		$(document).ready(function(){
-			$( "#modifica-{{t.id}}" ).dialog({
-				resizable: false,
-				modal: true,
-				autoOpen: false,
-				buttons: {
-					"Annulla": function() {
-						$( this ).dialog( "close" );
-					}
-				}
-			});
-		$('#titolo-turno-{{t.id}}').click(function () {$("#modifica-{{t.id}}" ).dialog("open");});
-		});
-		</script>
 
-{% endif %}
-
-<div class="turno ombra-{{t.coperto}}" id="turno-{{t.id}}" >
-	<div class="titolo-turno-{{t.coperto}}"></div>
-	<div class="titolo-turno" id="titolo-turno-{{t.id}}">
-	<span class="titolo-turno1">{{t.inizio|time:"H:i"}}-{{t.fine|time:"H:i"}}</span><span class="titolo-turno2"> {{t.identificativo}}</span>
-	</div>
-	
 	{% for requisito in t.tipo.req_tipo_turno.all %}
 		{% if not requisito.extra %}
-			<div class="mansione-calendario mansione-calendario-{{t|verifica_requisito:requisito }} necessario-{{requisito.necessario}}">
-			{% if requisito.sufficiente %}<span class="img_asterisco_16"></span>{% endif %}
-				{{requisito.mansione}}<small> {{requisito.operatore}} {{requisito.valore}}</small>
-			{% if not requisito.operatore = "=" or not t|verifica_requisito:requisito  or not requisito.necessario %}
-				<a href="/calendario/cerca_persona/{{t.id}}/{{requisito.mansione.id}}"><span class="aggiungi staff"></span></a>
-			{% endif %}
-				</div> 
-			{% for disp in t.turno_disponibilita.all %}
-				{% if disp.mansione = requisito.mansione and disp.tipo = 'Disponibile' %}
-					<span class="persona-turno">{{disp.persona}}<a href="/calendario/rimuovi_disponibilita/{{disp.id}}"><span class="img_rimuovi staff"></span></a></span>
+			<div class="mansione-calendario">
+				<h6 class="h6-mansione-{{requisito.mansione.id}}">{{requisito.mansione}}
+				{% if not requisito.operatore = "=" or not t|verifica_requisito:requisito  or not requisito.necessario %}
+					{% if request.user.is_staff %}
+						<a href="/calendario/cerca_persona/{{t.id}}/{{requisito.mansione.id}}">
+					{% endif %}
 				{% endif %}
-			{% endfor %}
+				{% if requisito.sufficiente %}
+					<span class="badge badge-info pull-right">
+				{% elif not requisito.necessario %}
+					<span class="badge  pull-right">
+				{% elif t|verifica_requisito:requisito  %}
+					<span class="badge badge-success pull-right">
+				{% else %}
+					<span class="badge badge-important pull-right">
+				{% endif %}
+				{{requisito.operatore}} {{requisito.valore}}</span></a></h6> 
+			</div>
+			<div class="">
+				<ul>
+				{% for disp in t.turno_disponibilita.all %}
+					{% if disp.mansione = requisito.mansione and disp.tipo = 'Disponibile' %}
+						<li class="persona-turno"><i class="icon-user"></i> {{disp.persona}}<a href="/calendario/rimuovi_disponibilita/{{disp.id}}"></a></li>
+					{% endif %}
+				{% endfor %}
+				</ul>
+			</div>
 		{% endif %}
 		{% if requisito.extra %}
-			<div class="mansione-calendario extra">{{requisito.mansione}}<small> {{requisito.operatore}} {{requisito.valore}}</small></div>
+			<div class="mansione-calendario">
+				<h6 class="h6-mansione-{{requisito.mansione.id}}"><i class="icon-asterisk"></i> {{requisito.mansione}}
+				<span class="badge badge-warning pull-right"> {{requisito.operatore}} {{requisito.valore}}</span></h6>
+			</div>
 		{% endif %}
 	{% endfor %}
-	
+	<div id="altre-mansioni-{{t.id}}" class="mansione-calendario hide">
+		<h6>Altre mansioni</h6>
+	</div>
+	<div class="">
+		<ul>
 	{% for disp in t.turno_disponibilita.all %}
 		{% if disp.mansione not in t.mansioni and disp.tipo = 'Disponibile' %}
-			{% if forloop.first %}<span class="mansione-calendario">Altre mansioni</span>{% endif  %}
-			<span class="persona-turno">{{disp.persona}}<a href="/calendario/rimuovi_disponibilita/{{disp.id}}"><span class="img_rimuovi staff">rimuovi</span></a></span>
+		<script>$('#altre-mansioni-{{t.id}}').removeClass('hide');</script>
+			<li class="persona-turno"><i class="icon-user"></i> {{disp.persona}}<a href="/calendario/rimuovi_disponibilita/{{disp.id}}"><i class="icon-remove"></i> </a></li>
 		{% endif %}
 	{% endfor %}
-	
-	<div class="footer-turno">
-	
-	<span class="tipo_turno" ">
-		{%if request.user.is_staff %}<a href="/impostazioni/#tabs-tipo-turno">{{t.tipo}}</a>
-		{%else%} {{t.tipo}}{%endif%}
-	</span>
-	<div id="elimina-turno-{{t.id}}" title="elimina turno">
-		Vuoi eliminare il turno del {{t.inizio|date:"d M"}}, ore {{t.inizio|time:"H:i"}} - {{t.fine|time:"H:i"}}?</br>
-		{% if t.occorrenza %}
-			<span class="emblem-generic" onclick="$('#occorrenze-{{t.id}}').slideDown()">Il turno fa parte di una occorrenza</span>
-			<div id="occorrenze-{{t.id}}"><ul>		
-			{% for o in t|occorrenze:t.occorrenza %}
-				<li class="occorrenze-{{o|turno_futuro}}">{{o.inizio|date:"d M"}}, ore {{o.inizio|time:"H:i"}} - {{o.fine|time:"H:i"}}</li>
-			{% endfor %}
-			</ul></div>
-		{% endif %}
+		</ul>
 	</div>
-		
-	<script type="text/javascript">
+	<div class="footer-turno">
+		{{t.tipo}}
+	</div>
 
-	$(document).ready(function(){
-			$( "#elimina-turno-{{t.id}}" ).dialog({
-				resizable: false,
-				modal: true,
-				autoOpen: false,
-				buttons: {
-					{% if t.occorrenza %}
-					"Elimina Turno e tutte le successive occorrenze": function() {
-						var url="/calendario/turno/elimina_occorrenza/{{t.occorrenza.id}}";
-						window.location = url;
-						$( this ).dialog( "close" );
-					},
-						{% if request.user.is_superuser %}				
-					"Elimina Turno e TUTTE le occorrenze": function() {
-						var url="/calendario/turno/elimina_occorrenza_tot/{{t.occorrenza.id}}";
-						window.location = url;
-						$( this ).dialog( "close" );
-					},
+</div>
 
-						{% endif %}
-					{% endif %}
-					"Elimina Turno": function() {
-						var url="/calendario/turno/elimina/{{t.id}}";
-						window.location = url;
-						$( this ).dialog( "close" );
-					},
-					"Annulla": function() {
-						$( this ).dialog( "close" );
-					}
-				}
-			});
-		$("#occorrenze-{{t.id}}").hide();
-		$('.img_rimuovi').hide();
-		$('.persona-turno').hover(	function () {$(this).find('.img_rimuovi').show();}, 	function () {$(this).find('.img_rimuovi').hide();});
-		});
-	</script>
-	
+<div id="elimina-turno-{{t.id}}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-body">
+		<div class="alert alert-error">
+			<h5><i class="icon-warning-sign icon-2x"></i> Vuoi eliminare il turno del {{t.inizio|date:"d M"}}, ore {{t.inizio|time:"H:i"}} - {{t.fine|time:"H:i"}}?</h5>
+			{% if t.occorrenza %}
+				<span onclick="Dajaxice.get2.calendario.occorrenze(Dajax.process,{'occ_id':{{t.occorrenza.id}},'turno_id':{{t.id}}});">Il turno fa parte di una occorrenza <i class="icon-chevron-down"></i></span>
+				<ul>
+				<div id="occorrenze-{{t.id}}" class="hide"></div>
+				</ul>
+			{% endif %}</div>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Annulla</button>
+		<div class="btn-group">
+		  <a href="/calendario/turno/elimina/{{t.id}}"  class="btn btn-primary">Elimina Turno</a>
+			{% if t.occorrenza %}<button class="btn  btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span>{% endif %}
+		  </button>
+		  {% if t.occorrenza %}
+		  <ul class="dropdown-menu">
+			<li><a href="/calendario/turno/elimina_occorrenza/{{t.occorrenza.id}}">Elimina turno e tutte le successive occorrenze</a></li>
+			<li><a href="/calendario/turno/elimina_occorrenza_tot/{{t.occorrenza.id}}">Elimina turno e TUTTE le occorrenze</a></li>
+		  </ul>
+		  {% endif %}
+		</div>
 	</div>
 </div>

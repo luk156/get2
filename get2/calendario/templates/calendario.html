@@ -1,20 +1,14 @@
 {% extends "base.html" %} 
+{% load template_filters %}
 
-
-{% block menu2 %}
-<ul>
-<li class="nuovo-turno staff"><a href="/calendario/turno/nuovo">Nuovo Turno</a></li>
-<li class="avanti"><a href="/calendario/settavanti">Avanti</a></li>
-<li class="oggi"><a href="/calendario/oggi">Oggi</a></li>
-<li class="indietro"><a href="/calendario/settindietro">Indietro</a></li>
-
-</ul>
-
-<div id="navigazione">
-<div class="nav-solo nav"><span class="calendario-nav"> Calendario</span></div>
-</div>
-
+{% block header %}
+	{% if request.user.is_staff %}
+		<a class="btn pull-right" href="/calendario/turno/nuovo"><i class="icon-plus"> </i> Nuovo Turno</a><h4 class="header">
+			Calendario
+		</h4>
+	{% endif %}
 {% endblock %}
+
 
 {% block main %}
 <!--<script>-->
@@ -31,42 +25,51 @@
 <!--<div class="menu-main">-->
 <!--	<span class="persona-draggable"> Matteo Lucchesi </span>-->
 <!--</div>-->
+<div class="row-fluid">	
+	<div class="span7">
+    <ul class="pager">
+    <li class="previous">
+    <a href="/calendario/settindietro"><i class="icon-chevron-left"></i> Indietro</a>
+    </li>
+    <li><a href="/calendario/oggi"><i class="icon-home"></i> Oggi</a></li>
+    <li class="next">
+    <a href="/calendario/settavanti">Avanti <i class="icon-chevron-right"></i></a>
+    </li>
+    </div>
+</div>
 
-
-
+<div class="row-fluid calendario">
   {% if error_message %}
     <p><strong>{{ error_message }}</strong></p>
   {% endif %}
 
 {% for giorno, turno in calendario %}
-    <div id="giorno-{{forloop.counter}}" class="giorno droppable" >
-    <span class="titolo-giorno {% cycle 'giorno1' 'giorno2' %}">{{giorno|date:"D d M"}}</span>
-    
+    <div id="giorno-{{forloop.counter}}" class="giorno span1" >
+		<div class="row">
+			<div class="span7 titolo-giorno {% cycle 'giorno1' 'giorno2' %}">
+				<header><h4 class="{{giorno|data_festa}}">{{giorno|date:"D d M"}}</h4></header>
+			</div>
+		</div>
 	{% for t in turno%}
-		{% include "turno.html" %}
+		<div class="row">
+			{% include "turno.html" %}
+		</div>
 	{% endfor %}
-<div style="clear: both;"></div>
 	</div>
 {% endfor %}
+</div>
 
-<script>	
-$(document).ready(function(){
-var maxHeight = Math.max.apply(null, $(".giorno").map(function () {return $(this).height();}).get());
-$(".giorno").height(maxHeight);
-
-var DimContenuto = $('#contenuto').width();
-$(".giorno").width((DimContenuto-8)/7.1);
-
-});
-
-$(window).resize(function() {
-var maxHeight = Math.max.apply(null, $(".giorno").map(function () {return $(this).height();}).get());
-$(".giorno").height(maxHeight);
-
-var DimContenuto = $('#contenuto').width();
-$(".giorno").width((DimContenuto-8)/7.1);
-});
-
-</script>
+<div class="row-fluid">	
+	<div class="span7">
+    <ul class="pager">
+    <li class="previous">
+    <a href="/calendario/settindietro"><i class="icon-chevron-left"></i> Indietro</a>
+    </li>
+    <li><a href="/calendario/oggi"><i class="icon-home"></i> Oggi</a></li>
+    <li class="next">
+    <a href="/calendario/settavanti">Avanti <i class="icon-chevron-right"></i></a>
+    </li>
+    </div>
+</div>
 
 {% endblock %}

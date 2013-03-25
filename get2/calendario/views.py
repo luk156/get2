@@ -158,6 +158,56 @@ def aggiungilista(request):
 
 #####   calendario   ####
 
+def pasqua(anno):
+  if anno<1583 or anno>2499: return None
+  tabella={15:(22, 2), 16:(22, 2), 17:(23, 3), 18:(23, 4), 19:(24, 5),
+           20:(24, 5), 21:(24, 6), 22:(25, 0), 23:(26, 1), 24:(25, 1)}
+  m, n = tabella[anno//100]
+  a=anno%19
+  b=anno%4
+  c=anno%7
+  d=(19*a+m)%30
+  e=(2*b+4*c+6*d+n)%7
+  giorno=d+e
+  if (d+e<10):
+    giorno+=22
+    mese=3
+  else:
+    giorno-=9
+    mese=4
+    if ((giorno==26) or ((giorno==25) and (d==28) and (e==6) and (a>10))):
+      giorno-=7
+  return giorno, mese
+
+def festivo(giorno):
+	feste=(
+		(1,1),
+		(1,6),
+		(4,25),
+		(5,1),
+		(06,02),
+		(8,15),
+		(11,01),
+		(12,8),
+		(12,25),
+		(12,26),
+	)
+	if (giorno.weekday() == 6) or ((giorno.month,giorno.day) in feste):
+		return True
+	p_g,p_m=pasqua(giorno.year)
+	if (giorno.day == p_g and giorno.month == p_m):
+		return True
+	precedente=giorno-datetime.timedelta(days=1)
+	if (precedente.day == p_g and precedente.month == p_m):
+		return True
+	return False
+
+def prefestivo(giorno):
+	successivo=giorno+datetime.timedelta(days=1)
+	if festivo(successivo) and not festivo(giorno):
+		return True
+	return False
+
 def calendario(request):
 	if request.COOKIES.has_key('anno'):
 		anno=int(request.COOKIES['anno'])
@@ -221,7 +271,7 @@ def cerca_persona(request, turno_id, mansione_id):
 	mansione=Mansione.objects.get(id=mansione_id)
 	persone=Persona.objects.filter(competenze=mansione)
 	turno=Turno.objects.get(id=turno_id)
-	return render_to_response('cerca_persona.html',{'persone':persone,'turno':turno,'mansione':mansione,'DISPONIBILITA':DISPONIBILITA,'request':request})
+	return render_to_response('cerca_persona.html',{'persone':persone,'t':turno,'mansione':mansione,'DISPONIBILITA':DISPONIBILITA,'request':request})
 
 
 ####   fine calendario   ####
@@ -313,7 +363,7 @@ def disponibilita_url(request, turno_id, mansione_id, persona_id, disponibilita)
 def disponibilita_gruppo(request,turno_id,gruppo_id):
 	turno=Turno.objects.get(id=turno_id)
 	gruppo=Gruppo.objects.get(id=gruppo_id)
-	return render_to_response('disponibilita_gruppo.html',{'turno':turno,'gruppo':gruppo,'request':request})
+	return render_to_response('disponibilita_gruppo.html',{'t':turno,'gruppo':gruppo,'request':request})
 
 ####   fine disponibilita   ####
 
@@ -514,10 +564,12 @@ def nuovo_turno(request):
 	azione = 'Aggiungi'
 	if request.method == 'POST': # If the form has been submitted...
 		form = TurnoFormRipeti(request.POST) # A form bound to the POST data
+		form.helper.form_action = '/calendario/turno/nuovo/'
 		if form.is_valid():
 			data = form.cleaned_data
-			form.save()
-			if data.get('ripeti'):
+			if not data.get('ripeti'):
+				form.save()
+			else:
 				o=Occorrenza()
 				o.save()
 				start=data.get('ripeti_da')
@@ -531,20 +583,18 @@ def nuovo_turno(request):
 				data['occorrenza']=o.id
 				#pdb.set_trace()
 				while (start.date()<=stop):
-					data['inizio_0']=start.date()
-					data['fine_0']=(start+durata).date()
-					data['inizio_1']=start.time()
-					data['fine_1']=(start+durata).time()
+					data['inizio']=start
+					data['fine']=(start+durata)
 					f=TurnoFormRipeti(data)
-					if str(start.weekday()) in giorno and f.is_valid():
+					if ((str(start.weekday()) in giorno) or ('p' in giorno and prefestivo(start)) or ('f' in giorno and festivo(start)) or ('q' in giorno)) and f.is_valid():
 						t=f.save()
 						t.occorrenza=o
 						t.save()
 					start+=delta
-				
 			return HttpResponseRedirect('/calendario/') # Redirect after POST
 	else:
 		form = TurnoFormRipeti()
+		form.helper.form_action = '/calendario/turno/nuovo/'
 	return render_to_response('form_turno.html',{'form': form,'azione': azione,'request':request}, RequestContext(request))
 	
 @user_passes_test(lambda u:u.is_staff)
@@ -553,6 +603,7 @@ def modifica_turno(request, turno_id):
 	turno = Turno.objects.get(id=turno_id)
 	if request.method == 'POST': # If the form has been submitted...
 		form = TurnoForm(request.POST, instance=turno) # necessario per modificare la riga preesistente
+		form.helper.form_action = '/calendario/turno/modifica/'+str(turno.id)+'/' 
 		if form.is_valid():
 			data = form.cleaned_data
 			form.save()
@@ -577,6 +628,11 @@ def modifica_turno(request, turno_id):
 			return HttpResponseRedirect('/calendario/') # Redirect after POST
 	else:
 		form = TurnoForm(instance=turno)
+		form.helper.form_action = '/calendario/turno/modifica/'+str(turno.id)+'/'
+		if turno.occorrenza:
+			form.helper.layout[4].append(Fieldset("Il turno fa parte di una occorrenza","modifica_futuri"))
+			if request.user.is_superuser:
+				form.helper.layout[4][1].append("modifica_tutti")
 	return render_to_response('form_turno.html',{'form': form,'azione': azione, 'turno': turno,'request':request}, RequestContext(request))
 
 @user_passes_test(lambda u:u.is_staff)

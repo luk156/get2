@@ -56,20 +56,17 @@ def utente_persona(request,user_id,persona_id):
         per.user=None
         per.save()
         if persona_id=='n':
-            s=s+'noty({"text":"l\' utente <b>'+str(a)+'</b> non e piu assegnato a <b>nessuna persona</b>","layout":"bottomRight","type":"success","animateOpen":{"height":"toggle"},"animateClose":{"height":"toggle"},"speed":500,"timeout":5000,"closeButton":true,"closeOnSelfClick":true,"closeOnSelfOver":false});'
+            s=s+'$(".bottom-right").notify({ message: { text: "l\' utente '+str(a)+' non e piu assegnato a nessuna persona" }}).show();'
             pass
-
     if persona_id!='n' and User.objects.filter(pers_user=persona_id):
         a=User.objects.get(pers_user=persona_id)
-        dajax.assign('select#'+str(a.id),'selectedIndex','0')
-        s=s+'noty({"text":"<b>Attenzione</b>:La persona era precedentemente assegnato all\'utente <b>'+str(a)+'</b>","layout":"bottomRight","type":"alert","animateOpen":{"height":"toggle"},"animateClose":{"height":"toggle"},"speed":500,"timeout":5000,"closeButton":true,"closeOnSelfClick":true,"closeOnSelfOver":false});'
-
+        dajax.assign('select#select-'+str(a.id),'selectedIndex','0')
+        s=s+'$(".bottom-right").notify({ message: { text: "Attenzione:La persona era precedentemente assegnato all\'utente '+str(a)+'" }}).show();'
     if persona_id!='n':
         per=Persona.objects.get(id=persona_id)
         u=User.objects.get(id=user_id)
         per.user=u
-        s=s+'noty({"text":"La persona <b>'+str(per)+'</b> e stato assegnata all\'utente <b>'+str(u)+'</b>","layout":"bottomRight","type":"success","animateOpen":{"height":"toggle"},"animateClose":{"height":"toggle"},"speed":500,"timeout":5000,"closeButton":true,"closeOnSelfClick":true,"closeOnSelfOver":false});'
-
+        s=s+'$(".bottom-right").notify({ message: { text: "La persona '+str(per)+' e stato assegnata all\'utente '+str(u)+'" }}).show();'
     dajax.script(s)
     per.save()
     return dajax.json()
@@ -81,13 +78,13 @@ def utente_staff(request,user_id):
     if request.user.is_superuser:
         if u.is_staff:
             u.is_staff=False
-            dajax.script('noty({"text":"<b>Rimossi</b> i privilegi di staff all\'utente <b>'+str(u)+'</b>","layout":"bottomRight","type":"success","animateOpen":{"height":"toggle"},"animateClose":{"height":"toggle"},"speed":500,"timeout":5000,"closeButton":true,"closeOnSelfClick":true,"closeOnSelfOver":false});')
+            dajax.script('$(".bottom-right").notify({ message: { text: "Rimossi i privilegi di staff all\'utente '+str(u)+'" }}).show();')
         else:
             u.is_staff=True
-            dajax.script('noty({"text":"<b>Aggiunti</b> i privilegi di staff all\'utente <b>'+str(u)+'</b>","layout":"bottomRight","type":"success","animateOpen":{"height":"toggle"},"animateClose":{"height":"toggle"},"speed":500,"timeout":5000,"closeButton":true,"closeOnSelfClick":true,"closeOnSelfOver":false});')
+            dajax.script('$(".bottom-right").notify({ message: { text: "Aggiunti i privilegi di staff all\'utente '+str(u)+'" }}).show();')
         u.save()
     else:
-        dajax.script('noty({"text":"Solo l\'amministratore puo modificare i permessi degli utenti","layout":"bottomRight","type":"error","animateOpen":{"height":"toggle"},"animateClose":{"height":"toggle"},"speed":500,"timeout":5000,"closeButton":true,"closeOnSelfClick":true,"closeOnSelfOver":false});')
+        dajax.script('$(".bottom-right").notify({ message: { text: "Solo l\'amministratore puo modificare i permessi degli utenti" }}).show();')
         if u.is_staff:
             dajax.assign('input#staff-'+str(user_id),'checked',True)
         else:
@@ -107,31 +104,21 @@ def notifiche(request,option,url):
         if (option == 'letto'):
             m.letto=True
             m.save()
-            dajax.remove_css_class(selector,'letto-False')
-            dajax.add_css_class(selector,'letto-True')
+            dajax.remove_css_class(selector,'warning')
         if (option == 'nonletto'):
             m.letto=False
             m.save()
-            dajax.remove_css_class(selector,'letto-True')
-            dajax.add_css_class(selector,'letto-False')
+            dajax.add_css_class(selector,'warning')
         if (option == 'cancella'):
             m.delete()
             dajax.remove(selector)
             dajax.remove('#not-inv-'+not_id)
             #dajax.alert(request.user.get_profile().nonletti())
     non=request.user.get_profile().notifiche_non_lette()
-    selector='#menu-notifiche'
     if non >0:
-    	dajax.remove_css_class(selector,'notifiche-ok')
-        dajax.add_css_class(selector,'notifiche')
-        dajax.remove_css_class('.notifiche_nonlette','hide')
-    	dajax.assign('.notifiche_nonlette','innerHTML',non)
-    	
-    	
+       dajax.assign('#notifiche-badge','innerHTML',non)
     else:
-    	dajax.remove_css_class(selector,'notifiche')
-        dajax.add_css_class(selector,'notifiche-ok')
-        dajax.add_css_class('.notifiche_nonlette','hide')
+       dajax.assign('#notifiche-badge','innerHTML','')
     dajax.clear('.ch','checked')
     return dajax.json()
 
@@ -162,36 +149,6 @@ def elimina_tipo_turno(request,turno_id):
     t.delete()
     return dajax.json()
 
-@dajaxice_register
-def requisito_form(request, form, form_id):
-    dajax = Dajax()
-    #pdb.set_trace()
-    f = deserialize_form(form)
-    if Requisito.objects.filter(mansione=f['mansione'],tipo_turno=f['tipo_turno']).exists():
-        r = Requisito.objects.get(mansione=f['mansione'],tipo_turno=f['tipo_turno'])
-        form = RequisitoForm(f,instance=r)
-    else:
-        form = RequisitoForm(f)
-    dajax.remove_css_class(str(form_id)+ ' #id_operatore', 'ui-state-error')
-    dajax.remove_css_class(str(form_id)+ ' #id_valore', 'ui-state-error')
-    if form.data.get('operatore')=='NULL' and Requisito.objects.filter(mansione=f['mansione'],tipo_turno=f['tipo_turno']).exists():
-        r=Requisito.objects.get(mansione=form.data.get('mansione'),tipo_turno=form.data.get('tipo_turno'))
-        turni=Turno.objects.filter(tipo=form.data.get('tipo_turno'))
-        for t in turni:
-             for d in Disponibilita.objects.filter(turno=t, mansione=form.data.get('mansione')):
-                d.mansione=None
-                d.save()
-        r.delete()
-        dajax.script('$("#applica-'+str(form.data.get('mansione'))+'-'+str(form.data.get('tipo_turno'))+'").hide();')
-        dajax.assign(str(form_id)+ ' input', 'value','')
-    elif form.is_valid():
-        form.save()
-        dajax.script('$("#applica-'+str(form.data.get('mansione'))+'-'+str(form.data.get('tipo_turno'))+'").hide();')
-	dajax.script('noty({"text":"Modifiche apportate con successo","layout":"bottomRight","type":"success","animateOpen":{"height":"toggle"},"animateClose":{"height":"toggle"},"speed":500,"timeout":5000,"closeButton":true,"closeOnSelfClick":true,"closeOnSelfOver":false});')
-    else:
-        for error in form.errors:
-            dajax.add_css_class('%(form)s #id_%(error)s' % {"form": form_id, "error": error}, 'ui-state-error')
-    return dajax.json()
 
 @dajaxice_register
 def disp(request, turno_id, mansione_id, persona_id, disp):
@@ -199,27 +156,31 @@ def disp(request, turno_id, mansione_id, persona_id, disp):
 	#pdb.set_trace()
 	p=Persona.objects.get(id=persona_id)
 	t=Turno.objects.get(id=turno_id)
-	if Disponibilita.objects.filter(persona=p,turno=t, tipo="Disponibile" ).exists():
-		d=Disponibilita.objects.get(persona=p,turno=t, tipo="Disponibile" )
-		dajax.remove('#disponibile-'+str(d.id))
-	nuova_disponibilita(request, turno_id, mansione_id, persona_id, disp)
-	d=Disponibilita.objects.get(persona=p,turno=t)
-	if d.tipo=="Disponibile":
-		dajax.append('#disponibili', 'innerHTML', '<span id="disponibile-'+str(d.id)+'" class="disponibile">'+str(d.persona)+' ('+str(d.mansione)+')</span>')
-	#dajax.alert(disponibilita)
-	dajax.script('noty({"text":"Aggiornata disponibilita per '+str(p)+'","layout":"bottomRight","type":"success","animateOpen":{"height":"toggle"},"animateClose":{"height":"toggle"},"speed":500,"timeout":5000,"closeButton":true,"closeOnSelfClick":true,"closeOnSelfOver":false});')
+	#pdb.set_trace()
+	if disp!="-":
+		nuova_disponibilita(request, turno_id, mansione_id, persona_id, disp)
+	else:
+		d=Disponibilita.objects.get(persona=p,turno=t)
+		d.delete()
+	html_anteprima = render_to_string( 'turno.html', { 't': t, 'request':request } )
+	dajax.assign('div #anteprima', 'innerHTML', html_anteprima+'<div style="clear:both;"></div>')
+	dajax.script('$(".bottom-right").notify({ message: { text: "Aggiornata disponibilita per '+str(p)+'" }}).show();')
 	return dajax.json()
 
 @dajaxice_register
 def aggiorna_statistiche(request,da,al):
 	dajax=Dajax()
-	if (da!="" and al!=""):
+	if (da=="0"):
+		dati=statistiche_intervallo(request,datetime.date(2000,1,1),datetime.datetime.now().date())
+		html_statistiche = render_to_string( 'statistiche/statistiche.html', { 'dati': dati, 'elenco_statistiche': elenco_statistiche, 'request':request } )
+		dajax.assign('div #stat', 'innerHTML', html_statistiche)
+	elif (da!="" and al!=""):
 		data_da=datetime.datetime.strptime(da, "%d/%m/%Y").date()
 		data_al=datetime.datetime.strptime(al, "%d/%m/%Y").date()
 		dati=statistiche_intervallo(request,data_da,data_al)
 		html_statistiche = render_to_string( 'statistiche/statistiche.html', { 'dati': dati, 'elenco_statistiche': elenco_statistiche, 'request':request } )
 		dajax.assign('div #stat', 'innerHTML', html_statistiche)
-		#dajax.alert("ciao")
+		#dajax.alert()
 	return dajax.json()
 
 @dajaxice_register
@@ -237,5 +198,16 @@ def persona_stato(request,stato,persona):
 	per=Persona.objects.get(id=persona)
 	per.stato=stato
 	per.save()
-	dajax.script('noty({"text":"Modifiche apportate con successo","layout":"bottomRight","type":"success","animateOpen":{"height":"toggle"},"animateClose":{"height":"toggle"},"speed":500,"timeout":5000,"closeButton":true,"closeOnSelfClick":true,"closeOnSelfOver":false});')
+	dajax.script('$(".bottom-right").notify({ message: { text: "Modifiche apportate con successo" }}).show();')
 	return dajax.json()	
+
+@dajaxice_register
+def occorrenze(request,occ_id,turno_id):
+	dajax=Dajax()
+	html=''
+	for t in Turno.objects.filter(occorrenza_id=occ_id):
+		html+='<li>'+str(t.inizio)+'</li>'
+	dajax.assign("div#occorrenze-"+str(turno_id), "innerHTML", html)
+	dajax.script('$("div#occorrenze-'+str(turno_id)+'").slideDown();')
+	return dajax.json()	
+

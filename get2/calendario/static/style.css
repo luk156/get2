@@ -458,6 +458,8 @@ span.statistiche-nav{
 	border-right: 1px solid #999;
 	min-width: 140px;
 	height:auto;
+	background: #ddd;
+ 	box-shadow:0px 2px 3px #bbb inset;
 }
 
 .giorno1{
@@ -465,8 +467,7 @@ span.statistiche-nav{
 }
 
 .giorno2{
-background: #cfdbed;
- 	box-shadow:0px 2px 3px #bbb inset;
+
 }
 
 .azioni {
