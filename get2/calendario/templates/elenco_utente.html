@@ -91,16 +91,6 @@ function utente_staff(selettore){
 {% endfor %}
 </table>
 
-<script type="text/javascript">	
-	$("table#tabella_utenti").tablesorter({
-		headers: {
-			2: { sorter: false, filter:false },
-			4: { sorter: false, filter:false },
-			},
-		theme : "bootstrap",widthFixed: true,headerTemplate : '{content} {icon}',widgets : [ "uitheme", "filter", "zebra" ],
-		widgetOptions : {zebra : ["even", "odd"], filter_reset : ".reset",}
-		});
-</script>
 
 {% for utente in utenti %}
 
@@ -116,5 +106,19 @@ function utente_staff(selettore){
 
 {% endfor %}
 
+
+<script type="text/javascript">	
+	$("table#tabella_utenti").tablesorter({
+		headers: {
+			4: { sorter: false, filter:false },
+			},
+		textExtraction: {
+			2: function(node, table, cellIndex){ 
+				return $('select option:selected',node).text();  },
+		},
+		theme : "bootstrap",widthFixed: true,headerTemplate : '{content} {icon}',widgets : [ "uitheme", "filter", "zebra" ],
+		widgetOptions : {zebra : ["even", "odd"], filter_reset : ".reset",}
+		});
+</script>
 
 {% endblock %}

@@ -19,6 +19,11 @@
 <div class="span7">
 
 <script type="text/javascript">
+	function persona_stato(selettore){
+	value=selettore.options[selettore.selectedIndex].value;
+	dati=value.split("-");
+	Dajaxice.get2.calendario.persona_stato(Dajax.process,{'stato':dati[0],'persona':dati[1]});
+	};
 	var select_enable;
 	var select_gruppi;
 	var select_mansioni;
@@ -103,30 +108,33 @@
 </form>
 </div>
 
-<script type="text/javascript">	
-	$("table#tabella_persone").tablesorter({
-		headers: {
-			0: { sorter: false, filter:false },
-			4: { sorter: false, filter:false },
-			5: { sorter: false, filter:false },
-			6: { sorter: false, filter:false },
-			},
-		theme : "bootstrap",widthFixed: true,headerTemplate : '{content} {icon}',widgets : [ "uitheme", "filter", "zebra" ],
-		widgetOptions : {zebra : ["even", "odd"], filter_reset : ".reset",}
-		});
-</script>
-
 {% for persona in persone %}
 <script type="text/javascript">	
 	$(document).ready(function(){
-function persona_stato(selettore){
-	value=selettore.options[selettore.selectedIndex].value;
-	dati=value.split("-");
-	Dajaxice.get2.calendario.persona_stato(Dajax.process,{'stato':dati[0],'persona':dati[1]});
-	}
 	
 	$('#sel-{{persona.id}} option').filter(function(){return this.text=='{{persona.get_stato_display}}';}).attr('selected', true);
 	
 });
 </script>
 {% endfor %}
+
+<script type="text/javascript">
+$(document).ready(function(){
+
+
+	$("table#tabella_persone").tablesorter({
+		headers: {
+			0: { sorter: false, filter:false },
+			4: { sorter: true, filter:false },
+			5: { sorter: false, filter:false },
+			6: { sorter: false, filter:false },
+			},
+		textExtraction: {
+			4: function(node, table, cellIndex){ 
+				return $('select option:selected',node).text();  },
+		},
+		theme : "bootstrap",widthFixed: true,headerTemplate : '{content} {icon}',widgets : [ "uitheme", "filter", "zebra" ],
+		widgetOptions : {zebra : ["even", "odd"], filter_reset : ".reset",}
+		});
+});
+</script>

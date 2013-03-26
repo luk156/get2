@@ -123,6 +123,16 @@ class Mansione(models.Model):
 class MansioneForm(forms.ModelForm):
 	class Meta:
 		model = Mansione
+	def __init__(self, *args, **kwargs):
+		self.helper = FormHelper()
+		self.helper.layout = Layout(
+			Field('nome'),
+			Field('descrizione'),
+			FormActions(
+				Submit('save', 'Invia', css_class="btn-primary")
+			)
+		)
+		super(MansioneForm, self).__init__(*args, **kwargs)
 
 STATI=(('disponibile','Disponibile'),('ferie','In ferie'),('malattia','In malattia'),('indisponibile','Indisponibile'))
 
@@ -192,6 +202,7 @@ class Requisito(models.Model):
 	mansione=models.ForeignKey(Mansione, related_name="req_mansione")
 	operatore=models.CharField('operatore', max_length=10, choices=OPERATORI )
 	valore=models.IntegerField()
+	massimo=models.IntegerField(default=99)
 	tipo_turno=models.ForeignKey(TipoTurno, related_name="req_tipo_turno",)
 	necessario=models.BooleanField('Necessario')
 	sufficiente=models.BooleanField('Sufficiente')

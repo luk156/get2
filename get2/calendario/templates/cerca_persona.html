@@ -2,6 +2,14 @@
 {% extends "base.html" %}
 {% load static %}
 
+
+{% block head %}
+	<script src="/static/js/jquery.tablesorter.min.js"></script>
+	<script src="/static/js/jquery.tablesorter.widgets.min.js"></script>
+	<script src="/static/js/jquery.tablesorter.widgets-filter-formatter.min.js"></script>
+	<link href="/static/css/theme.bootstrap.css" rel="stylesheet">
+{% endblock%}
+
 {% block header %}
 		<h4 class="header">
 			<a href="/calendario/">Calendario</a>
@@ -43,7 +51,7 @@ function disp(selettore){
 					<h5><i class="icon-search"></i> Cerca persone</h5>
 			</div>
 			<div class="box-content">
-				<table class="table table-striped no-more-tables">
+				<table class="table table-striped no-more-tables" id="cerca_persona">
 				<thead>
 					<tr>
 					<th>Nome</th><th>Mansioni</th><th>Disponibilita'</th>
@@ -121,5 +129,20 @@ function disp(selettore){
 		</div>
 	</div>
 </div>
+
+
+<script type="text/javascript">
+
+	
+	
+	$("table#cerca_persona").tablesorter({
+		textExtraction: {
+			2: function(node, table, cellIndex){ 
+				return $('select option:selected',node).text();  },
+		},
+		theme : "bootstrap",widthFixed: true,headerTemplate : '{content} {icon}',widgets : [ "uitheme", "filter", "zebra" ],
+		widgetOptions : {zebra : ["even", "odd"], filter_reset : ".reset",	}
+		});
+</script>
 
 {% endblock %}

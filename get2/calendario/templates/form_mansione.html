@@ -1,15 +1,12 @@
 
 {% extends "base.html" %}
 {% load static %}
+{% load crispy_forms_tags %}
 
-
-{% block menu2 %}
-
-<div id="navigazione">
-<div class="nav-inizio nav"><a href="/impostazioni"><span class="impostazioni-nav"> Impostazioni</span></a></div>
-<div class="nav-fine nav">Nuova mansione</div>
-</div>
-
+{% block header %}
+		<h4 class="header"><a href="/impostazioni/">Impostazioni</a>
+		<i class="icon-angle-right"></i>
+		{{azione}} mansione
 {% endblock %}
 
 {% block main %}
@@ -18,17 +15,6 @@
     <p><strong>{{ error_message }}</strong></p>
   {% endif %}
 
-  {% ifequal azione 'nuovo' %}
-  <form action="/impostazioni/mansione/nuovo/" method="post">{% csrf_token %}
-  {% endifequal %}
-
-  {% ifequal azione 'modifica' %}
-  <form action="/impostazioni/mansione/modifica/{{ mansione.id }}/" method="post">{% csrf_token %}
-  {% endifequal %}
-  <table id="form_mansione">
-  {{form.as_table}}
-  </table>
-  <input type="submit" value="invia" />
-  </form>
-    </div>
+  {% crispy form %}
+</div>
 {% endblock %}

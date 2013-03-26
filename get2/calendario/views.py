@@ -459,11 +459,13 @@ def nuovo_mansione(request):
 	azione = 'nuovo'
 	if request.method == 'POST': # If the form has been submitted...
 		form = MansioneForm(request.POST) # A form bound to the POST data
+		form.helper.form_action = '/impostazioni/mansione/nuovo/'
 		if form.is_valid():
 			form.save()
 			return HttpResponseRedirect('/impostazioni') # Redirect after POST
 	else:
 		form = MansioneForm()
+		form.helper.form_action = '/impostazioni/mansione/nuovo/'
 	return render_to_response('form_mansione.html',{'request':request, 'form': form,'azione': azione}, RequestContext(request))	
 	
 @user_passes_test(lambda u: u.is_superuser)
@@ -472,11 +474,13 @@ def modifica_mansione(request, mansione_id):
 	mansione = Mansione.objects.get(id=mansione_id)
 	if request.method == 'POST': # If the form has been submitted...
 		form = MansioneForm(request.POST, instance=mansione) # necessario per modificare la riga preesistente
+		form.helper.form_action = '/impostazioni/mansione/modifica/'+str(mansione.id)+'/' 
 		if form.is_valid():
 			form.save()
 			return HttpResponseRedirect('/impostazioni/') # Redirect after POST
 	else:
 		form = MansioneForm(instance=mansione)
+		form.helper.form_action = '/impostazioni/mansione/modifica/'+str(mansione.id)+'/' 
 	return render_to_response('form_mansione.html',{'form':form,'azione': azione, 'mansione': mansione,'request':request}, RequestContext(request))
 	
 @user_passes_test(lambda u: u.is_superuser)
