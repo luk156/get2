@@ -47,6 +47,9 @@
 						</a>
 						<ul class="dropdown-menu">
 							<li><a href="/accounts/logout">Esci</a></li>
+							{%if request.user.get_profile %}
+								<li><a href="/persone/visualizza/{{request.user.get_profile.id}}">Il mio profilo</a></li>
+							{% endif%}
 						</ul>
 					</div>
 				{%else%}
