@@ -40,7 +40,7 @@
 	{% for requisito in t.tipo.req_tipo_turno.all %}
 		{% if not requisito.extra %}
 			<div class="mansione-calendario">
-				<h6 class="h6-mansione-{{requisito.mansione.id}}">{{requisito.mansione}}
+				<h6 class="h6-mansione-{{requisito.mansione.id}}">{{requisito.mansione}} 
 				{% if not requisito.operatore = "=" or not t|verifica_requisito:requisito  or not requisito.necessario %}
 					{% if request.user.is_staff %}
 						<a href="/calendario/cerca_persona/{{t.id}}/{{requisito.mansione.id}}">
@@ -55,7 +55,11 @@
 				{% else %}
 					<span class="badge badge-important pull-right">
 				{% endif %}
-				{{requisito.operatore}} {{requisito.valore}}</span></a></h6> 
+				{{requisito.operatore}} {{requisito.valore}}
+				{% if requisito.massimo != 0 %}
+					| &le; {{requisito.massimo}}
+				{% endif %}
+				</span></a></h6> 
 			</div>
 			<div class="">
 				<ul>
@@ -142,7 +146,11 @@
 				{% for requisito in t.tipo.req_tipo_turno.all %}
 					{% if requisito.mansione in request.user.get_profile.competenze.all %}
 						{% if not requisito.operatore = "=" or not t|verifica_requisito:requisito  %}
-							<option value="{{requisito.mansione.id}}">{{requisito.mansione}}
+							{%if requisito.massimo = 0 %}
+								<option value="{{requisito.mansione.id}}">{{requisito.mansione}}
+							{% elif t|gia_disponibili:requisito < requisito.massimo %}
+								<option value="{{requisito.mansione.id}}">{{requisito.mansione}}
+							{% endif %}
 						{% endif %}
 					{% endif %}
 				{% endfor %}

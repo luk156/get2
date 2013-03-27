@@ -179,7 +179,7 @@ class Requisito(models.Model):
 	mansione=models.ForeignKey(Mansione, related_name="req_mansione")
 	operatore=models.CharField('operatore', max_length=10, choices=OPERATORI )
 	valore=models.IntegerField()
-	massimo=models.IntegerField(default=99)
+	massimo=models.IntegerField(default=0)
 	tipo_turno=models.ForeignKey(TipoTurno, related_name="req_tipo_turno",)
 	necessario=models.BooleanField('Necessario')
 	sufficiente=models.BooleanField('Sufficiente')
@@ -226,11 +226,15 @@ class Turno(models.Model):
 				if (requisito.extra and requisito.mansione in d.persona.competenze.all()):
 					contatore+=1
 			operatore=ops[requisito.operatore]
-			if not operatore(contatore,requisito.valore):
+			if not (operatore(contatore,requisito.valore)):
+				return False
+			if contatore>requisito.massimo and requisito.massimo!=0:
 				return False
 			return True
 		else:
 			return True
+	def gia_disponibili(self,requisito):
+		return self.turno_disponibilita.filter(tipo="Disponibile",mansione=requisito.mansione).count()
 	def coperto(self):
 		if self.tipo:
 			for r in Requisito.objects.filter(tipo_turno=self.tipo_id):
