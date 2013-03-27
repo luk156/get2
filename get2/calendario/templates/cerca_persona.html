@@ -71,9 +71,13 @@ function disp(selettore){
 									s.append("<option value=''>Gia Impegnato</option>");
 									$('#persona-{{persona.id}}').addClass("error");
 								}
-								else {$('#sel-{{persona.id}} option').filter(function() { return this.text == '{{d.tipo}}';}).attr('selected', true);}
+								else {$('#sel-{{persona.id}} option').filter(function() { return this.text == '{{d.get_tipo_display}}';}).attr('selected', true);
+									$('#disponibilita-{{persona.id}}').html('{{d.creata_da}}:{{d.ultima_modifica|date:"d M"}} {{d.ultima_modifica|time:"H:i"}}');
+									}
 							}
-							else { $('#sel-{{persona.id}} option').filter(function() { return this.text == '{{d.tipo}}';}).attr('selected', true);} }
+							else { $('#sel-{{persona.id}} option').filter(function() { return this.text == '{{d.get_tipo_display}}';}).attr('selected', true);
+								$('#disponibilita-{{persona.id}}').html('{{d.creata_da}}:{{d.ultima_modifica|date:"d M"}} {{d.ultima_modifica|time:"H:i"}}');
+								} }
 						);
 						</script>
 						{% endif %}
@@ -85,7 +89,7 @@ function disp(selettore){
 						  $(document).ready(function(){
 							  var s = $('#sel-{{persona.id}}');
 							  $("#sel-{{persona.id}} option:first").remove();
-							  s.prepend("<option value=''>{{d.mansione}}</option>");
+							  s.prepend("<option value=''>{{d.mansione}} </option>");
 							  $("#sel-{{persona.id}} option:first").attr('selected', true);}
 							);
 					  </script> 
@@ -93,7 +97,8 @@ function disp(selettore){
 					 {% if persona = d.persona and d.mansione.id = mansione.id %}
 					  <script type="text/javascript">
 						$(document).ready(function(){
-							$('#sel-{{persona.id}} option').filter(function() { return this.text == '{{d.tipo}}'; }).attr('selected', true);
+							$('#sel-{{persona.id}} option').filter(function() { return this.text == '{{d.get_tipo_display}}'; }).attr('selected', true);
+							$('#disponibilita-{{persona.id}}').html('{{d.creata_da}}:{{d.ultima_modifica|date:"d M"}} {{d.ultima_modifica|time:"H:i"}}');
 							}
 						);
 					  </script> 
@@ -108,6 +113,7 @@ function disp(selettore){
 				{%for key,value in DISPONIBILITA %}
 				<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/{{key}}">{{value}}{% endfor%}
 				</SELECT>
+				<div id="disponibilita-{{persona.id}}"></div>
 					</td>
 					</tr>
 

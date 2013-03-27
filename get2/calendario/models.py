@@ -117,6 +117,8 @@ class Persona(models.Model):
 	nome = models.CharField('Nome',max_length=200)
 	cognome = models.CharField('Cognome',max_length=200)
 	nascita = models.DateField('Data di nascita')
+	#tel1 = models.CharField('Telefono Principale',max_length=20)
+	#tel2 = models.CharField('telefono Secondario',max_length=20)
 	#caratteristiche della persona
 	stato = models.CharField('Stato',max_length=40, choices=STATI, default='disponibile' )
 	competenze = models.ManyToManyField(Mansione, blank=True, null=True)
