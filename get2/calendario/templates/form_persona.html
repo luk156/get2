@@ -1,8 +1,13 @@
 {% extends "base.html" %}
 {% load static %}
 {% load crispy_forms_tags %}
-{% block title %} Inserimento/Modifica di una persona {% endblock %}	
+{% block title %} {{azione}} persona {% endblock %}
 
+{% block head %}
+	<link href="/static/css/datetimepicker.css" rel="stylesheet">
+	<script src="/static/js/bootstrap-datetimepicker.min.js"></script>
+	<script src="/static/js/locales/bootstrap-datetimepicker.it.js"></script>
+{% endblock%}
 
 {% block header %}
 		<h4 class="header"><a href="/persone/">Persone</a>
@@ -11,6 +16,12 @@
 {% endblock %}
 
 {% block main %}
+<script>
+window.onload = function() 
+{ 
+	$(".dateinput").datetimepicker({format: 'dd/mm/yyyy',autoclose: true,minView:2,language: 'it'});
+};
+</script>
 
 <div style="margin:10px;">
 

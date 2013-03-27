@@ -8,30 +8,32 @@
 {% endblock %}
 
 {% block main %}
-<span class="titolo impostazioni">{{persona.nome}} {{persona.cognome}}</span>
-<table class="cento">	
-		<tr class="gruppi">
-			<td class="gruppi">User:</td>
-			<td class="gruppi">{{persona.user}}</td>
-		</tr>
-		<tr class="gruppi">
-			<td class="gruppi">Data nascita:</td>
-			<td class="gruppi">{{persona.nascita}}</td>
-		</tr>
-		<tr class="gruppi">
-			<td class="gruppi">Stato:</td>
-			<td class="gruppi">{{persona.stato}}</td>
-		</tr>
-		<tr class="gruppi">
-			<td class="gruppi">Mansioni:</td>
-			<td class="gruppi">{% for mansione in persona.competenze.all %} {{mansione.descrizione}} {% endfor %}</td>
-		</tr>
-		{% for nome_attributo, valore_attributo in attributi %}
-		<tr class="gruppi">
-			<td class="gruppi">{{nome_attributo}}:</td>
-			<td class="gruppi">{{valore_attributo}}</td>
-		</tr>
-			
-		{% endfor %}
-</table>
+
+<div class="row-fluid">
+	<div class="span7">
+		<div class="Informazioni">
+		<div class="box">
+			<div class="box-header">
+				<a href="/impostazioni/mansione/nuovo" class="pull-right btn"><i class="icon-edit"></i> modifica</a>
+				<h5>{{persona.nome}} {{persona.cognome}}</h5>
+			</div>
+			<div class="box-content">
+				<table class="table table-striped no-more-tables">
+					<thead>
+					<tr>
+						<th>Utente associato</th><th>Nascita</th><th>Stato</th><th>Competenze</th><th>note</th>
+					</tr>
+					</thead>
+					<tr>
+						<td>{{persona.user}}</td><td>{{persona.nascita}}</td><td>{{persona.stato}}</td>
+						<td>{% for mansione in persona.competenze.all %} 
+						<span class="badge-mansione">{{mansione.descrizione}}</span>
+						{% endfor %}</td><td>{{persona.note}}</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
 {% endblock %}

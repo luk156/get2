@@ -1,16 +1,17 @@
 {% extends "base.html" %}
 {% load static %}
+{% load crispy_forms_tags %}
 
-
-{% block title %} Inserimento/Modifica di una persona {% endblock %}	
+{% block title %} {{azione}} gruppo {% endblock %}	
 
 
 {% block menu2 %}
 
-<div id="navigazione">
-<div class="nav-inizio nav"><a href="/persone"><span class="persone-nav"> Persone</span></a></div>
-<div class="nav-fine nav">Nuovo gruppo</div>
-</div>
+{% block header %}
+		<h4 class="header"><a href="/persone/">Persone</a>
+		<i class="icon-angle-right"></i>
+		{{azione}} gruppo
+{% endblock %}
 
 {% endblock %}
 
@@ -18,18 +19,7 @@
 
 <div style="margin:10px;">
 
+  {% crispy form %}
 
-  {% ifequal azione 'nuovo' %}
-  <form action="/persone/gruppo/nuovo/" method="post">{% csrf_token %}
-  {% endifequal %}
-
-  {% ifequal azione 'modifica' %}
-  <form action="/persone/gruppo/modifica/{{ g.id }}/" method="post">{% csrf_token %}
-  {% endifequal %}
-  <table>
-  {{form.as_table}}
-  <tr><td></td><td><input type="submit" value="invia" /></td></tr>
-  </table>
-  </form>    	
-  </div>
+</div>
 {% endblock %}

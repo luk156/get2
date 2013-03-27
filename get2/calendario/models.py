@@ -85,7 +85,9 @@ class MultiSelectField(models.Field):
     def value_to_string(self, obj):
         value = self._get_val_from_obj(obj)
         return self.get_db_prep_value(value)
-
+        
+from south.modelsinspector import add_introspection_rules  
+add_introspection_rules([], ["^get2\.calendario\.models\.MultiSelectField"]) 
 
 class Mansione(models.Model):
 	nome =models.CharField('Nome',max_length=20)
@@ -114,6 +116,7 @@ class Persona(models.Model):
 	user = models.ForeignKey(User, unique=True, blank=True, null=True, related_name='pers_user')
 	nome = models.CharField('Nome',max_length=200)
 	cognome = models.CharField('Cognome',max_length=200)
+	nascita = models.DateField('Data di nascita')
 	#caratteristiche della persona
 	stato = models.CharField('Stato',max_length=40, choices=STATI, default='disponibile' )
 	competenze = models.ManyToManyField(Mansione, blank=True, null=True)
@@ -135,6 +138,7 @@ class PersonaForm(forms.ModelForm):
 		self.helper.layout = Layout(
 			Field('nome'),
 			Field('cognome'),
+			AppendedText('nascita', '<i class="icon-calendar"></i>'),
 			Field('stato'),
 			InlineCheckboxes('competenze', css_class="badge-mansione"),
 			Field('note'),
@@ -162,6 +166,16 @@ class GruppoForm(forms.ModelForm):
 	class Meta:
 		model = Gruppo
 		exclude = ('componenti')
+	def __init__(self, *args, **kwargs):
+		self.helper = FormHelper()
+		self.helper.layout = Layout(
+			Field('nome'),
+			Field('note'),
+			FormActions(
+				Submit('save', 'Invia', css_class="btn-primary")
+			)
+		)
+		super(GruppoForm, self).__init__(*args, **kwargs)
 
 class TipoTurno(models.Model):
 	identificativo = models.CharField(max_length=30, blank=False)

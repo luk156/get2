@@ -1,6 +1,10 @@
 <script src="/static/sorttable.js"></script>
 
 <div class="row-fluid">
+	<div class="pull-left">
+		<a class="btn" name="CheckAll" onClick="checkAll()"><i class="icon-check"></i> Seleziona tutto</a>
+		<a class="btn" name="UnCheckAll" onClick="uncheckAll()"><i class="icon-check-empty"></i> Annulla selezione</a>
+	</div>
 	<div class=" pull-right">
 		<form action="/persone/aggiungilista/" method="get"  class="form-inline">
 		Se selezionati: <select name="azione">
@@ -19,6 +23,18 @@
 <div class="span7">
 
 <script type="text/javascript">
+	function checkAll() {
+	  checkboxes = document.getElementsByName('persone_id');
+	  for(var i in checkboxes)
+		checkboxes[i].checked = true;
+	}
+
+	function uncheckAll() {
+	  checkboxes = document.getElementsByName('persone_id');
+	  for(var i in checkboxes)
+		checkboxes[i].checked = false;
+	}
+
 	function persona_stato(selettore){
 	value=selettore.options[selettore.selectedIndex].value;
 	dati=value.split("-");

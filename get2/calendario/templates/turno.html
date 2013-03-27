@@ -55,9 +55,9 @@
 				{% else %}
 					<span class="badge badge-important pull-right">
 				{% endif %}
-				{{requisito.operatore}} {{requisito.valore}}
+				{{requisito.operatore}}{{requisito.valore}}
 				{% if requisito.massimo != 0 %}
-					| &le; {{requisito.massimo}}
+					| &le;{{requisito.massimo}}
 				{% endif %}
 				</span></a></h6> 
 			</div>
@@ -74,7 +74,10 @@
 		{% if requisito.extra %}
 			<div class="mansione-calendario">
 				<h6 class="h6-mansione-{{requisito.mansione.id}}"><i class="icon-asterisk"></i> {{requisito.mansione}}
-				<span class="badge badge-warning pull-right"> {{requisito.operatore}} {{requisito.valore}}</span></h6>
+				<span class="badge badge-warning pull-right"> {{requisito.operatore}}{{requisito.valore}}
+				{% if requisito.massimo != 0 %}
+					| &le;{{requisito.massimo}}
+				{% endif %}</span></h6>
 			</div>
 		{% endif %}
 	{% endfor %}

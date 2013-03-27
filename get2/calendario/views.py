@@ -72,11 +72,13 @@ def nuovo_gruppo(request):
 	azione = 'nuovo'
 	if request.method == 'POST':
 		form = GruppoForm(request.POST)
+		form.helper.form_action = 'persone/gruppo/nuovo/'
 		if form.is_valid():
 			form.save()
 			return HttpResponseRedirect('/persone')
 	else:
 		form = GruppoForm()
+		form.helper.form_action = 'persone/gruppo/nuovo/'
 	return render_to_response('form_gruppo.html',{'request':request,'form': form,'azione': azione,}, RequestContext(request))
 	#else:
 	#	return render_to_response('staff-no.html')
@@ -87,11 +89,13 @@ def modifica_gruppo(request,gruppo_id):
 	g = Gruppo.objects.get(id=gruppo_id)
 	if request.method == 'POST':  # If the form has been submitted...
 		form = GruppoForm(request.POST, instance=g)  # necessario per modificare la riga preesistente
+		form.helper.form_action = '/persone/gruppo/modifica/'+str(g.id)+'/'
 		if form.is_valid():
 			form.save()
 			return HttpResponseRedirect('/persone') # Redirect after POST
 	else:
 		form = GruppoForm(instance=g)
+		form.helper.form_action = '/persone/gruppo/modifica/'+str(g.id)+'/'
 	return render_to_response('form_gruppo.html',{'request': request, 'form': form,'azione': azione, 'g': g,}, RequestContext(request))
 
 @user_passes_test(lambda u:u.is_staff)

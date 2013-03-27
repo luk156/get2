@@ -70,6 +70,12 @@ background-color: #ddd;
 
 }
 
+.badge {
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 5px 5px 5px 5px;
+}
+
 .well {background-color: #fff;}
 
 .pager li > a, .pager li > span {
@@ -280,10 +286,15 @@ div .titolo-turno .gruppo-turno {
 	}
 }
 
+div.mansione-calendario{
+	padding:0px 3px;
+}
+
+
 div.mansione-calendario h6 {
     padding-bottom: 3px;
-    padding-left:10px;
-    padding-right:10px;
+    padding-left:0px;
+    padding-right:0px;
     margin-bottom: 5px;
     border-bottom: 1px solid #bbb;
     color: #444;
@@ -372,6 +383,7 @@ span.badge-gruppo {
 		background-color: #F5DA81;
 		border-radius: 4px 4px 4px 4px;
 		font-weight:bold;
+		padding:0px;
 		padding-top:3px;
 		
 }
