@@ -30,11 +30,15 @@ giorni[6] = "Domenica";
 			</div>
 			<div class="box-content">
 				<table class="table table-striped no-more-tables">
+					<thead>
+						<th>Nome</th><th>Descrizione</th><th>Operazioni</th>
+					</thead>
 				{% for mansione in mansioni %}
 					<tr class="" id="mansione-{{mansione.id}}">
-					<td class="mansioni">{{mansione}}</td>
-					<td class="operazioni">
-						<div class="btn-group pull-right">
+					<td data-title="Nome">{{mansione}}</td>
+					<td data-title="Descrizione">{{mansione.descrizione}}</td>
+					<td data-title="Operazioni">
+						<div class="btn-group">
 						  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
 							<i class="icon-cog"></i> Azioni
 							<span class="caret"></span>
@@ -65,19 +69,19 @@ giorni[6] = "Domenica";
 				{% for i in impostazioni_notifica_utente %}
 				
 					<tr id="impostazioni_notifica_utente-{{i.id}}">
-						<td>{{i.utente}}</td>
-						<td>
+						<td data-title="Utente">{{i.utente}}</td>
+						<td data-title="Giorni">
 						{% for g in i.giorni %}
-						<script>document.write(giorni[{{ g }}]);</script>
+						<script>document.write(giorni[{{ g }}]);</script>, 
 						{% endfor%}
 						</td>
-						<td>
+						<td data-title="Tipo turno">
 						{% for t in i.tipo_turno.all %}
-						{{t}}
+						{{t}}, 
 						{% endfor%}		
 						</td>
 						<td>
-							<div class="btn-group pull-right">
+							<div class="btn-group">
 							  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
 								<i class="icon-cog"></i> Azioni
 								<span class="caret"></span>

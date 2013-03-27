@@ -21,14 +21,25 @@
 				<table class="table table-striped no-more-tables">
 					<thead>
 					<tr>
-						<th>Utente associato</th><th>Nascita</th><th>Stato</th><th>Competenze</th><th>note</th>
+						<th>Utente associato</th>
+						<th>Nascita</th>
+						<th>Stato</th>
+						<th>Competenze</th>
+						<th>Telefono principale</th>
+						<th>Telefono secondario</th>
+						<th>note</th>
 					</tr>
 					</thead>
 					<tr>
-						<td>{{persona.user}}</td><td>{{persona.nascita}}</td><td>{{persona.stato}}</td>
-						<td>{% for mansione in persona.competenze.all %} 
+						<td data-title="Utente">{{persona.user}}</td>
+						<td data-title="Nascita">{{persona.nascita}}</td>
+						<td data-title="Stato">{{persona.stato}}</td>
+						<td data-title="Competenze">{% for mansione in persona.competenze.all %} 
 						<span class="badge-mansione">{{mansione.descrizione}}</span>
-						{% endfor %}</td><td>{{persona.note}}</td>
+						{% endfor %}</td>
+						<td data-title="Tel. Principale">{{persona.tel1}}</td>
+						<td data-title="tel. secondario">{{persona.tel2}}</td>
+						<td data-title="Note">{{persona.note}}</td>
 					</tr>
 				</table>
 			</div>

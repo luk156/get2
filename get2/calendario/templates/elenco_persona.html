@@ -32,10 +32,10 @@
 				</tr></thead>
 				{% for gruppo in gruppi %}
 					<tr id="gruppo-{{gruppo.id}}">
-						<td>{{gruppo}} ({{gruppo.numero_componenti}})</td>
-						<td>{{gruppo.note}}
+						<td data-title="Nome">{{gruppo}} ({{gruppo.numero_componenti}})</td>
+						<td data-title="Note">{{gruppo.note}}
 						</td>
-						<td>
+						<td data-title="Operazioni">
 							<div class="btn-group">
 							  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
 								<i class="icon-cog"></i> Azioni
