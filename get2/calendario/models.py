@@ -117,7 +117,7 @@ class Persona(models.Model):
 	nome = models.CharField('Nome',max_length=200)
 	cognome = models.CharField('Cognome',max_length=200)
 	indirizzo = models.TextField( blank=True, null=True, )
-	nascita = models.DateField('Data di nascita')
+	nascita = models.DateField('Data di nascita', blank=True, null=True,)
 	tel1 = models.CharField('Telefono Principale',max_length=20)
 	tel2 = models.CharField('telefono Secondario',max_length=20, blank=True, null=True)
 	#caratteristiche della persona
