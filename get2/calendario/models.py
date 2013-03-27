@@ -7,25 +7,7 @@ import pdb
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Field, MultiField, HTML
 from crispy_forms.bootstrap import *
-
-#############################################################
-
 from django.utils.text import capfirst
-from django.core import exceptions
-
-#### import per eav #####
-import os
-project = os.path.basename(os.path.dirname(__file__))
-os.environ['DJANGO_SETTINGS_MODULE'] = '%s.settings' % project
-import eav
-from eav.forms import BaseDynamicEntityForm
-from eav.models import Attribute
-
-from south.modelsinspector import add_ignored_fields
-add_ignored_fields(["^eav\.fields\.EavDatatypeField"])
-add_ignored_fields(["^eav\.fields\.EavSlugField"])
-
-#### fine import eav ####
 
 class MultiSelectFormField(forms.MultipleChoiceField):
     widget = forms.CheckboxSelectMultiple
@@ -105,14 +87,6 @@ class MultiSelectField(models.Field):
         return self.get_db_prep_value(value)
 
 
-# needed for South compatibility
-
-from south.modelsinspector import add_introspection_rules  
-add_introspection_rules([], ["^get2\.calendario\.models\.MultiSelectField"])
-
-############################################
-
-
 class Mansione(models.Model):
 	nome =models.CharField('Nome',max_length=20)
 	descrizione = models.TextField('Descrizione estesa')
@@ -153,20 +127,23 @@ class Persona(models.Model):
 	def __unicode__(self):
 		return '%s %s' % (self.nome,self.cognome)
 
-class PersonaForm(BaseDynamicEntityForm):
-	def __init__(self, *args, **kwargs):
-		super(PersonaForm, self).__init__(*args, **kwargs)
-		lista_attributi = eav.models.Entity(Persona).get_all_attributes()
-		#pdb.set_trace()
-		# da finire
-		for attributo in lista_attributi:
-			if attributo.datatype == 'date':
-	       			self.fields[attributo.slug].widget.attrs['class'] = 'campo_tipo_data'
+class PersonaForm(forms.ModelForm):
 	class Meta:
-		model = Persona		
-		widgets = {'competenze': forms.CheckboxSelectMultiple}
+		model = Persona
+	def __init__(self, *args, **kwargs):
+		self.helper = FormHelper()
+		self.helper.layout = Layout(
+			Field('nome'),
+			Field('cognome'),
+			Field('stato'),
+			InlineCheckboxes('competenze', css_class="badge-mansione"),
+			Field('note'),
+			FormActions(
+				Submit('save', 'Invia', css_class="btn-primary")
+			)
+		)
+		super(PersonaForm, self).__init__(*args, **kwargs)
 
-eav.register(Persona) #registro il Model Persona come associazione a eav
 
 class Gruppo(models.Model):
 	nome = models.CharField('Nome',max_length=30)
@@ -394,15 +371,3 @@ class Impostazioni_notificaForm(forms.ModelForm):
 		model = Impostazioni_notifica
 		widgets = {'tipo_turno': forms.CheckboxSelectMultiple}
 
-
-#### Form per Attribute(eav) ####
-class AttributeForm(forms.ModelForm):
-	def __init__(self, *args, **kwargs):
-		super(AttributeForm, self).__init__(*args, **kwargs)
-		self.fields['name'].help_text = ''
-		self.fields['datatype'].label = 'Tipo'
-		self.fields['required'].label = 'Obbligatorio'
-
-	class Meta:
-		model = Attribute
-		exclude = ('slug', 'site', 'slug', 'description', 'enum_group', 'type')

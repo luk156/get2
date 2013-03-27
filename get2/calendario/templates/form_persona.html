@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-
+{% load crispy_forms_tags %}
 {% block title %} Inserimento/Modifica di una persona {% endblock %}	
 
 
@@ -23,8 +23,8 @@
   <form action="/persone/modifica/{{ per.id }}/" method="post">{% csrf_token %}
   {% endifequal %}
   <table>
-  {{form.as_table}}
-  <tr><td></td><td><input type="submit" value="invia" /></td></tr>
+  {% crispy form %}
+  
   </table>
   </form>    	
   </div>
