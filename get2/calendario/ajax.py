@@ -165,7 +165,7 @@ def disp(request, turno_id, mansione_id, persona_id, disp):
 	html_anteprima = render_to_string( 'turno.html', { 't': t, 'request':request } )
 	dajax.assign('div #anteprima', 'innerHTML', html_anteprima+'<div style="clear:both;"></div>')
 	dajax.script('$(".bottom-right").notify({ message: { text: "Aggiornata disponibilita per '+str(p)+'" }}).show();')
-	dajax.script('$(".h6-mansione-{{mansione.id}}").addClass("mansione-sel");')
+	dajax.script('$(".h6-mansione-'+mansione_id+'").addClass("mansione-sel");')
 	return dajax.json()
 
 @dajaxice_register

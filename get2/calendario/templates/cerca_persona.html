@@ -54,7 +54,7 @@ function disp(selettore){
 				<table class="table table-striped no-more-tables" id="cerca_persona">
 				<thead>
 					<tr>
-					<th>Nome</th><th>Mansioni</th><th>Disponibilita'</th>
+					<th>Nome</th><th>Mansioni</th><th>Telefono principale</th><th>telefono secondario</th></th><th>Disponibilita'</th>
 					</tr>
 				</thead>
 				{%for persona in persone%}
@@ -107,6 +107,8 @@ function disp(selettore){
 					<tr {%if persona.stato != 'disponibile'%} class="error" {%endif%} id="persona-{{persona.id}}">
 					<td data-title="Nome" class="nome">{{persona}}</td>
 					<td data-title="Mansioni" class="mansioni">{% for m in persona.competenze.all %}<span class="badge-mansione">{{m}}</span>  {% endfor %}</td>
+					<td data-title="telefono1">{{persona.tel1}}</td>
+					<td data-title="telefono2">{{persona.tel2}}</td>
 					<td data-title="Disponibilita" class="disponibilita">
 						<SELECT NAME="stato" class="span7" ONCHANGE="disp(this);" id="sel-{{persona.id}}">
 				<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/-">----
@@ -138,17 +140,17 @@ function disp(selettore){
 
 
 <script type="text/javascript">
+$(document).ready(function(){
 
-	
-	
 	$("table#cerca_persona").tablesorter({
 		textExtraction: {
-			2: function(node, table, cellIndex){ 
+			4: function(node, table, cellIndex){ 
 				return $('select option:selected',node).text();  },
 		},
 		theme : "bootstrap",widthFixed: true,headerTemplate : '{content} {icon}',widgets : [ "uitheme", "filter", "zebra" ],
 		widgetOptions : {zebra : ["even", "odd"], filter_reset : ".reset",	}
 		});
+});
 </script>
 
 {% endblock %}
