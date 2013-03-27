@@ -5,27 +5,16 @@
 
 
 {% block header %}
-		<h4 class="header"><a href="/persone/">Persone</a> / {{azione}} persona
+		<h4 class="header"><a href="/persone/">Persone</a>
+		<i class="icon-angle-right"></i>
+		{{azione}} persona
 {% endblock %}
 
 {% block main %}
 
 <div style="margin:10px;">
-  {% if error_message %}
-    <p><strong>{{ error_message }}</strong></p>
-  {% endif %}
 
-  {% ifequal azione 'nuovo' %}
-  <form action="/persone/nuovo/" method="post">{% csrf_token %}
-  {% endifequal %}
-
-  {% ifequal azione 'modifica' %}
-  <form action="/persone/modifica/{{ per.id }}/" method="post">{% csrf_token %}
-  {% endifequal %}
-  <table>
   {% crispy form %}
-  
-  </table>
-  </form>    	
-  </div>
+
+</div>
 {% endblock %}

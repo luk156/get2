@@ -34,12 +34,14 @@ def nuovo_persona(request):
 	azione = 'nuovo'
 	if request.method == 'POST':
 		form = PersonaForm(request.POST)
+		form.helper.form_action = '/persone/nuovo/'
 		if form.is_valid():
 			form.save()
 			return HttpResponseRedirect('/persone')
 	else:
 		form = PersonaForm()
-	return render_to_response('form_persona.html',{'request':request,'form': form,'azione': azione,'mansione_form':MansioneForm()}, RequestContext(request))
+		form.helper.form_action = '/persone/nuovo/'
+	return render_to_response('form_persona.html',{'request':request,'form': form,'azione': azione,}, RequestContext(request))
 	#else:
 	#	return render_to_response('staff-no.html')
 	
@@ -49,12 +51,13 @@ def modifica_persona(request,persona_id):
 	per = Persona.objects.get(id=persona_id)
 	if request.method == 'POST':  # If the form has been submitted...
 		form = PersonaForm(request.POST, instance=per)  # necessario per modificare la riga preesistente
+		form.helper.form_action = '/persone/modifica/'+str(per.id)+'/'
 		if form.is_valid():
 			form.save()
-			form.save_m2m()
 			return HttpResponseRedirect('/persone') # Redirect after POST
 	else:
 		form = PersonaForm(instance=per)
+		form.helper.form_action = '/persone/modifica/'+str(per.id)+'/'
 	return render_to_response('form_persona.html',{'request': request, 'form': form,'azione': azione, 'per': per,'mansione_form':MansioneForm()}, RequestContext(request))
 
 @user_passes_test(lambda u: u.is_superuser)

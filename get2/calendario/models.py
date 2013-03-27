@@ -125,7 +125,7 @@ class Persona(models.Model):
 				n+=1
 		return n
 	def __unicode__(self):
-		return '%s %s' % (self.nome,self.cognome)
+		return '%s %s' % (self.cognome,self.nome)
 
 class PersonaForm(forms.ModelForm):
 	class Meta:
