@@ -141,16 +141,33 @@ class PersonaForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):
 		self.helper = FormHelper()
 		self.helper.layout = Layout(
-			Field('nome'),
-			Field('cognome'),
-			AppendedText('nascita', '<i class="icon-calendar"></i>'),
-			AppendedText('tel1', '<i class="icon-phone"></i>'),
-			AppendedText('tel2', '<i class="icon-phone"></i>'),
-			Field('stato'),
-			InlineCheckboxes('competenze', css_class="badge-mansione"),
-			Field('note'),
+			HTML('<div class="row">'),
+			Div(
+				Fieldset(
+					'Informazioni Anagrafiche',
+					'nome',
+					'cognome',
+					'indirizzo',
+					),
+				AppendedText('nascita', '<i class="icon-calendar"></i>'),
+				AppendedText('tel1', '<i class="icon-phone"></i>'),
+				AppendedText('tel2', '<i class="icon-phone"></i>'),
+				css_class="span3",
+			),
+			Div(
+				Fieldset(
+					'Altre informazioni',
+					'user',
+					'stato',
+					),
+				InlineCheckboxes('competenze', css_class="badge-mansione"),
+				AppendedText('retraining', '<i class="icon-calendar"></i>'),
+				AppendedText('retraining_blsd', '<i class="icon-calendar"></i>'),
+				css_class="span3"
+			),
+			HTML('</div>'),
 			FormActions(
-				Submit('save', 'Invia', css_class="btn-primary")
+				Submit('save', 'Invia', css_class="btn-primary"),
 			)
 		)
 		super(PersonaForm, self).__init__(*args, **kwargs)
@@ -192,7 +209,15 @@ class TipoTurno(models.Model):
 class TipoTurnoForm(forms.ModelForm):
 	class Meta:
 		model = TipoTurno
-
+	def __init__(self, *args, **kwargs):
+		self.helper = FormHelper()
+		self.helper.layout = Layout(
+			Field('identificativo'),
+			FormActions(
+				Submit('save', 'Invia', css_class="btn-primary")
+			)
+		)
+		super(TipoTurnoForm, self).__init__(*args, **kwargs)
 
 OPERATORI=(('=','Uguale a'),('>','Maggiore di'))
 
@@ -210,7 +235,22 @@ class RequisitoForm(forms.ModelForm):
 	class Meta:
 		model = Requisito
 		exclude = ('tipo_turno')
-
+	def __init__(self, *args, **kwargs):
+		self.helper = FormHelper()
+		self.helper.layout = Layout(
+			Field('mansione'),
+			Field('operatore'),
+			Field('valore'),
+			Field('massimo'),
+			Field('necessario'),
+			Field('sufficiente'),
+			Field('extra'),
+			FormActions(
+				Submit('save', 'Invia', css_class="btn-primary")
+			)
+		)
+		super(RequisitoForm, self).__init__(*args, **kwargs)
+		
 GIORNO = (
   ('q', 'qualsiasi'),
   (0, 'lunedi'),

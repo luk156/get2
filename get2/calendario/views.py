@@ -706,6 +706,7 @@ def nuovo_requisito(request,tipo_turno_id):
 	azione = 'nuovo'
 	if request.method == 'POST': # If the form has been submitted...
 		form = RequisitoForm(request.POST) # A form bound to the POST data
+		form.helper.form_action = '/impostazioni/tipo_turno/aggiungi_requisito/'+str(t_turno.id)+'/'
 		if form.is_valid():
 			r=Requisito(tipo_turno=t_turno)
 			form =  RequisitoForm(request.POST, instance=r)
@@ -713,6 +714,7 @@ def nuovo_requisito(request,tipo_turno_id):
 			return HttpResponseRedirect('/impostazioni/#tabs-tipo-turno') # Redirect after POST
 	else:
 		form = RequisitoForm(initial={'necessario': True,})
+		form.helper.form_action = '/impostazioni/tipo_turno/aggiungi_requisito/'+str(t_turno.id)+'/'
 	return render_to_response('form_requisito.html',{'request':request, 'tipo_turno': t_turno, 'form': form,'azione': azione}, RequestContext(request))	
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -722,11 +724,13 @@ def modifica_requisito(request,requisito_id):
 	requisito = Requisito.objects.get(id=requisito_id)
 	if request.method == 'POST': # If the form has been submitted...
 		form = RequisitoForm(request.POST, instance=requisito) # necessario per modificare la riga preesistente
+		form.helper.form_action = '/impostazioni/requisito/modifica/'+str(requisito.id)+'/'
 		if form.is_valid():
 			form.save()
 			return HttpResponseRedirect('/impostazioni/#tabs-tipo-turno') # Redirect after POST
 	else:
 		form = RequisitoForm(instance=requisito)
+		form.helper.form_action = '/impostazioni/requisito/modifica/'+str(requisito.id)+'/'
 	return render_to_response('form_requisito.html',{'form':form,'azione': azione,'requisito': requisito,'request':request}, RequestContext(request))
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -739,7 +743,6 @@ def elimina_requisito(request,requisito_id):
 
 #### inizio pagina persona ####
 
-@user_passes_test(lambda u:u.is_staff)
 def visualizza_persona(request,persona_id):
 	persona = Persona.objects.get(id=persona_id)
 	return render_to_response('dettaglio_persona.html',{'request': request, 'persona': persona}, RequestContext(request))
