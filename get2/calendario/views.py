@@ -329,7 +329,7 @@ def disponibilita_risolvi_contemporaneo(request,persona_id,contemporaneo):
 			if d.tipo=="Disponibile":
 				persona= Persona.objects.get(id=persona_id)
 				notifica_disponibilita(request,persona,contemporaneo,'Non piu disponibile',contemporaneo.mansione)
-			rimuovi_disponibilita(d.id)
+			rimuovi_disponibilita(request,d.id)
 
 
 def nuova_disponibilita(request, turno_id, mansione_id, persona_id, disponibilita):
