@@ -275,7 +275,7 @@ def calendarioazione(request,azione):
 @user_passes_test(lambda u:u.is_staff)
 def cerca_persona(request, turno_id, mansione_id):
 	mansione=Mansione.objects.get(id=mansione_id)
-	persone=Persona.objects.filter(competenze=mansione)
+	persone=Persona.objects.filter(competenze=mansione).order_by('cognome').exclude(stato='indisponibile')
 	turno=Turno.objects.get(id=turno_id)
 	return render_to_response('cerca_persona.html',{'persone':persone,'t':turno,'mansione':mansione,'DISPONIBILITA':DISPONIBILITA,'request':request})
 
