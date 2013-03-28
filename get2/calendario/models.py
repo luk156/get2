@@ -262,6 +262,7 @@ GIORNO = (
   (6, 'domenica'),
   ('p', 'prefestivi'),
   ('f', 'festivi'),
+  ('e', 'feriali'),
   )
 
 class Occorrenza(models.Model):
