@@ -20,11 +20,13 @@
 function utente_persona(selettore){
 	value=selettore.options[selettore.selectedIndex].value;
 	dati=value.split("/");
+	$('#loading').removeClass('hidden');
 	Dajaxice.get2.calendario.utente_persona(Dajax.process,{'user_id':dati[0],'persona_id':dati[1]});
 }
 
 function utente_staff(selettore){
 	value=selettore.value;
+	$('#loading').removeClass('hidden');
 	Dajaxice.get2.calendario.utente_staff(Dajax.process,{'user_id':value});
 }
 

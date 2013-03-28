@@ -29,7 +29,9 @@ function disp(selettore){
 	if (selettore.options[0].value==''){
 		selettore.remove(0);}
 	dati=value.split("/");
+	$('#loading').removeClass('hidden');
 	Dajaxice.get2.calendario.disp(Dajax.process,{'turno_id':dati[0],'mansione_id':dati[1],'persona_id':dati[2],'disp':dati[3]});
+	
 }
 </script>
 

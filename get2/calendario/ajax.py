@@ -23,6 +23,7 @@ def mansione_form(request, form):
         for error in form.errors:
             # error  il nome del campo
             dajax.add_css_class('#id_%s' % error, 'ui-state-error')
+    dajax.script("$('#loading').addClass('hidden');")
     return dajax.json()
 
 
@@ -32,6 +33,7 @@ def elimina_persona(request,persona_id):
     per.delete()
     dajax = Dajax()
     dajax.remove('#persona-'+str(persona_id))
+    dajax.script("$('#loading').addClass('hidden');")
     return dajax.json()
 
 @dajaxice_register
@@ -43,6 +45,7 @@ def elimina_utente(request,utente_id):
         dajax.remove('#utente-'+str(utente_id))
     else:
         pass
+    dajax.script("$('#loading').addClass('hidden');")
     return dajax.json()
 
 
@@ -69,6 +72,7 @@ def utente_persona(request,user_id,persona_id):
         s=s+'$(".bottom-right").notify({ message: { text: "La persona '+str(per)+' e stato assegnata all\'utente '+str(u)+'" }}).show();'
     dajax.script(s)
     per.save()
+    dajax.script("$('#loading').addClass('hidden');")
     return dajax.json()
 
 @dajaxice_register
@@ -89,6 +93,7 @@ def utente_staff(request,user_id):
             dajax.assign('input#staff-'+str(user_id),'checked',True)
         else:
             dajax.assign('input#staff-'+str(user_id),'checked',False)
+    dajax.script("$('#loading').addClass('hidden');")
     return dajax.json()
 
 @dajaxice_register
@@ -120,6 +125,7 @@ def notifiche(request,option,url):
     else:
        dajax.assign('#notifiche-badge','innerHTML','')
     dajax.clear('.ch','checked')
+    dajax.script("$('#loading').addClass('hidden');")
     return dajax.json()
 
 
@@ -147,6 +153,7 @@ def elimina_tipo_turno(request,turno_id):
     dajax = Dajax()
     t=TipoTurno.objects.get(id=turno_id)
     t.delete()
+    dajax.script("$('#loading').addClass('hidden');")
     return dajax.json()
 
 
@@ -154,6 +161,8 @@ def elimina_tipo_turno(request,turno_id):
 def disp(request, turno_id, mansione_id, persona_id, disp):
 	dajax = Dajax()
 	#pdb.set_trace()
+	#import time
+	#time.sleep(5)
 	p=Persona.objects.get(id=persona_id)
 	t=Turno.objects.get(id=turno_id)
 	#pdb.set_trace()
@@ -166,6 +175,7 @@ def disp(request, turno_id, mansione_id, persona_id, disp):
 	dajax.assign('div #anteprima', 'innerHTML', html_anteprima+'<div style="clear:both;"></div>')
 	dajax.script('$(".bottom-right").notify({ message: { text: "Aggiornata disponibilita per '+str(p)+'" }}).show();')
 	dajax.script('$(".h6-mansione-'+mansione_id+'").addClass("mansione-sel");')
+	dajax.script("$('#loading').addClass('hidden');")
 	return dajax.json()
 
 @dajaxice_register
@@ -181,17 +191,10 @@ def aggiorna_statistiche(request,da,al):
 		dati=statistiche_intervallo(request,data_da,data_al)
 		html_statistiche = render_to_string( 'statistiche/statistiche.html', { 'dati': dati, 'elenco_statistiche': elenco_statistiche, 'request':request } )
 		dajax.assign('div #stat', 'innerHTML', html_statistiche)
+		dajax.script("$('#loading').addClass('hidden');")
 		#dajax.alert()
 	return dajax.json()
 
-@dajaxice_register
-def elenco_cerca_persone(request,testo,mansioni):
-	#pdb.set_trace()
-	dajax=Dajax()
-	persone=Persona.objects.filter(Q(nome__icontains=testo) | Q(cognome__icontains=testo)).filter(competenze__in = mansioni)
-	html_persona=render_to_string( 'persone/tabella_persone.html', { 'persone': persone, 'stati':STATI, 'request':request } )
-	dajax.assign("div#tabella-persone", "innerHTML", html_persona)
-	return dajax.json()
 
 @dajaxice_register
 def persona_stato(request,stato,persona):
@@ -200,7 +203,8 @@ def persona_stato(request,stato,persona):
 	per.stato=stato
 	per.save()
 	dajax.script('$(".bottom-right").notify({ message: { text: "Modifiche apportate con successo" }}).show();')
-	return dajax.json()	
+	dajax.script("$('#loading').addClass('hidden');")
+	return dajax.json()
 
 @dajaxice_register
 def occorrenze(request,occ_id,turno_id):
