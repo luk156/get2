@@ -15,7 +15,7 @@
 	<!--[if IE 7]>
 	<link rel="stylesheet" href="/static/bootstrap/css/font-awesome-ie7.min.css">
 	<![endif]-->
-	<script src="/static/bootstrap/js/bootstrap.js"></script>
+	<script src="/static/bootstrap/js/bootstrap.min.js"></script>
 	{% dajaxice_js_import %}
 	<script type="text/javascript" src="{% static "dajax/jquery.dajax.core.js" %}"></script>
 
@@ -53,7 +53,7 @@
 						</ul>
 					</div>
 				{%else%}
-					<form method="post" action="{% url django.contrib.auth.views.login %}" class="navbar-form pull-right">{% csrf_token %}
+					<form method="post" action="{% url 'django.contrib.auth.views.login' %}" class="navbar-form pull-right">{% csrf_token %}
 					<input type="hidden" name="next" value="/calendario/" />
 					<input id="id_username" type="text" name="username" class="input" placeholder="Utente">
 					<input type="password" name="password" id="id_password" class="input" placeholder="Password">

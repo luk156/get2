@@ -6,7 +6,7 @@
 <span class="emblem-important">Il tuo username e password non coincidono. Per favore riprova</span></br>
 {% endif %}
 
-<form method="post" action="{% url django.contrib.auth.views.login %}">{% csrf_token %}
+<form method="post" action="{% url 'django.contrib.auth.views.login' %}">{% csrf_token %}
 <input type="hidden" name="next" value="{{ next }}" />
 <table>
 <tr>
