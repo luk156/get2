@@ -353,7 +353,8 @@ def nuova_disponibilita(request, turno_id, mansione_id, persona_id, disponibilit
 			esistente.delete()
 		#risolvo i conflitti con i turni contemporanei
 		for contemporaneo in disp.turno.contemporanei():
-			disponibilita_risolvi_contemporaneo(request,persona_id,contemporaneo)
+			if contemporaneo != disp.turno:
+				disponibilita_risolvi_contemporaneo(request,persona_id,contemporaneo)
 		disp.save()
 		if not request.user.is_staff:
 			notifica_disponibilita(request,disp.persona,disp.turno,disponibilita,disp.mansione)

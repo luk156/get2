@@ -306,8 +306,8 @@ class Turno(models.Model):
 					return True
 		return True
 	def contemporanei(self):
-		i=self.inizio+datetime.timedelta(seconds=1)
-		f=self.fine-datetime.timedelta(seconds=1)
+		i=self.inizio+datetime.timedelta(seconds=60)
+		f=self.fine-datetime.timedelta(seconds=60)
 		return Turno.objects.filter( (models.Q(inizio__lte=i) & models.Q(fine__gte=f)) | models.Q(inizio__range=(i ,f)) | models.Q(fine__range=(i,f)) ).exclude(id=self.id)
 	def mansioni(self):
 		return Mansione.objects.filter(req_mansione__tipo_turno=self.tipo)
@@ -319,6 +319,12 @@ class TurnoForm(forms.ModelForm):
 		self.helper = FormHelper()
 		self.helper.layout = Layout(
 			Field('identificativo'),
+			AppendedText(
+				'inizio', '<i class="icon-calendar"></i>'
+			),
+			AppendedText(
+				'fine', '<i class="icon-calendar"></i>'
+			),
 			Field('tipo'),
 			Field('valore'),
 			FormActions(
