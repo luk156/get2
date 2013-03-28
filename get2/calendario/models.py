@@ -123,8 +123,8 @@ class Persona(models.Model):
 	#caratteristiche della persona
 	stato = models.CharField('Stato',max_length=40, choices=STATI, default='disponibile' )
 	competenze = models.ManyToManyField(Mansione, blank=True, null=True)
-	retraining = models.DateField('Ultimo retraining livello A')
-	retraining_blsd = models.DateField('Ultimo retraining Operatore BLSD')
+	retraining = models.DateField('Ultimo retraining livello A', blank=True, null=True,)
+	retraining_blsd = models.DateField('Ultimo retraining Operatore BLSD', blank=True, null=True,)
 	note = models.TextField( blank=True, null=True, )
 	def notifiche_non_lette(self):
 		n=0
