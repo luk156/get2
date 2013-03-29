@@ -18,7 +18,33 @@
 	<script src="/static/bootstrap/js/bootstrap.min.js"></script>
 	{% dajaxice_js_import %}
 	<script type="text/javascript" src="{% static "dajax/jquery.dajax.core.js" %}"></script>
+	<script>
+	$(document).ready(function(){
 
+		// hide #back-top first
+		$("#back-top").hide();
+		
+		// fade in #back-top
+		$(function () {
+			$(window).scroll(function () {
+				if ($(this).scrollTop() > 100) {
+					$('#back-top').fadeIn();
+				} else {
+					$('#back-top').fadeOut();
+				}
+			});
+
+			// scroll body to 0px on click
+			$('#back-top a').click(function () {
+				$('body,html').animate({
+					scrollTop: 0
+				}, 800);
+				return false;
+			});
+		});
+
+	});
+	</script>
 	{% block head %}{% endblock %}
 	<script>	
 	$(document).ready(function(){
@@ -35,6 +61,7 @@
 </script>
 </head>
 <body>
+	<div id="back-top"><a href="#top"><i class="icon-arrow-up"></i></a></div>
 	<div id="loading" class="hidden"><i class="icon-spinner icon-spin icon-4x" id="loading-image"></i></div>
 	<div class='notifications bottom-right'></div>
 	<div class="navbar navbar-static-top">

@@ -206,6 +206,7 @@ h5,h6 {
 	background-color: #fff;
 	padding:5px;
 	box-shadow: 0px 0px 5px #444;
+	margin-bottom:120px;
 }
 
 
@@ -408,3 +409,42 @@ span.badge-gruppo {
 		
 }
 
+
+/*
+Back to top button 
+*/
+#back-top {
+	position: fixed;
+	bottom: 15px;
+	margin: 40px;
+	z-index:89;
+	width: 80px;
+	height: 80px;
+	margin-bottom: 7px;
+	background-color:rgba(190,190,190,0.5);
+	/* rounded corners */
+	-webkit-border-radius: 15px;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	/* background color transition */
+	-webkit-transition: 1s;
+	-moz-transition: 1s;
+	transition: 1s;
+	
+}
+#back-top a {
+	display:block;
+	text-align: center;
+	font-size: 70px;
+	text-decoration: none;
+	color: rgba(50,50,50,0.5);
+	margin: auto;
+}
+
+#back-top:hover {
+	background-color:rgba(190,190,190,0.2);
+}
+
+#back-top a:hover {
+	color:rgba(50,50,50,0.2);
+}
