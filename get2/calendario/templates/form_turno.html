@@ -43,15 +43,6 @@ window.onload = function()
 	$("#ripeti").hide();
 	$('label[for=id_ripeti]').hide();
 
-	{%if not request.user.is_superuser and azione != 'modifica'%} 
-		$('#id_inizio_0').hide();
-		$('#id_tipo').prop('disabled', true);
-		jQuery(function($) {
-		    $('form').bind('submit', function() {
-	        $(this).find(':input').removeAttr('disabled');
-		    });
-		});
-	{% endif %}
 }; 
 
 </script>
