@@ -71,7 +71,9 @@ giorni[6] = "Domenica";
 					<tr id="impostazioni_notifica_utente-{{i.id}}">
 						<td data-title="Utente">{{i.utente}}</td>
 						<td data-title="Giorni">
-						{{i.get_giorni_display}}
+						{% for g in i.giorni %}
+							<script>document.write(giorni[{{ g }}]);</script>, 
+						{% endfor%} 
 						</td>
 						<td data-title="Tipo turno">
 						{% for t in i.tipo_turno.all %}

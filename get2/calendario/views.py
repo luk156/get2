@@ -542,11 +542,13 @@ def nuovo_impostazioni_notifica(request):
 	azione = 'nuovo'
 	if request.method == 'POST': # If the form has been submitted...
 		impostazioni_notifica_form = Impostazioni_notificaForm(request.POST) # A form bound to the POST data
+		impostazioni_notifica_form.helper.form_action = '/impostazioni/notifica/nuovo/'
 		if impostazioni_notifica_form.is_valid():
 			impostazioni_notifica_form.save()
 			return HttpResponseRedirect('/impostazioni/#tabs-notifiche') # Redirect after POST
 	else:
 		impostazioni_notifica_form = Impostazioni_notificaForm()
+		impostazioni_notifica_form.helper.form_action = '/impostazioni/notifica/nuovo/'
 	return render_to_response('form_impostazioni_statistiche.html',{'form':impostazioni_notifica_form,'azione':azione,'request':request}, RequestContext(request))
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -555,11 +557,13 @@ def modifica_impostazioni_notifica(request, impostazioni_notifica_id):
 	impostazioni_notifica = Impostazioni_notifica.objects.get(id=impostazioni_notifica_id)
 	if request.method == 'POST': # If the form has been submitted...
 		impostazioni_notifica_form = Impostazioni_notificaForm(request.POST, instance=impostazioni_notifica)
+		impostazioni_notifica_form.helper.form_action = '/impostazioni/notifica/modifica/'+str(impostazioni_notifica.id)+'/' 
 		if impostazioni_notifica_form.is_valid():
 			impostazioni_notifica_form.save()
 			return HttpResponseRedirect('/impostazioni/#tabs-notifiche') # Redirect after POST
 	else:
 		impostazioni_notifica_form = Impostazioni_notificaForm(instance=impostazioni_notifica)
+		impostazioni_notifica_form.helper.form_action = '/impostazioni/notifica/modifica/'+str(impostazioni_notifica.id)+'/' 
 	return render_to_response('form_impostazioni_statistiche.html',{'form': impostazioni_notifica_form,'azione': azione, 'impostazioni_notifica': impostazioni_notifica,'request':request}, RequestContext(request))
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -593,12 +597,12 @@ def nuovo_turno(request):
 				delta = datetime.timedelta(days=1)
 				data['tipo']=data['tipo'].id
 				data['occorrenza']=o.id
-				#pdb.set_trace()
+				npdb.set_trace()
 				while (start.date()<=stop):
 					data['inizio']=start
 					data['fine']=(start+durata)
 					f=TurnoFormRipeti(data)
-					if ((str(start.weekday()) in giorno) or (101 in giorno and prefestivo(start)) or (102 in giorno and festivo(start)) or (99 in giorno) or (103 in giorno and (not prefestivo(start) and not festivo(start)) )) and f.is_valid():
+					if ((str(start.weekday()) in giorno) or (('101' in giorno) and prefestivo(start)) or (('102' in giorno) and festivo(start)) or ('99' in giorno) or (('103' in giorno) and (not prefestivo(start) and not festivo(start)) )) and f.is_valid():
 						t=f.save()
 						t.occorrenza=o
 						t.save()

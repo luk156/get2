@@ -252,7 +252,6 @@ class RequisitoForm(forms.ModelForm):
 		super(RequisitoForm, self).__init__(*args, **kwargs)
 		
 GIORNO = (
-  (99, 'qualsiasi'),
   (0, 'lunedi'),
   (1, 'martedi'),
   (2, 'mercoledi'),
@@ -260,9 +259,6 @@ GIORNO = (
   (4, 'venerdi'),
   (5, 'sabato'),
   (6, 'domenica'),
-  (11, 'prefestivi'),
-  (12, 'festivi'),
-  (13, 'feriali'),
   )
 
 class Occorrenza(models.Model):
@@ -435,5 +431,15 @@ class Impostazioni_notificaForm(forms.ModelForm):
 	giorni = MultiSelectFormField(choices=GIORNO)
 	class Meta:
 		model = Impostazioni_notifica
-		widgets = {'tipo_turno': forms.CheckboxSelectMultiple}
+	def __init__(self, *args, **kwargs):
+		self.helper = FormHelper()
+		self.helper.layout = Layout(
+			Field('utente'),
+			InlineCheckboxes('giorni'),
+			InlineCheckboxes('tipo_turno'),
+			FormActions(
+				Submit('save', 'Aggiungi', css_class="btn-primary")
+			)
+		)
+		super(Impostazioni_notificaForm, self).__init__(*args, **kwargs)
 
