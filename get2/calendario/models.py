@@ -260,9 +260,9 @@ GIORNO = (
   (4, 'venerdi'),
   (5, 'sabato'),
   (6, 'domenica'),
-  (11, 'prefestivi'),
-  (12, 'festivi'),
-  (13, 'feriali'),
+#  (11, 'prefestivi'),
+#  (12, 'festivi'),
+#  (13, 'feriali'),
   )
 
 class Occorrenza(models.Model):
