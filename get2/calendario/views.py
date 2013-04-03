@@ -597,7 +597,7 @@ def nuovo_turno(request):
 				delta = datetime.timedelta(days=1)
 				data['tipo']=data['tipo'].id
 				data['occorrenza']=o.id
-				npdb.set_trace()
+				#pdb.set_trace()
 				while (start.date()<=stop):
 					data['inizio']=start
 					data['fine']=(start+durata)
