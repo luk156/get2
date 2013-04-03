@@ -72,13 +72,13 @@ def nuovo_gruppo(request):
 	azione = 'nuovo'
 	if request.method == 'POST':
 		form = GruppoForm(request.POST)
-		form.helper.form_action = 'persone/gruppo/nuovo/'
+		form.helper.form_action = '/persone/gruppo/nuovo/'
 		if form.is_valid():
 			form.save()
 			return HttpResponseRedirect('/persone')
 	else:
 		form = GruppoForm()
-		form.helper.form_action = 'persone/gruppo/nuovo/'
+		form.helper.form_action = '/persone/gruppo/nuovo/'
 	return render_to_response('form_gruppo.html',{'request':request,'form': form,'azione': azione,}, RequestContext(request))
 	#else:
 	#	return render_to_response('staff-no.html')
