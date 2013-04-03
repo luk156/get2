@@ -252,7 +252,7 @@ class RequisitoForm(forms.ModelForm):
 		super(RequisitoForm, self).__init__(*args, **kwargs)
 		
 GIORNO = (
-  ('q', 'qualsiasi'),
+  (99, 'qualsiasi'),
   (0, 'lunedi'),
   (1, 'martedi'),
   (2, 'mercoledi'),
@@ -260,9 +260,9 @@ GIORNO = (
   (4, 'venerdi'),
   (5, 'sabato'),
   (6, 'domenica'),
-  ('p', 'prefestivi'),
-  ('f', 'festivi'),
-  ('e', 'feriali'),
+  (11, 'prefestivi'),
+  (12, 'festivi'),
+  (13, 'feriali'),
   )
 
 class Occorrenza(models.Model):

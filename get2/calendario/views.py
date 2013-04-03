@@ -598,7 +598,7 @@ def nuovo_turno(request):
 					data['inizio']=start
 					data['fine']=(start+durata)
 					f=TurnoFormRipeti(data)
-					if ((str(start.weekday()) in giorno) or ('p' in giorno and prefestivo(start)) or ('f' in giorno and festivo(start)) or ('q' in giorno) or ('e' in giorno and (not prefestivo(start) and not festivo(start)) )) and f.is_valid():
+					if ((str(start.weekday()) in giorno) or (101 in giorno and prefestivo(start)) or (102 in giorno and festivo(start)) or (99 in giorno) or (103 in giorno and (not prefestivo(start) and not festivo(start)) )) and f.is_valid():
 						t=f.save()
 						t.occorrenza=o
 						t.save()
