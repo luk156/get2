@@ -261,6 +261,13 @@ GIORNO = (
   (6, 'domenica'),
   )
 
+GIORNO_EXT = (GIORNO ,
+  (101, 'prefestivo'),
+  (102, 'festivo'),
+  (103, 'feriale'),
+  (99, 'qualsiasi'),
+  )
+
 class Occorrenza(models.Model):
 	pass
 
@@ -342,7 +349,7 @@ class TurnoFormRipeti(TurnoForm):
 	ripeti = forms.BooleanField(required=False)
 	ripeti_da = forms.DateField(required=False)
 	ripeti_al = forms.DateField(required=False)
-	ripeti_il_giorno = forms.MultipleChoiceField(choices=GIORNO, widget=forms.CheckboxSelectMultiple(),required=False)
+	ripeti_il_giorno = forms.MultipleChoiceField(choices=GIORNO_EXT, widget=forms.CheckboxSelectMultiple(),required=False)
 	def __init__(self, *args, **kwargs):
 		self.helper = FormHelper()
 		self.helper.layout = Layout(

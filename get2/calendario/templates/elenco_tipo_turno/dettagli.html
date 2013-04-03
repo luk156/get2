@@ -5,6 +5,7 @@
 	<div class="row-fluid" id="tipo_turno-{{tipo_turno.id}}">
 		
 		<h5><i class="icon-th-list"></i> {{tipo_turno}}</h5>
+			{% if request.user.is_superuser %}
 			<div class="btn-group pull-right">
 				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
 				<i class="icon-cog"></i> Azioni
@@ -16,6 +17,7 @@
 					<li><a href="/impostazioni/tipo_turno/elimina/{{tipo_turno.id}}" data-toggle="modal"><i class="icon-trash"></i> elimina</a></li>
 				</ul>
 			</div>
+			{% endif %}
 
 	</div>
 	<div class="row-fluid">

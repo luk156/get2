@@ -25,7 +25,7 @@ giorni[6] = "Domenica";
 		<div class="row-fluid">
 		<div class="box">
 			<div class="box-header">
-				<a href="/impostazioni/mansione/nuovo" class="pull-right btn"><i class="icon-plus"></i> aggiungi mansione</a>
+				<a href="/impostazioni/mansione/nuovo" class="pull-right btn superuser"><i class="icon-plus"></i> aggiungi mansione</a>
 				<h5>Mansioni</h5>
 			</div>
 			<div class="box-content">
@@ -38,7 +38,7 @@ giorni[6] = "Domenica";
 					<td data-title="Nome">{{mansione}}</td>
 					<td data-title="Descrizione">{{mansione.descrizione}}</td>
 					<td data-title="Operazioni">
-						<div class="btn-group">
+						<div class="btn-group superuser">
 						  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
 							<i class="icon-cog"></i> Azioni
 							<span class="caret"></span>
@@ -57,7 +57,7 @@ giorni[6] = "Domenica";
 		<div class="row-fluid">
 		<div class="box">
 			<div class="box-header">
-				<a href="/impostazioni/notifica/nuovo" class="pull-right btn"><i class="icon-plus"></i> aggiungi regola</a>
+				<a href="/impostazioni/notifica/nuovo" class="pull-right btn superuser"><i class="icon-plus"></i> aggiungi regola</a>
 				<h5>Notifiche</h5>
 			</div>
 			<div class="box-content">
@@ -81,7 +81,7 @@ giorni[6] = "Domenica";
 						{% endfor%}		
 						</td>
 						<td data-title="Operazioni">
-							<div class="btn-group">
+							<div class="btn-group superuser">
 							  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
 								<i class="icon-cog"></i> Azioni
 								<span class="caret"></span>
@@ -103,7 +103,9 @@ giorni[6] = "Domenica";
 	<div class="span4">
 		<div class="box">
 			<div class="box-header">
-				<a href="/impostazioni/tipo_turno/nuovo" class="pull-right btn"><i class="icon-plus"></i> aggiungi tipo</a>
+				{% if request.user.is_superuser %}
+					<a href="/impostazioni/tipo_turno/nuovo" class="pull-right btn"><i class="icon-plus"></i> aggiungi tipo</a>
+				{% endif %}
 				<h5>Tipi di turno</h5>
 			</div>
 			<div class="box-content">			

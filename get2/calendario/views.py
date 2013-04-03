@@ -537,7 +537,7 @@ def elimina_tipo_turno(request,tipo_turno_id):
 	t.delete()
 	return HttpResponseRedirect('/impostazioni/')
 
-@user_passes_test(lambda u: u.is_superuser)	
+@user_passes_test(lambda u: u.is_staff)	
 def nuovo_impostazioni_notifica(request):
 	azione = 'nuovo'
 	if request.method == 'POST': # If the form has been submitted...
@@ -551,7 +551,7 @@ def nuovo_impostazioni_notifica(request):
 		impostazioni_notifica_form.helper.form_action = '/impostazioni/notifica/nuovo/'
 	return render_to_response('form_impostazioni_statistiche.html',{'form':impostazioni_notifica_form,'azione':azione,'request':request}, RequestContext(request))
 
-@user_passes_test(lambda u: u.is_superuser)
+@user_passes_test(lambda u: u.is_staff)
 def modifica_impostazioni_notifica(request, impostazioni_notifica_id):
 	azione = 'modifica';
 	impostazioni_notifica = Impostazioni_notifica.objects.get(id=impostazioni_notifica_id)
@@ -566,7 +566,7 @@ def modifica_impostazioni_notifica(request, impostazioni_notifica_id):
 		impostazioni_notifica_form.helper.form_action = '/impostazioni/notifica/modifica/'+str(impostazioni_notifica.id)+'/' 
 	return render_to_response('form_impostazioni_statistiche.html',{'form': impostazioni_notifica_form,'azione': azione, 'impostazioni_notifica': impostazioni_notifica,'request':request}, RequestContext(request))
 
-@user_passes_test(lambda u: u.is_superuser)
+@user_passes_test(lambda u: u.is_staff)
 def elimina_impostazioni_notifica(request, impostazioni_notifica_id):
 	i=Impostazioni_notifica.objects.get(id=impostazioni_notifica_id)
 	i.delete()
