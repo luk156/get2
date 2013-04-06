@@ -57,7 +57,7 @@ def modifica_persona(request,persona_id):
 			return HttpResponseRedirect('/persone') # Redirect after POST
 	else:
 		form = PersonaForm(instance=per)
-		form.helper.formget2/calendario/templates/turno_staff.html_action = '/persone/modifica/'+str(per.id)+'/'
+		form.helper.form_action = '/persone/modifica/'+str(per.id)+'/'
 	return render_to_response('form_persona.html',{'request': request, 'form': form,'azione': azione, 'per': per,'mansione_form':MansioneForm()}, RequestContext(request))
 
 @user_passes_test(lambda u: u.is_superuser)
