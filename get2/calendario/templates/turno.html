@@ -89,7 +89,7 @@
 	{% for disp in t.turno_disponibilita.all %}
 		{% if disp.mansione not in t.mansioni and disp.tipo = 'Disponibile' %}
 		<script>$('#altre-mansioni-{{t.id}}').removeClass('hide');</script>
-			<li class="persona-turno"><i class="icon-user"></i> {{disp.persona}}<a href="/calendario/rimuovi_disponibilita/{{disp.id}}"><i class="icon-remove"></i> </a></li>
+			<li class="persona-turno"><i class="icon-user"></i> {{disp.persona}}</li>
 		{% endif %}
 	{% endfor %}
 		</ul>

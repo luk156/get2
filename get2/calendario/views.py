@@ -318,9 +318,10 @@ def disponibilita_verifica_tempo(request, turno):
 # attenzione ai permessi
 def rimuovi_disponibilita(request, disp_id):
 	d=Disponibilita.objects.get(id=disp_id)
-	d.tipo='Indisponibile'
-	d.save()
-	notifica_disponibilita(request,d.persona,d.turno,'Non piu disponibile',d.mansione)
+	if request.user.is_staff or request.user.get_profile()==d.persona:
+		d.tipo='Indisponibile'
+		d.save()
+		notifica_disponibilita(request,d.persona,d.turno,'Non piu disponibile',d.mansione)
 	return HttpResponseRedirect('/calendario')
 
 def disponibilita_risolvi_contemporaneo(request,persona_id,contemporaneo):
@@ -335,30 +336,34 @@ def disponibilita_risolvi_contemporaneo(request,persona_id,contemporaneo):
 def nuova_disponibilita(request, turno_id, mansione_id, persona_id, disponibilita):
 	#inizializzo ma non salvo un oggetto disponibilita
 	#pdb.set_trace()
-	disp=Disponibilita()
-	disp.tipo=disponibilita
-	disp.persona=Persona.objects.get(id=persona_id)
-	disp.ultima_modifica=datetime.datetime.now()
-	disp.creata_da=request.user
-	disp.turno=Turno.objects.get(id=turno_id)
-	disp.mansione=Mansione.objects.get(id=mansione_id)
-	#verifico se la disponibilita e entro i tempi corretti
-	verifica_tempo=disponibilita_verifica_tempo(request, disp.turno)
-	if verifica_tempo[0]:
-		#una persona puo avere una sola disponibilita per turno
-		if Disponibilita.objects.filter(persona=disp.persona,turno=disp.turno ).exists():
-			esistente=Disponibilita.objects.get(persona=disp.persona, turno=disp.turno )
-			#if esistente.tipo=='Disponibile':
-				#notifica_disponibilita(request,esistente.persona,esistente.turno,'Non piu disponibile',esistente.mansione)
-			esistente.delete()
-		#risolvo i conflitti con i turni contemporanei
-		for contemporaneo in disp.turno.contemporanei():
-			if contemporaneo != disp.turno:
-				disponibilita_risolvi_contemporaneo(request,persona_id,contemporaneo)
-		disp.save()
-		if not request.user.is_staff:
-			notifica_disponibilita(request,disp.persona,disp.turno,disponibilita,disp.mansione)
-	return verifica_tempo
+	per=Persona.objects.get(id=persona_id)
+	if request.user.is_staff or request.user.get_profile()==per:
+		disp=Disponibilita()
+		disp.tipo=disponibilita
+		disp.persona=per
+		disp.ultima_modifica=datetime.datetime.now()
+		disp.creata_da=request.user
+		disp.turno=Turno.objects.get(id=turno_id)
+		disp.mansione=Mansione.objects.get(id=mansione_id)
+		#verifico se la disponibilita e entro i tempi corretti
+		verifica_tempo=disponibilita_verifica_tempo(request, disp.turno)
+		if verifica_tempo[0]:
+			#una persona puo avere una sola disponibilita per turno
+			if Disponibilita.objects.filter(persona=disp.persona,turno=disp.turno ).exists():
+				esistente=Disponibilita.objects.get(persona=disp.persona, turno=disp.turno )
+				#if esistente.tipo=='Disponibile':
+					#notifica_disponibilita(request,esistente.persona,esistente.turno,'Non piu disponibile',esistente.mansione)
+				esistente.delete()
+			#risolvo i conflitti con i turni contemporanei
+			for contemporaneo in disp.turno.contemporanei():
+				if contemporaneo != disp.turno:
+					disponibilita_risolvi_contemporaneo(request,persona_id,contemporaneo)
+			disp.save()
+			if not request.user.is_staff:
+				notifica_disponibilita(request,disp.persona,disp.turno,disponibilita,disp.mansione)
+		return verifica_tempo
+	else:
+		return (False,'non autorizzato')
 
 
 def disponibilita_url(request, turno_id, mansione_id, persona_id, disponibilita):
