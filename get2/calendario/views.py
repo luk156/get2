@@ -57,7 +57,7 @@ def modifica_persona(request,persona_id):
 			return HttpResponseRedirect('/persone') # Redirect after POST
 	else:
 		form = PersonaForm(instance=per)
-		form.helper.form_action = '/persone/modifica/'+str(per.id)+'/'
+		form.helper.formget2/calendario/templates/turno_staff.html_action = '/persone/modifica/'+str(per.id)+'/'
 	return render_to_response('form_persona.html',{'request': request, 'form': form,'azione': azione, 'per': per,'mansione_form':MansioneForm()}, RequestContext(request))
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -329,7 +329,7 @@ def disponibilita_risolvi_contemporaneo(request,persona_id,contemporaneo):
 		for d in Disponibilita.objects.filter(persona_id=persona_id,turno=contemporaneo):
 			if d.tipo=="Disponibile":
 				persona= Persona.objects.get(id=persona_id)
-				notifica_disponibilita(request,persona,contemporaneo,'Non piu disponibile',contemporaneo.mansione)
+				notifica_disponibilita(request,persona,contemporaneo,'Non piu disponibile per impegno contemporaneo',contemporaneo.mansione)
 			rimuovi_disponibilita(request,d.id)
 
 
