@@ -219,7 +219,7 @@ h5,h6 {
 }
 
 .pager {
-    margin: 5px 0px;
+    margin: 1px 5px;
     list-style: none outside none;
     text-align: center;
 }
