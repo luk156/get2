@@ -86,7 +86,13 @@
 			<ul>
 			{% for disp in t.turno_disponibilita.all %}
 				{% if disp.tipo = 'Disponibile' %}
-					<li class="persona-turno"><i class="icon-user"></i> {{disp.persona}}</li>
+					<li class="persona-turno"><i class="icon-user"></i>
+					{% if request.user.is_authenticated %}
+					 {{disp.persona}}
+					{% else %}
+					 ----
+					{% endif %}
+					 </li>
 				{% endif %}
 			{% endfor %}
 			</ul>
