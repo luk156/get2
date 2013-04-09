@@ -43,7 +43,7 @@
 							  </a>
 							  <ul class="dropdown-menu">
 								<li><a href="/persone/gruppo/modifica/{{gruppo.id}}"><i class="icon-edit"></i> modifica</a></li>
-								<li><a href="#" onclick='$("#elimina-gruppo-{{gruppo.id}}" ).dialog("open");'><i class="icon-trash"></i> elimina</a></li>
+								<li><a href="#elimina-gruppo-{{gruppo.id}}" data-toggle="modal"><i class="icon-trash"></i> elimina</a></li>
 							  </ul>
 							</div>
 						</td>
@@ -54,6 +54,20 @@
 		</div>
 	</div>
 </div>
+
+{% for gruppo in gruppi %}
+<div id="elimina-gruppo-{{gruppo.id}}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-body">
+		<div class="alert alert-error">
+			<h5><i class="icon-warning-sign icon-2x"></i> Vuoi veramente eliminare il gruppo {{gruppo}}?</h5>
+		</div>
+	</div>
+	<div class="modal-footer">
+	<button class="btn" data-dismiss="modal" aria-hidden="true">Annulla</button>
+	<button class="btn btn-primary" data-dismiss="modal" onclick="$('#loading').removeClass('hidden'); Dajaxice.get2.calendario.elimina_gruppo(Dajax.process,{'gruppo_id':{{gruppo.id}}});">Elimina</button>
+	</div>
+</div>
+{% endfor %}
 
 <div class="row-fluid">
 	<div class="span7">

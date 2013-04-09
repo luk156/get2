@@ -29,24 +29,37 @@ def mansione_form(request, form):
 
 @dajaxice_register
 def elimina_persona(request,persona_id):
-    per=Persona.objects.get(id=persona_id)
-    per.delete()
-    dajax = Dajax()
-    dajax.remove('#persona-'+str(persona_id))
-    dajax.script("$('#loading').addClass('hidden');")
-    return dajax.json()
+	dajax = Dajax()
+	if request.user.is_superuser:
+		per=Persona.objects.get(id=persona_id)
+		per.delete()
+		dajax.remove('#persona-'+str(persona_id))
+	dajax.script("$('#loading').addClass('hidden');")
+	return dajax.json()
+
+@dajaxice_register
+def elimina_gruppo(request,gruppo_id):
+	#pdb.set_trace()
+	dajax = Dajax()
+	if request.user.is_staff:
+		gr=Gruppo.objects.get(id=gruppo_id)
+		gr.delete()
+		dajax.remove('#gruppo-'+str(gruppo_id))
+	dajax.script("$('#loading').addClass('hidden');")
+	return dajax.json()
 
 @dajaxice_register
 def elimina_utente(request,utente_id):
-    user=User.objects.get(id=utente_id)
-    dajax = Dajax()
-    if (not user.is_staff() or request.user.is_superuser):
-        #user.delete()
-        dajax.remove('#utente-'+str(utente_id))
-    else:
-        pass
-    dajax.script("$('#loading').addClass('hidden');")
-    return dajax.json()
+	user=User.objects.get(id=utente_id)
+	dajax = Dajax()
+	if request.user.is_staff:
+		if (not user.is_staff or request.user.is_superuser):
+			#user.delete()
+			dajax.remove('#utente-'+str(utente_id))
+		else:
+			pass
+	dajax.script("$('#loading').addClass('hidden');")
+	return dajax.json()
 
 
 @dajaxice_register
