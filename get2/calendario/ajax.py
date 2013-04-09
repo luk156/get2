@@ -167,8 +167,10 @@ def disp(request, turno_id, mansione_id, persona_id, disp):
 	t=Turno.objects.get(id=turno_id)
 	#pdb.set_trace()
 	if disp!="-":
-		nuova_disponibilita(request, turno_id, mansione_id, persona_id, disp)
-	else:
+		d=nuova_disponibilita(request, turno_id, mansione_id, persona_id, disp)
+		if not d[0]:
+			dajax.script('$(".bottom-right").notify({ message: { text: "Errore'+str(d[1])+'" }}).show();')
+	elif request.user.is_staff:
 		d=Disponibilita.objects.get(persona=p,turno=t)
 		d.delete()
 	html_anteprima = render_to_string( 'turno.html', { 't': t, 'request':request } )

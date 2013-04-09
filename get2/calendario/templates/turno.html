@@ -61,7 +61,7 @@
 				{% endif %}
 				</span></a></h6> 
 			</div>
-			<div class="">
+			<div class="persone">
 				<ul>
 				{% for disp in t.turno_disponibilita.all %}
 					{% if disp.mansione = requisito.mansione and disp.tipo = 'Disponibile' %}
@@ -84,7 +84,7 @@
 	<div id="altre-mansioni-{{t.id}}" class="mansione-calendario hide">
 		<h6>Altre mansioni</h6>
 	</div>
-	<div class="">
+	<div class="persone">
 		<ul>
 	{% for disp in t.turno_disponibilita.all %}
 		{% if disp.mansione not in t.mansioni and disp.tipo = 'Disponibile' %}
