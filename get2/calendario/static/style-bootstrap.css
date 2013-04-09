@@ -262,6 +262,7 @@ div.turno {
 	cursor:pointer;
 	position:relative;
 	margin-top:-3px;
+	margin-bottom: 2px;
 	padding-left: 3px;
 	color: #ffffff;
 	margin-left: -1px;
@@ -330,7 +331,7 @@ div.mansione-calendario h6 {
 }
 
 .persona-turno {
-color: #222;
+color: #333;
 margin-left: -5px;
 font-size:14px;
 list-style-type: none;

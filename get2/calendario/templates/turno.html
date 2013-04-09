@@ -36,51 +36,63 @@
 			</div>
 		{% endif %}
 	</div>
-
-	{% for requisito in t.tipo.req_tipo_turno.all %}
-		{% if not requisito.extra %}
-			<div class="mansione-calendario">
-				<h6 class="h6-mansione-{{requisito.mansione.id}}">{{requisito.mansione}} 
-				{% if not requisito.operatore = "=" or not t|verifica_requisito:requisito  or not requisito.necessario %}
-					{% if request.user.is_staff %}
-						<a href="/calendario/cerca_persona/{{t.id}}/{{requisito.mansione.id}}">
+	{%if request.user.is_staff %}
+		{% for requisito in t.tipo.req_tipo_turno.all %}
+			{% if not requisito.extra %}
+				<div class="mansione-calendario">
+					<h6 class="h6-mansione-{{requisito.mansione.id}}">{{requisito.mansione}} 
+					{% if not requisito.operatore = "=" or not t|verifica_requisito:requisito  or not requisito.necessario %}
+						{% if request.user.is_staff %}
+							<a href="/calendario/cerca_persona/{{t.id}}/{{requisito.mansione.id}}">
+						{% endif %}
 					{% endif %}
-				{% endif %}
-				{% if requisito.sufficiente %}
-					<span class="badge badge-info pull-right">
-				{% elif not requisito.necessario %}
-					<span class="badge  pull-right">
-				{% elif t|verifica_requisito:requisito  %}
-					<span class="badge badge-success pull-right">
-				{% else %}
-					<span class="badge badge-important pull-right">
-				{% endif %}
-				{{requisito.operatore}}{{requisito.valore}}
-				{% if requisito.massimo != 0 %}
-					| &le;{{requisito.massimo}}
-				{% endif %}
-				</span></a></h6> 
-			</div>
-			<div class="persone">
-				<ul>
-				{% for disp in t.turno_disponibilita.all %}
-					{% if disp.mansione = requisito.mansione and disp.tipo = 'Disponibile' %}
-						<li class="persona-turno"><i class="icon-user"></i> {{disp.persona}}<a href="/calendario/rimuovi_disponibilita/{{disp.id}}"></a></li>
+					{% if requisito.sufficiente %}
+						<span class="badge badge-info pull-right">
+					{% elif not requisito.necessario %}
+						<span class="badge  pull-right">
+					{% elif t|verifica_requisito:requisito  %}
+						<span class="badge badge-success pull-right">
+					{% else %}
+						<span class="badge badge-important pull-right">
 					{% endif %}
-				{% endfor %}
-				</ul>
-			</div>
-		{% endif %}
-		{% if requisito.extra %}
-			<div class="mansione-calendario">
-				<h6 class="h6-mansione-{{requisito.mansione.id}}"><i class="icon-asterisk"></i> {{requisito.mansione}}
-				<span class="badge badge-warning pull-right"> {{requisito.operatore}}{{requisito.valore}}
-				{% if requisito.massimo != 0 %}
-					| &le;{{requisito.massimo}}
-				{% endif %}</span></h6>
-			</div>
-		{% endif %}
-	{% endfor %}
+					{{requisito.operatore}}{{requisito.valore}}
+					{% if requisito.massimo != 0 %}
+						| &le;{{requisito.massimo}}
+					{% endif %}
+					</span></a></h6> 
+				</div>
+				<div class="persone">
+					<ul>
+					{% for disp in t.turno_disponibilita.all %}
+						{% if disp.mansione = requisito.mansione and disp.tipo = 'Disponibile' %}
+							<li class="persona-turno"><i class="icon-user"></i> {{disp.persona}}</li>
+						{% endif %}
+					{% endfor %}
+					</ul>
+				</div>
+			{% endif %}
+			{% if requisito.extra %}
+				<div class="mansione-calendario">
+					<h6 class="h6-mansione-{{requisito.mansione.id}}"><i class="icon-asterisk"></i> {{requisito.mansione}}
+					<span class="badge badge-warning pull-right"> {{requisito.operatore}}{{requisito.valore}}
+					{% if requisito.massimo != 0 %}
+						| &le;{{requisito.massimo}}
+					{% endif %}</span></h6>
+				</div>
+			{% endif %}
+		{% endfor %}
+	{% else %}
+		<div class="persone">
+			<ul>
+			{% for disp in t.turno_disponibilita.all %}
+				{% if disp.tipo = 'Disponibile' %}
+					<li class="persona-turno"><i class="icon-user"></i> {{disp.persona}}</li>
+				{% endif %}
+			{% endfor %}
+			</ul>
+		</div>
+	{% endif %}
+		
 	<div id="altre-mansioni-{{t.id}}" class="mansione-calendario hide">
 		<h6>Altre mansioni</h6>
 	</div>
