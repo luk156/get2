@@ -272,6 +272,7 @@ div.turno {
 	text-align:center;
 }
 
+
 .titolo-turno-False{
 	border: 1px solid rgb(185, 74, 72);
 	background: none repeat scroll 0% 0% #e55858;
@@ -312,13 +313,18 @@ div.mansione-calendario{
 	border-top: 1px solid #bbb;
 }
 
+div.mansione-calendario span.badge {
+    font-size: 12px;
+	font-weight: bold;
+	line-height: 12px;
+}
 
 div.mansione-calendario h6 {
     padding-top: 1px;
     padding-left:0px;
     padding-right:0px;
     margin-bottom: 1px;
-
+	font-size:11px;
     color: #444;
 
 }
@@ -328,7 +334,7 @@ color: #222;
 margin-left: -5px;
 font-size:14px;
 list-style-type: none;
-line-height:14px;
+line-height:15px;
 
 }
 
