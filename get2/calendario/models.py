@@ -261,7 +261,7 @@ GIORNO = (
   (6, 'domenica'),
   )
 
-GIORNO_EXT = (GIORNO ,
+GIORNO_EXT = GIORNO + (
   (101, 'prefestivo'),
   (102, 'festivo'),
   (103, 'feriale'),
