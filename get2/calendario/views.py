@@ -16,6 +16,13 @@ import get2.calendario.settings_calendario as settings_calendario
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import user_passes_test
 
+####   touch   ####
+
+def touch(request,v):
+	risposta=HttpResponseRedirect('/')
+	risposta.set_cookie('touch', value=v)
+	return risposta
+
 ####   persona   ####
 
 def elenco_persona(request):
@@ -240,13 +247,17 @@ def calendario(request):
 		start = start + datetime.timedelta(days=1)
 	start = datetime.datetime(anno,mese,giorno,1)
 	
+	touch=""
+	if request.COOKIES.has_key('touch'):
+		touch=request.COOKIES['touch']
+
 	calendario = []
 	calendario.append(giorni)
 	calendario.append(turni)
 	calendario=zip(*calendario)
 	tipo_turno=TipoTurno.objects.all()
 	gruppi=Gruppo.objects.all()
-	corpo=render_to_response('calendario.html',{'calendario':calendario,'start':start,'request':request,'tipo_turno':tipo_turno,'gruppi':gruppi}, RequestContext(request))
+	corpo=render_to_response('calendario.html',{'calendario':calendario,'start':start,'request':request,'tipo_turno':tipo_turno,'gruppi':gruppi,'touch':touch}, RequestContext(request))
 	risposta = HttpResponse(corpo)
 	risposta.set_cookie('anno', value=anno)
 	risposta.set_cookie('mese', value=mese)

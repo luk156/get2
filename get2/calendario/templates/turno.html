@@ -87,7 +87,7 @@
 			{% for disp in t.turno_disponibilita.all %}
 				{% if disp.tipo = 'Disponibile' %}
 					<li class="persona-turno"><i class="icon-user"></i>
-					{% if request.user.is_authenticated %}
+					{% if request.user.is_authenticated or touch == "yes" %}
 					 {{disp.persona}}
 					{% else %}
 					 ----
