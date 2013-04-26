@@ -10,8 +10,10 @@
 	<link href="/static/style-bootstrap.css" rel="stylesheet">
 	<link href="/static/bootstrap/css/font-awesome.min.css" rel="stylesheet">
 	<script src="/static/bootstrap/js/jquery.min.js"></script>
+	<script src="/static/js/jquery.cookie.js"></script>
 	<link href="/static/css/bootstrap-notify.css" rel="stylesheet">
 	<script src="/static/js/bootstrap-notify.js"></script>
+	
 	<!--[if IE 7]>
 	<link rel="stylesheet" href="/static/bootstrap/css/font-awesome-ie7.min.css">
 	<![endif]-->
@@ -42,6 +44,10 @@
 				return false;
 			});
 		});
+
+		if(jQuery.cookie('touch')=='yes') {
+
+		};
 
 	});
 	</script>
