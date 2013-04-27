@@ -44,15 +44,15 @@
 	var select_enable;
 	var select_gruppi;
 	var select_mansioni;
-	$(document).ready(function(){
+	$(window).load(function(){
 		select_enable = $("select[name='default_select']");
-		select_gruppi = $("<select>").attr("name", "gruppo_id").append($("<option value=''>---</option>"));
+		select_gruppi = $("<select>").prop("name", "gruppo_id").append($("<option value=''>---</option>"));
 		{% for gruppo in gruppi %}
-			select_gruppi.append($("<option>").attr("value", "{{gruppo.id}}").text("{{gruppo.nome}}"));
+			select_gruppi.append($("<option>").prop("value", "{{gruppo.id}}").text("{{gruppo.nome}}"));
 		{% endfor %}
-		select_mansioni = $("<select>").attr("name", "mansione_id").append($("<option value=''>---</option>"));
+		select_mansioni = $("<select>").prop("name", "mansione_id").append($("<option value=''>---</option>"));
 		{% for mansione in mansioni %}
-			select_mansioni.append($("<option>").attr("value", "{{mansione.id}}").text("{{mansione.nome}}"));
+			select_mansioni.append($("<option>").prop("value", "{{mansione.id}}").text("{{mansione.nome}}"));
 		{% endfor %}
 	
 
@@ -127,16 +127,16 @@
 
 {% for persona in persone %}
 <script type="text/javascript">	
-	$(document).ready(function(){
+	$(window).load(function(){
 	
-	$('#sel-{{persona.id}} option').filter(function(){return this.text=='{{persona.get_stato_display}}';}).attr('selected', true);
+	$('#sel-{{persona.id}} option').filter(function(){return this.text=='{{persona.get_stato_display}}';}).prop('selected', true);
 	
 });
 </script>
 {% endfor %}
 
 <script type="text/javascript">
-$(document).ready(function(){
+$(window).load(function(){
 
 
 	$("table#tabella_persone").tablesorter({

@@ -73,11 +73,11 @@ function disp(selettore){
 									s.append("<option value=''>Gia Impegnato</option>");
 									$('#persona-{{persona.id}}').addClass("error");
 								}
-								else {$('#sel-{{persona.id}} option').filter(function() { return this.text == '{{d.get_tipo_display}}';}).attr('selected', true);
+								else {$('#sel-{{persona.id}} option').filter(function() { return this.text == '{{d.get_tipo_display}}';}).prop('selected', true);
 									$('#disponibilita-{{persona.id}}').html('{{d.creata_da}}:{{d.ultima_modifica|date:"d M"}} {{d.ultima_modifica|time:"H:i"}}');
 									}
 							}
-							else { $('#sel-{{persona.id}} option').filter(function() { return this.text == '{{d.get_tipo_display}}';}).attr('selected', true);
+							else { $('#sel-{{persona.id}} option').filter(function() { return this.text == '{{d.get_tipo_display}}';}).prop('selected', true);
 								$('#disponibilita-{{persona.id}}').html('{{d.creata_da}}:{{d.ultima_modifica|date:"d M"}} {{d.ultima_modifica|time:"H:i"}}');
 								} }
 						);
@@ -92,14 +92,14 @@ function disp(selettore){
 							  var s = $('#sel-{{persona.id}}');
 							  $("#sel-{{persona.id}} option:first").remove();
 							  s.prepend("<option value=''>{{d.mansione}} </option>");
-							  $("#sel-{{persona.id}} option:first").attr('selected', true);}
+							  $("#sel-{{persona.id}} option:first").prop('selected', true);}
 							);
 					  </script> 
 					 {% endif %}
 					 {% if persona = d.persona and d.mansione.id = mansione.id %}
 					  <script type="text/javascript">
 						$(document).ready(function(){
-							$('#sel-{{persona.id}} option').filter(function() { return this.text == '{{d.get_tipo_display}}'; }).attr('selected', true);
+							$('#sel-{{persona.id}} option').filter(function() { return this.text == '{{d.get_tipo_display}}'; }).prop('selected', true);
 							$('#disponibilita-{{persona.id}}').html('{{d.creata_da}}:{{d.ultima_modifica|date:"d M"}} {{d.ultima_modifica|time:"H:i"}}');
 							}
 						);

@@ -21,14 +21,14 @@
      function ripeti_toggle(){
 		if ($('#ripeti').is(":visible")){
 			$('#ripeti').slideUp();
-			$('input[name=ripeti]').attr('checked', false);
+			$('input[name=ripeti]').prop('checked', false);
 			$('#ripeti-switch i').removeClass('icon-chevron-up');
 			$('#ripeti-switch i').addClass('icon-chevron-down');
 			
 		}
 		else {
 			$('#ripeti').slideDown();
-			$('input[name=ripeti]').attr('checked', true);
+			$('input[name=ripeti]').prop('checked', true);
 			$('#ripeti-switch i').removeClass('icon-chevron-down');
 			$('#ripeti-switch i').addClass('icon-chevron-up');
 			
