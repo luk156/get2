@@ -65,7 +65,7 @@
 					<ul>
 					{% for disp in t.turno_disponibilita.all %}
 						{% if disp.mansione = requisito.mansione and disp.tipo = 'Disponibile' %}
-							<li class="persona-turno"><i class="icon-user"></i> {{disp.persona}}</li>
+							<li class="persona-turno"><i class="{{disp.mansione.icona}}" style="color:{{disp.mansione.colore}}"></i> {{disp.persona}}</li>
 						{% endif %}
 					{% endfor %}
 					</ul>
@@ -86,7 +86,7 @@
 			<ul>
 			{% for disp in t.turno_disponibilita.all %}
 				{% if disp.tipo = 'Disponibile' %}
-					<li class="persona-turno"><i class="icon-user"></i>
+					<li class="persona-turno"><i class="{{disp.mansione.icona}}" style="color:{{disp.mansione.colore}}"></i>
 					{% if request.user.is_authenticated or touch == "yes" %}
 					 {{disp.persona}}
 					{% else %}

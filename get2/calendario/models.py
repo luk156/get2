@@ -89,9 +89,18 @@ class MultiSelectField(models.Field):
 from south.modelsinspector import add_introspection_rules  
 add_introspection_rules([], ["^get2\.calendario\.models\.MultiSelectField"]) 
 
+ICONE = (
+	('icon-user','icon-user'),
+	('icon-ambulance','icon-ambulance'),
+	('icon-user-md','icon-user-md'),
+	('icon-phone','icon-phone'),
+	)
+
 class Mansione(models.Model):
 	nome =models.CharField('Nome',max_length=20)
 	descrizione = models.TextField('Descrizione estesa')
+	icona = models.TextField('Icona', choices=ICONE, default='icon-user' )
+	colore = models.TextField('Colore', default='#aaa' )
 	def __unicode__(self):
 		return '%s' % (self.nome)
 	# Milite tipo A, milite tipo B, centralinista ecc... 
@@ -104,6 +113,14 @@ class MansioneForm(forms.ModelForm):
 		self.helper.layout = Layout(
 			Field('nome'),
 			Field('descrizione'),
+			Field(
+				'colore',
+				template = 'form_templates/color.html'
+			),
+			Field(
+        		'icona',
+				template = 'form_templates/radioselect_inline.html',
+			),
 			FormActions(
 				Submit('save', 'Invia', css_class="btn-primary")
 			)
