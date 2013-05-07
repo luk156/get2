@@ -94,6 +94,8 @@ ICONE = (
 	('icon-ambulance','icon-ambulance'),
 	('icon-user-md','icon-user-md'),
 	('icon-phone','icon-phone'),
+	('icon-stethoscope','icon-stethoscope'),
+	('icon-eye-open','icon-eye-open'),
 	)
 
 class Mansione(models.Model):
