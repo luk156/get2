@@ -766,7 +766,7 @@ def elimina_requisito(request,requisito_id):
 
 def visualizza_persona(request,persona_id):
 	persona = Persona.objects.get(id=persona_id)
-	if request.user.is_staff or request.user.get_profile()==d.persona:
+	if request.user.is_staff or request.user.get_profile()==persona:
 	  return render_to_response('dettaglio_persona.html',{'request': request, 'persona': persona}, RequestContext(request))
 
 #### fine pagina persona ####
