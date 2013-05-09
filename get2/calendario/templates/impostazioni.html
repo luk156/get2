@@ -31,12 +31,13 @@ giorni[6] = "Domenica";
 			<div class="box-content">
 				<table class="table table-striped no-more-tables">
 					<thead>
-						<th>Nome</th><th>Descrizione</th><th>Operazioni</th>
+						<th>Nome</th><th>Descrizione</th><th>Icona</th><th>Operazioni</th>
 					</thead>
 				{% for mansione in mansioni %}
 					<tr class="" id="mansione-{{mansione.id}}">
 					<td data-title="Nome">{{mansione}}</td>
 					<td data-title="Descrizione">{{mansione.descrizione}}</td>
+					<td data-title="Icona"><i class="{{mansione.icona}} icon-2x icona" style="color:{{mansione.colore}}"></i></td>
 					<td data-title="Operazioni">
 						<div class="btn-group superuser">
 						  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">

@@ -3,6 +3,11 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
+{% block head %}
+	<script src="/static/js/jquery.minicolors.js"></script>
+	<link href="/static/css/jquery.minicolors.css" rel="stylesheet">
+{% endblock%}
+
 {% block header %}
 		<h4 class="header"><a href="/impostazioni/">Impostazioni</a>
 		<i class="icon-angle-right"></i>
