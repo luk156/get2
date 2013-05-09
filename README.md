@@ -8,10 +8,10 @@ Il software è completamente personalizzabile e può essere adattato ai più dis
 
 ##caratteristiche principali
 
-*Il software è sviluppato come una applicazione web: cioè può essere utilizzato su qualsiasi PC, Mac, Tablet ec.. che abbia la possibilità di collegarsi ad internet senza dover installare alcunché;
-*Il lavoro dei responsabili dei turni può essere effettuato anche da casa, lavorando su un calendario sempre aggiornato;
-*Le persone sono in grado di controllare da casa il calendario dei turni e di rendersi eventualmente disponibili per ricoprire una mansione;
-*Il programma dispone di un sistema di statistiche personalizzabile aggiornate in tempo reale;
+*	Il software è sviluppato come una applicazione web: cioè può essere utilizzato su qualsiasi PC, Mac, Tablet ec.. che abbia la possibilità di collegarsi ad internet senza dover installare alcunché;
+*	Il lavoro dei responsabili dei turni può essere effettuato anche da casa, lavorando su un calendario sempre aggiornato;
+*	Le persone sono in grado di controllare da casa il calendario dei turni e di rendersi eventualmente disponibili per ricoprire una mansione;
+*	Il programma dispone di un sistema di statistiche personalizzabile aggiornate in tempo reale;
 
 ##Come funziona?
 
