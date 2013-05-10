@@ -27,7 +27,13 @@ a {
   text-decoration: none;
 }
 
- @media only screen and (max-width: 800px) {
+@media only screen and (min-width: 768px) {
+	body {
+		min-width: 1232px;
+	}
+}
+ 
+@media only screen and (max-width: 767px) {
     /* Force table to not be like tables anymore */
 		.no-more-tables table,
 		.no-more-tables thead,
@@ -191,11 +197,11 @@ h5,h6 {
 }
 
 .page {
-	margin:0.5%;
+	/*margin:4px;*/
 	margin-top:-10px;
-	border-radius: 6px 6px 6px 6px;
+	/*border-radius: 6px 6px 6px 6px;*/
 	background-color: #fff;
-	padding:5px;
+	padding:3px;
 	box-shadow: 0px 0px 5px #444;
 	margin-bottom:120px;
 }
