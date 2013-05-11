@@ -161,21 +161,23 @@
 		{% if t|turno_intervallo_disponibilita %}
 			{% if not request.user.get_profile|gia_disponibile:t %}
 				<legend>Seleziona la mansione che vuoi ricoprire:</legend>
-				</br>
-				<select>
-				<option value="">seleziona mansione
+				
+				<!-- <select>
+				<option value=""> -->
 				{% for requisito in t.tipo.req_tipo_turno.all %}
 					{% if requisito.mansione in request.user.get_profile.competenze.all %}
 						{% if not requisito.operatore = "=" or not t|verifica_requisito:requisito  %}
 							{%if requisito.massimo = 0 %}
-								<option value="{{requisito.mansione.id}}">{{requisito.mansione}}
+								<!-- <option value="{{requisito.mansione.id}}">{{requisito.mansione}} -->
+								<a href="#" onclick="disponibilita_{{t.id}}({{requisito.mansione.id}});" class="btn btn-primary btn-block btn-large"><i class="{{requisito.mansione.icona}}"></i> {{requisito.mansione}}</a></br>
 							{% elif t|gia_disponibili:requisito < requisito.massimo %}
-								<option value="{{requisito.mansione.id}}">{{requisito.mansione}}
+								<a href="#" onclick="disponibilita_{{t.id}}({{requisito.mansione.id}});" class="btn btn-primary btn-block btn-large"><i class="{{requisito.mansione.icona}}"></i> {{requisito.mansione}}</a></br>
+								<!-- <option value="{{requisito.mansione.id}}">{{requisito.mansione}} -->
 							{% endif %}
 						{% endif %}
 					{% endif %}
 				{% endfor %}
-				</select>
+				<!-- </select> -->
 			{% else %}
 				Vuoi cancellarti dal turno del {{t.inizio|date:"d M"}}, ore {{t.inizio|time:"H:i"}} - {{t.fine|time:"H:i"}}?
 			{% endif %}
@@ -189,13 +191,11 @@
 		{% if t|turno_intervallo_disponibilita %}
 			{% if not request.user.get_profile|gia_disponibile:t %}
 				<script>
-					function disponibilita_{{t.id}}(){
-						mansione=$("#disponibilita-turno-{{t.id}} select option:selected").val();
+					function disponibilita_{{t.id}}(mansione){
 						persona="{{request.user.get_profile.id}}"
 						if (mansione!=""){url="/calendario/disponibilita/{{t.id}}/" +mansione+ "/" +persona+ "/Disponibile/";}
 						window.location = url;}
 				</script>
-				<button class="btn btn-primary" type="button" onclick="disponibilita_{{t.id}}();">Aggiungi disponibilita'</button>
 			{% else %}
 				<script>
 					function disponibilita_{{t.id}}(){
