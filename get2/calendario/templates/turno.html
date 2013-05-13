@@ -165,9 +165,9 @@
 				<!-- <select>
 				<option value=""> -->
 				{% for requisito in t.tipo.req_tipo_turno.all %}
-					{% if requisito.mansione in request.user.get_profile.competenze.all %}
-						{% if not requisito.operatore = "=" or not t|verifica_requisito:requisito  %}
-							{%if requisito.massimo = 0 %}
+					{% if requisito.mansione in request.user.get_profile.competenze.all and not requisito.extra %}
+						{% if not requisito.operatore = "=" or not t|verifica_requisito:requisito %}
+							{% if requisito.massimo = 0 %}
 								<!-- <option value="{{requisito.mansione.id}}">{{requisito.mansione}} -->
 								<a href="#" onclick="disponibilita_{{t.id}}({{requisito.mansione.id}});" class="btn btn-primary btn-block btn-large"><i class="{{requisito.mansione.icona}}"></i> {{requisito.mansione}}</a></br>
 							{% elif t|gia_disponibili:requisito < requisito.massimo %}

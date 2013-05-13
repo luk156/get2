@@ -422,7 +422,8 @@ class Disponibilita(models.Model):
 	creata_da = models.ForeignKey(User, related_name='creata_da_disponibilita')
 	turno = models.ForeignKey(Turno, related_name='turno_disponibilita')
 	mansione = models.ForeignKey(Mansione, related_name='mansione_disponibilita',blank=True, null=True, on_delete=models.SET_NULL)
-
+	class Meta:
+		ordering = ['mansione']
 
 class Notifica(models.Model):
 	destinatario = models.ForeignKey(User, related_name='destinatario_user')
