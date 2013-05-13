@@ -12,9 +12,7 @@ class Migration(SchemaMigration):
         # Changing field 'Impostazioni_notifica.giorni'
         db.alter_column(u'calendario_impostazioni_notifica', 'giorni', self.gf('get2.calendario.models.MultiSelectField')(max_length=250))
         # Adding field 'Mansione.icona'
-        db.add_column(u'calendario_mansione', 'icona',
-                      self.gf('django.db.models.fields.TextField')(default='disponibile'),
-                      keep_default=False)
+        db.add_column(u'calendario_mansione', 'icona', self.gf('django.db.models.fields.TextField')(default='disponibile'), keep_default=False)
 
 
     def backwards(self, orm):
