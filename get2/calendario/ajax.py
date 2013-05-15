@@ -150,7 +150,7 @@ def tipo_turno_form(request, form):
         f=form.save()
         tipo_turno=TipoTurno.objects.get(id=f.id)
         mansioni=Mansione.objects.all()
-        html_dettagli = render_to_string( 'elenco_tipo_turno/dettagli.html', { 'tipo_turno': tipo_turno, 'mansioni': mansioni,'operatori': OPERATORI } )
+        html_dettagli = render_to_string( 'elenco_tipo_turno/dettagli.html', { 'tipo_turno': tipo_turno, 'mansioni': mansioni } )
         #dajax.alert(html_dettagli)
         dajax.append('#elenco', 'innerHTML', html_dettagli)
         dajax.script('$("#form_tipo_turno" ).dialog("close"); $( "div#tipo_turno-'+str(f.id)+'.riga a").button(); $( ".dettagli_requisito").hide();')

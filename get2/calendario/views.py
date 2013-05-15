@@ -520,7 +520,7 @@ def elimina_mansione(request,mansione_id):
 @user_passes_test(lambda u:u.is_staff)
 def impostazioni(request):
 	tipi_turno=TipoTurno.objects.all()
-	return render_to_response('impostazioni.html',{'tipi_turno':tipi_turno,'tipo_turno_form':TipoTurnoForm(),'operatori':OPERATORI,'mansioni':Mansione.objects.all(),'impostazioni_notifica_utente':Impostazioni_notifica.objects.all(), 'request':request}, RequestContext(request))
+	return render_to_response('impostazioni.html',{'tipi_turno':tipi_turno,'tipo_turno_form':TipoTurnoForm(),'mansioni':Mansione.objects.all(),'impostazioni_notifica_utente':Impostazioni_notifica.objects.all(), 'request':request}, RequestContext(request))
 
 @user_passes_test(lambda u: u.is_superuser)
 def nuovo_tipo_turno(request):
