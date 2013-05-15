@@ -59,9 +59,9 @@
 							&ge;{{requisito.minimo}}
 						{% endif %}
 						{% if requisito.massimo != 0 %}
-							| &le;{{requisito.massimo}}
-						{% endif %}
-					</span></a></h6> 
+							&le;{{requisito.massimo}}
+						{% endif %}<span class="icon-stack">
+					</span></a></h6> <span class="icon-stack"><span class="icon-stack">
 				</div>
 				<div class="persone">
 					<ul>
@@ -81,7 +81,7 @@
 							&ge;{{requisito.minimo}}
 						{% endif %}
 						{% if requisito.massimo != 0 %}
-							| &le;{{requisito.massimo}}
+							&le;{{requisito.massimo}}
 						{% endif %}
 					</span>
 					</h6>
@@ -92,8 +92,9 @@
 		<div class="persone">
 			<ul>
 			{% for disp in t.turno_disponibilita.all %}
-				{% if disp.tipo = 'Disponibile' %}
-					<li class="persona-turno"><i class="{{disp.mansione.icona}}" style="color:{{disp.mansione.colore}}"></i>
+				{% if disp.tipo = 'Disponibile' and disp.mansione %}
+					<li class="persona-turno">
+						<i class="{{disp.mansione.icona}}" style="color:{{disp.mansione.colore}}"></i>
 					{% if request.user.is_authenticated or touch == "yes" %}
 					 {{disp.persona}}
 					{% else %}
