@@ -238,13 +238,12 @@ class TipoTurnoForm(forms.ModelForm):
 		)
 		super(TipoTurnoForm, self).__init__(*args, **kwargs)
 
-OPERATORI=(('=','Uguale a'),('>','Maggiore di'))
+OPERATORI=(('=','Uguale a'),('>','Maggiore di'),('<','Minore di'))
 
 class Requisito(models.Model):
 	mansione=models.ForeignKey(Mansione, related_name="req_mansione")
-	operatore=models.CharField('operatore', max_length=10, choices=OPERATORI )
-	valore=models.IntegerField()
-	massimo=models.IntegerField(default=0)
+	massimo=models.IntegerField('Maggiore o uguale', default=0)
+	minimo=models.IntegerField('Minore o uguale', default=0)
 	tipo_turno=models.ForeignKey(TipoTurno, related_name="req_tipo_turno",)
 	necessario=models.BooleanField('Necessario')
 	sufficiente=models.BooleanField('Sufficiente')
@@ -261,6 +260,7 @@ class RequisitoForm(forms.ModelForm):
 			Field('operatore'),
 			Field('valore'),
 			Field('massimo'),
+			Field('minimo'),
 			Field('necessario'),
 			Field('sufficiente'),
 			Field('extra'),
@@ -290,9 +290,6 @@ GIORNO_EXT = GIORNO + (
 class Occorrenza(models.Model):
 	pass
 
-
-ops = {"=": operator.eq, ">": operator.gt}
-
 class Turno(models.Model):
 	identificativo = models.CharField(max_length=30, blank=True , default='')
 	inizio = models.DateTimeField()
@@ -309,10 +306,9 @@ class Turno(models.Model):
 					contatore+=1
 				if (requisito.extra and requisito.mansione in d.persona.competenze.all()):
 					contatore+=1
-			operatore=ops[requisito.operatore]
-			if not (operatore(contatore,requisito.valore)):
-				return False
 			if contatore>requisito.massimo and requisito.massimo!=0:
+				return False
+			if contatore<requisito.minimo and requisito.minimo!=0:
 				return False
 			return True
 		else:

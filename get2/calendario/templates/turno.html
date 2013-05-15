@@ -41,11 +41,11 @@
 			{% if not requisito.extra %}
 				<div class="mansione-calendario">
 					<h6 class="h6-mansione-{{requisito.mansione.id}}">{{requisito.mansione}} 
-					{% if not requisito.operatore = "=" or not t|verifica_requisito:requisito  or not requisito.necessario %}
+					
 						{% if request.user.is_staff %}
 							<a href="/calendario/cerca_persona/{{t.id}}/{{requisito.mansione.id}}">
 						{% endif %}
-					{% endif %}
+
 					{% if requisito.sufficiente %}
 						<span class="badge badge-info pull-right">
 					{% elif not requisito.necessario %}
@@ -55,10 +55,12 @@
 					{% else %}
 						<span class="badge badge-important pull-right">
 					{% endif %}
-					{{requisito.operatore}}{{requisito.valore}}
-					{% if requisito.massimo != 0 %}
-						| &le;{{requisito.massimo}}
-					{% endif %}
+						{% if requisito.minimo != 0 %}
+							&ge;{{requisito.minimo}}
+						{% endif %}
+						{% if requisito.massimo != 0 %}
+							| &le;{{requisito.massimo}}
+						{% endif %}
 					</span></a></h6> 
 				</div>
 				<div class="persone">
@@ -74,10 +76,15 @@
 			{% if requisito.extra %}
 				<div class="mansione-calendario">
 					<h6 class="h6-mansione-{{requisito.mansione.id}}"><i class="icon-asterisk"></i> {{requisito.mansione}}
-					<span class="badge badge-warning pull-right"> {{requisito.operatore}}{{requisito.valore}}
-					{% if requisito.massimo != 0 %}
-						| &le;{{requisito.massimo}}
-					{% endif %}</span></h6>
+					<span class="badge badge-warning pull-right">
+						{% if requisito.minimo != 0 %}
+							&ge;{{requisito.minimo}}
+						{% endif %}
+						{% if requisito.massimo != 0 %}
+							| &le;{{requisito.massimo}}
+						{% endif %}
+					</span>
+					</h6>
 				</div>
 			{% endif %}
 		{% endfor %}
@@ -161,23 +168,13 @@
 		{% if t|turno_intervallo_disponibilita %}
 			{% if not request.user.get_profile|gia_disponibile:t %}
 				<legend>Seleziona la mansione che vuoi ricoprire:</legend>
-				
-				<!-- <select>
-				<option value=""> -->
 				{% for requisito in t.tipo.req_tipo_turno.all %}
 					{% if requisito.mansione in request.user.get_profile.competenze.all and not requisito.extra %}
-						{% if not requisito.operatore = "=" or not t|verifica_requisito:requisito %}
-							{% if requisito.massimo = 0 %}
-								<!-- <option value="{{requisito.mansione.id}}">{{requisito.mansione}} -->
+						{% if t|gia_disponibili:requisito <= requisito.massimo %}
 								<a href="#" onclick="disponibilita_{{t.id}}({{requisito.mansione.id}});" class="btn btn-primary btn-block btn-large"><i class="{{requisito.mansione.icona}}"></i> {{requisito.mansione}}</a></br>
-							{% elif t|gia_disponibili:requisito < requisito.massimo %}
-								<a href="#" onclick="disponibilita_{{t.id}}({{requisito.mansione.id}});" class="btn btn-primary btn-block btn-large"><i class="{{requisito.mansione.icona}}"></i> {{requisito.mansione}}</a></br>
-								<!-- <option value="{{requisito.mansione.id}}">{{requisito.mansione}} -->
-							{% endif %}
 						{% endif %}
 					{% endif %}
 				{% endfor %}
-				<!-- </select> -->
 			{% else %}
 				Vuoi cancellarti dal turno del {{t.inizio|date:"d M"}}, ore {{t.inizio|time:"H:i"}} - {{t.fine|time:"H:i"}}?
 			{% endif %}
