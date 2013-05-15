@@ -238,7 +238,6 @@ class TipoTurnoForm(forms.ModelForm):
 		)
 		super(TipoTurnoForm, self).__init__(*args, **kwargs)
 
-OPERATORI=(('=','Uguale a'),('>','Maggiore di'),('<','Minore di'))
 
 class Requisito(models.Model):
 	mansione=models.ForeignKey(Mansione, related_name="req_mansione")
@@ -257,8 +256,6 @@ class RequisitoForm(forms.ModelForm):
 		self.helper = FormHelper()
 		self.helper.layout = Layout(
 			Field('mansione'),
-			Field('operatore'),
-			Field('valore'),
 			Field('massimo'),
 			Field('minimo'),
 			Field('necessario'),
