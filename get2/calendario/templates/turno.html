@@ -79,7 +79,7 @@
 					</ul>
 				</div>
 		{% endif %}
-		{% if requisito.extra %}
+		{% if requisito.extra and request.user.is_staff %}
 				<div class="mansione-calendario">
 					<h6 class="h6-mansione-{{requisito.mansione.id}}"><i class="icon-asterisk"></i> {{requisito.mansione}}
 					<span class="badge badge-warning pull-right">
