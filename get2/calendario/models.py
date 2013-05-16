@@ -224,6 +224,7 @@ class GruppoForm(forms.ModelForm):
 
 class TipoTurno(models.Model):
 	identificativo = models.CharField(max_length=30, blank=False)
+	priorita = models.IntegerField('priorita', default=0, )
 	def __unicode__(self):
 		return '%s' % (self.identificativo)
 
