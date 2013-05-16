@@ -35,17 +35,16 @@
 				</ul>
 			</div>
 		{% endif %}
-	</div>
-	{%if request.user.is_staff %}
-		{% for requisito in t.tipo.req_tipo_turno.all %}
-			{% if not requisito.extra %}
+	</div>	
+	{% for requisito in t.tipo.req_tipo_turno.all %}
+		{% if not requisito.extra %}
+			{%if request.user.is_staff %}	
 				<div class="mansione-calendario">
 					<h6 class="h6-mansione-{{requisito.mansione.id}}">{{requisito.mansione}} 
 					
 						{% if request.user.is_staff %}
 							<a href="/calendario/cerca_persona/{{t.id}}/{{requisito.mansione.id}}">
 						{% endif %}
-
 					{% if requisito.sufficiente %}
 						<span class="badge badge-info pull-right">
 					{% elif not requisito.necessario %}
@@ -60,20 +59,27 @@
 						{% endif %}
 						{% if requisito.massimo != 0 %}
 							&le;{{requisito.massimo}}
-						{% endif %}<span class="icon-stack">
-					</span></a></h6> <span class="icon-stack"><span class="icon-stack">
+						{% endif %}
+					</span></a></h6> 
 				</div>
+			{% endif %}
 				<div class="persone">
 					<ul>
 					{% for disp in t.turno_disponibilita.all %}
 						{% if disp.mansione = requisito.mansione and disp.tipo = 'Disponibile' %}
-							<li class="persona-turno"><i class="{{disp.mansione.icona}}" style="color:{{disp.mansione.colore}}"></i> {{disp.persona}}</li>
+							<li class="persona-turno"><i class="{{disp.mansione.icona}}" style="color:{{disp.mansione.colore}}"></i> 
+								{% if request.user.is_authenticated or touch == "yes" %}
+					 				{{disp.persona}}
+								{% else %}
+					 				----
+								{% endif %}
+							</li>
 						{% endif %}
 					{% endfor %}
 					</ul>
 				</div>
-			{% endif %}
-			{% if requisito.extra %}
+		{% endif %}
+		{% if requisito.extra %}
 				<div class="mansione-calendario">
 					<h6 class="h6-mansione-{{requisito.mansione.id}}"><i class="icon-asterisk"></i> {{requisito.mansione}}
 					<span class="badge badge-warning pull-right">
@@ -86,26 +92,9 @@
 					</span>
 					</h6>
 				</div>
-			{% endif %}
-		{% endfor %}
-	{% else %}
-		<div class="persone">
-			<ul>
-			{% for disp in t.turno_disponibilita.all %}
-				{% if disp.tipo = 'Disponibile' and disp.mansione %}
-					<li class="persona-turno">
-						<i class="{{disp.mansione.icona}}" style="color:{{disp.mansione.colore}}"></i>
-					{% if request.user.is_authenticated or touch == "yes" %}
-					 {{disp.persona}}
-					{% else %}
-					 ----
-					{% endif %}
-					 </li>
-				{% endif %}
-			{% endfor %}
-			</ul>
-		</div>
-	{% endif %}
+		{% endif %}
+	{% endfor %}
+
 		
 	<div id="altre-mansioni-{{t.id}}" class="mansione-calendario hide">
 		<h6>Altre mansioni</h6>
@@ -115,7 +104,13 @@
 	{% for disp in t.turno_disponibilita.all %}
 		{% if disp.mansione not in t.mansioni and disp.tipo = 'Disponibile' %}
 		<script>$('#altre-mansioni-{{t.id}}').removeClass('hide');</script>
-			<li class="persona-turno"><i class="icon-user"></i> {{disp.persona}}</li>
+			<li class="persona-turno">
+				{% if request.user.is_authenticated or touch == "yes" %}
+	 				{{disp.persona}}
+				{% else %}
+	 				----
+				{% endif %}
+			</li>
 		{% endif %}
 	{% endfor %}
 		</ul>
