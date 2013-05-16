@@ -92,6 +92,7 @@ add_introspection_rules([], ["^get2\.calendario\.models\.MultiSelectField"])
 ICONE = (
 	('icon-user','icon-user'),
 	('icon-ambulance','icon-ambulance'),
+	('icon-truk','icon-truk'),
 	('icon-user-md','icon-user-md'),
 	('icon-phone','icon-phone'),
 	('icon-stethoscope','icon-stethoscope'),
