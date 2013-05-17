@@ -335,8 +335,8 @@ class Turno(models.Model):
 		super(Turno, self).save(*args, **kwargs)
 
 class TurnoForm(forms.ModelForm):
-	modifica_futuri=forms.BooleanField(label="modifica occorrenze future",required=False)
-	modifica_tutti=forms.BooleanField(label="modifica tutte le occorrenze",required=False)
+	modifica_futuri=forms.BooleanField(label="modifica occorrenze future",required=False, help_text="<i class='icon-warning-sign'></i> sara' modificato solo l'orario e non la data!")
+	modifica_tutti=forms.BooleanField(label="modifica tutte le occorrenze",required=False, help_text="<i class='icon-warning-sign'></i> sara' modificato solo l'orario e non la data!")
 	def __init__(self, *args, **kwargs):
 		self.helper = FormHelper()
 		self.helper.layout = Layout(
