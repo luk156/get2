@@ -380,7 +380,7 @@ def nuova_disponibilita(request, turno_id, mansione_id, persona_id, disponibilit
 def disponibilita_url(request, turno_id, mansione_id, persona_id, disponibilita):
 	d=nuova_disponibilita(request, turno_id, mansione_id, persona_id, disponibilita)
 	if d[0]:
-		return HttpResponseRedirect('/calendario')
+		return HttpResponseRedirect('/calendario')settings_calendario.DISP_MIN
 	else:
 		print d[1]
 		
@@ -406,7 +406,7 @@ def notifica_disponibilita(request,persona,turno,tipo_disponibilita,mansione):
 			notifica.destinatario_id=i.utente.id
 			notifica.save()
 	else:
-		notifica.destinatario_id=1 # se non c'epaola' regola va al admin
+		notifica.destinatario_id=settings_calendario.ID_ADMIN_NOTIFICHE # se non c'e regola va al admin
 		notifica.save()
 	return True
 	
