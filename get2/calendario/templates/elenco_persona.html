@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 
 {% block head %}
+	<script>$('#loading').removeClass('hidden');</script>
 	<script src="/static/js/jquery.tablesorter.min.js"></script>
 	<script src="/static/js/jquery.tablesorter.widgets.min.js"></script>
 	<script src="/static/js/jquery.tablesorter.widgets-filter-formatter.min.js"></script>
 	<link href="/static/css/theme.bootstrap.css" rel="stylesheet">
+	
 {% endblock%}
 
 {% block header %}
@@ -17,6 +19,12 @@
 
 {% block main %}
 
+<script>
+$('#loading').removeClass('hidden');
+$(document).ready(function(){
+	$('#loading').addClass('hidden');
+}
+</script>
 
 <div class="row-fluid">
 	<div class="span7">
