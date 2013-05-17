@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block head %}
-	<script>$('#loading').removeClass('hidden');</script>
 	<script src="/static/js/jquery.tablesorter.min.js"></script>
 	<script src="/static/js/jquery.tablesorter.widgets.min.js"></script>
 	<script src="/static/js/jquery.tablesorter.widgets-filter-formatter.min.js"></script>
@@ -30,11 +29,6 @@ function utente_staff(selettore){
 	$('#loading').removeClass('hidden');
 	Dajaxice.get2.calendario.utente_staff(Dajax.process,{'user_id':value});
 }
-
-$(document).ready(function(){
-	$('#loading').addClass('hidden');
-}
-
 </script>
 <script src="/static/sorttable.js"></script>
 </br>
