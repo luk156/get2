@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block head %}
-	<script>$('#loading').removeClass('hidden');</script>
 	<script src="/static/js/jquery.tablesorter.min.js"></script>
 	<script src="/static/js/jquery.tablesorter.widgets.min.js"></script>
 	<script src="/static/js/jquery.tablesorter.widgets-filter-formatter.min.js"></script>
@@ -19,11 +18,6 @@
 
 {% block main %}
 
-<script>
-$(document).ready(function(){
-	$('#loading').addClass('hidden');
-}
-</script>
 
 <div class="row-fluid">
 	<div class="span7">
