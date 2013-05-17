@@ -380,7 +380,7 @@ def nuova_disponibilita(request, turno_id, mansione_id, persona_id, disponibilit
 def disponibilita_url(request, turno_id, mansione_id, persona_id, disponibilita):
 	d=nuova_disponibilita(request, turno_id, mansione_id, persona_id, disponibilita)
 	if d[0]:
-		return HttpResponseRedirect('/calendario')settings_calendario.DISP_MIN
+		return HttpResponseRedirect('/calendario')
 	else:
 		print d[1]
 		
