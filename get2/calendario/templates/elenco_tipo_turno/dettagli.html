@@ -4,7 +4,7 @@
 <div class="well well-small">
 	<div class="row-fluid" id="tipo_turno-{{tipo_turno.id}}">
 		
-		<h5><i class="icon-th-list"></i> {{tipo_turno}}</h5>
+		<h5><i class="icon-th-list"></i> {{tipo_turno}} ( {{tipo_turno.priorita}} )</h5>
 			{% if request.user.is_superuser %}
 			<div class="btn-group pull-right">
 				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">

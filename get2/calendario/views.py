@@ -243,7 +243,7 @@ def calendario(request):
 	for i in range(0,7):
 		giorni.append(start)
 		stop = start + datetime.timedelta(days=1)
-		turni.append(Turno.objects.filter(inizio__range=(start, stop)).order_by('inizio'))
+		turni.append(Turno.objects.filter(inizio__range=(start, stop)).order_by('inizio', 'tipo__priorita'))
 		start = start + datetime.timedelta(days=1)
 	start = datetime.datetime(anno,mese,giorno,1)
 	

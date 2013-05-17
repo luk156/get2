@@ -329,6 +329,10 @@ class Turno(models.Model):
 		return Turno.objects.filter( (models.Q(inizio__lte=i) & models.Q(fine__gte=f)) | models.Q(inizio__range=(i ,f)) | models.Q(fine__range=(i,f)) ).exclude(id=self.id)
 	def mansioni(self):
 		return Mansione.objects.filter(req_mansione__tipo_turno=self.tipo)
+	def save(self, *args, **kwargs):
+		self.inizio = self.inizio.replace(second=0)
+		self.fine = self.fine.replace(second=0)
+		super(Turno, self).save(*args, **kwargs)
 
 class TurnoForm(forms.ModelForm):
 	modifica_futuri=forms.BooleanField(label="modifica occorrenze future",required=False)
@@ -358,6 +362,8 @@ class TurnoForm(forms.ModelForm):
 		data = self.cleaned_data
 		if data.get('inizio')>data.get('fine'):
 			raise forms.ValidationError('Il turno termina prima di iniziare! controlla inizio e fine')
+		if data.get('inizio').day!=data.get('fine').day:
+			raise forms.ValidationError('Il turno deve terminare nello stesso giorno')
 		return data
 		
 class TurnoFormRipeti(TurnoForm):
