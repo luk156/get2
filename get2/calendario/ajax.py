@@ -132,11 +132,14 @@ def notifiche(request,option,url):
             dajax.remove(selector)
             dajax.remove('#not-inv-'+not_id)
             #dajax.alert(request.user.get_profile().nonletti())
-    non=request.user.get_profile().notifiche_non_lette()
-    if non >0:
-       dajax.assign('#notifiche-badge','innerHTML',non)
-    else:
-       dajax.assign('#notifiche-badge','innerHTML','')
+    try:
+        non=request.user.get_profile().notifiche_non_lette()
+        if non >0:
+           dajax.assign('#notifiche-badge','innerHTML',non)
+        else:
+           dajax.assign('#notifiche-badge','innerHTML','')
+    except:
+        pass
     dajax.clear('.ch','checked')
     dajax.script("$('#loading').addClass('hidden');")
     return dajax.json()
