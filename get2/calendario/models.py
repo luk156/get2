@@ -407,6 +407,8 @@ class TurnoFormRipeti(TurnoForm):
 		ripeti=data.get('ripeti')
 		da=data.get('ripeti_da')
 		al=data.get('ripeti_al')
+		if data.get('inizio').day!=data.get('fine').day:
+			raise forms.ValidationError('Il turno deve terminare nello stesso giorno')
 		if data.get('inizio')>data.get('fine'):
 			raise forms.ValidationError('Il turno termina prima di iniziare! controlla inizio e fine')
 		if ripeti and (da==None or al==None):
