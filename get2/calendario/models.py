@@ -133,6 +133,8 @@ class MansioneForm(forms.ModelForm):
 
 STATI=(('disponibile','Disponibile'),('ferie','In ferie'),('malattia','In malattia'),('indisponibile','Indisponibile'))
 
+GIORNI=((1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), (6, '6'), (7, '7'))
+
 class Persona(models.Model):
 	user = models.ForeignKey(User, unique=True, blank=True, null=True, related_name='pers_user')
 	nome = models.CharField('Nome',max_length=200)
@@ -147,6 +149,8 @@ class Persona(models.Model):
 	retraining = models.DateField('Ultimo retraining livello A', blank=True, null=True)
 	retraining_blsd = models.DateField('Ultimo retraining Operatore BLSD', blank=True, null=True)
 	note = models.TextField( blank=True, null=True, )
+	notificaMail = models.BooleanField('Attiva notifica Mail')
+	giorniNotificaMail = models.PositiveSmallIntegerField('Giorni di anticipo', choices=GIORNI, default=2, blank=True, null=True )
 	def notifiche_non_lette(self):
 		n=0
 		for m in Notifica.objects.filter(destinatario=self.user):
@@ -186,6 +190,11 @@ class PersonaForm(forms.ModelForm):
 				AppendedText('retraining_blsd', '<i class="icon-calendar"></i>'),
 				css_class="span3"
 			),
+			Fieldset(
+				'Notifiche via E-mail'
+				'notificaMail',
+				AppendedText('giorniNotificaMail', '<i class="icon-envelope"></i>'),
+				),
 			HTML('</div>'),
 			FormActions(
 				Submit('save', 'Invia', css_class="btn-primary"),
