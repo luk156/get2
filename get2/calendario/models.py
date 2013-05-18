@@ -149,7 +149,7 @@ class Persona(models.Model):
 	retraining = models.DateField('Ultimo retraining livello A', blank=True, null=True)
 	retraining_blsd = models.DateField('Ultimo retraining Operatore BLSD', blank=True, null=True)
 	note = models.TextField( blank=True, null=True, )
-	notificaMail = models.BooleanField('Attiva notifica Mail')
+	notificaMail = models.BooleanField('Attiva', default=False )
 	giorniNotificaMail = models.PositiveSmallIntegerField('Giorni di anticipo', choices=GIORNI, default=2, blank=True, null=True )
 	def notifiche_non_lette(self):
 		n=0
@@ -191,7 +191,7 @@ class PersonaForm(forms.ModelForm):
 				css_class="span3"
 			),
 			Fieldset(
-				'Notifiche via E-mail'
+				'Notifiche via E-mail',
 				'notificaMail',
 				AppendedText('giorniNotificaMail', '<i class="icon-envelope"></i>'),
 				),

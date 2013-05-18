@@ -163,3 +163,8 @@ AUTH_PROFILE_MODULE = 'calendario.Persona'
 
 INTERNAL_IPS = ('127.0.0.1',)
 
+EMAIL_USE_TLS = True #Or False - For gmail: True
+EMAIL_HOST = 'your_host.com' #For gmail: 'smtp.gmail.com'
+EMAIL_HOST_USER = 'your@email.com'
+EMAIL_HOST_PASSWORD = 'your_password'
+EMAIL_PORT = your_host_port #For gmail: 587
