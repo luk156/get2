@@ -123,7 +123,7 @@ class MansioneForm(forms.ModelForm):
 			),
 			Field(
         		'icona',
-				template = 'form_templates/radioselect_inline.html',
+				template = 'form_templates/radioselect_inline.htmodal(ml',
 			),
 			FormActions(
 				Submit('save', 'Invia', css_class="btn-primary")
@@ -234,6 +234,8 @@ class GruppoForm(forms.ModelForm):
 class TipoTurno(models.Model):
 	identificativo = models.CharField(max_length=30, blank=False)
 	priorita = models.IntegerField('priorita', default=0, )
+	msg_errore = models.TextField('Messaggio errore disponibilita', blank=True, null=True, help_text="Il messaggio viene visualizzato nel caso non sia possibile modificare la disponibilta")
+	#msg_lontano = models.TextField( blank=True, null=True, )
 	def __unicode__(self):
 		return '%s' % (self.identificativo)
 
@@ -244,6 +246,8 @@ class TipoTurnoForm(forms.ModelForm):
 		self.helper = FormHelper()
 		self.helper.layout = Layout(
 			Field('identificativo'),
+			Field('priorita'),
+			Field('msg_errore'),
 			FormActions(
 				Submit('save', 'Invia', css_class="btn-primary")
 			)

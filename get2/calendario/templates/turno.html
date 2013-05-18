@@ -156,12 +156,12 @@
 
 <div id="disponibilita-turno-{{t.id}}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-header">
-		{% if t|turno_intervallo_disponibilita %}
+		{% if t|turno_intervallo_disponibilita:request.user.get_profile %}
 		<h4>turno del {{t.inizio|date:"d M"}}, ore {{t.inizio|time:"H:i"}} - {{t.fine|time:"H:i"}}</h4>
 		{% endif %}
 	</div>
 	<div class="modal-body">
-		{% if t|turno_intervallo_disponibilita %}
+		{% if t|turno_intervallo_disponibilita:request.user.get_profile %}
 			{% if not request.user.get_profile|gia_disponibile:t %}
 				<legend>Seleziona la mansione che vuoi ricoprire:</legend>
 				{% for requisito in t.tipo.req_tipo_turno.all %}
@@ -176,12 +176,14 @@
 			{% endif %}
 		{% else %}
 			Non puoi modificare la tua disponibilita per questo turno:</br>
-			<span class="emblem-important">{{t|errore_turno_intervallo_disponibilita}}</span>
+			<span class="emblem-important">{{t|errore_turno_intervallo_disponibilita:request.user.get_profile}}</span>
+			<hr>
+			{{t.tipo.msg_errore|safe}}
 		{% endif %}
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Annulla</button>
-		{% if t|turno_intervallo_disponibilita %}
+		{% if t|turno_intervallo_disponibilita:request.user.get_profile %}
 			{% if not request.user.get_profile|gia_disponibile:t %}
 				<script>
 					function disponibilita_{{t.id}}(mansione){

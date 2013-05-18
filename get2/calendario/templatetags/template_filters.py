@@ -32,12 +32,12 @@ def turno_futuro(instance):
 	return instance.inizio>datetime.datetime.now()
 
 @register.filter
-def turno_intervallo_disponibilita(instance):
-	return verifica_intervallo(instance)[0]
+def turno_intervallo_disponibilita(instance, arg):
+	return verifica_intervallo(instance, arg)[0]
 	
 @register.filter
-def errore_turno_intervallo_disponibilita(instance):
-	return verifica_intervallo(instance)[1]
+def errore_turno_intervallo_disponibilita(instance, arg):
+	return verifica_intervallo(instance, arg)[1]
 	
 @register.filter
 def stampa_requisito(instance):

@@ -1,36 +1,19 @@
 {% extends "base.html" %}
-
+{% load crispy_forms_tags %}
 {% block title %} Inserimento/Modifica Tipo Turno {% endblock %}	
 
-{% block menu2 %}
 
-<div id="navigazione">
-<div class="nav-inizio nav"><a href="/impostazioni"><span class="impostazioni-nav"> Impostazioni</span></a></div>
-<div class="nav-fine nav">Nuovo Tipo di Turno</div>
-</div>
-
+{% block header %}
+    <h4 class="header"><a href="/impostazioni">Impostazioni</a>
+    <i class="icon-angle-right"></i>
+    {{azione}} Tipo di Turno
 {% endblock %}
 
 {% block main %}
 <div style="margin:10px;">
-  {% if error_message %}
-    <p><strong>{{ error_message }}</strong></p>
-  {% endif %}
 
-  {% ifequal azione 'nuovo' %}
-  <form action="/impostazioni/tipo_turno/nuovo/" method="post">{% csrf_token %}
-  {% endifequal %}
+  {% crispy form %}
 
-  {% ifequal azione 'modifica' %}
-  <form action="/impostazioni/tipo_turno/modifica/{{ tipo_turno.id }}/" method="post">{% csrf_token %}
-  {% endifequal %}
-  <table>
-  {{tipo_turno_form.as_table}}
-
-  </table>
-  </br>
-  <input type="submit" value="Invia" /> <input type="reset" value="cancella">
-  </form>    	
-    </div>
+</div>
   
 {% endblock %}

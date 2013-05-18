@@ -296,12 +296,18 @@ def cerca_persona(request, turno_id, mansione_id):
 ####   disponibilita   ####
 
 
-def verifica_intervallo(turno):
+def verifica_intervallo(turno,persona):
 	now=datetime.datetime.now()
 	diff=turno.inizio-now
 	if diff.days<0:
 		verifica=False
 		errore='Turno passato'
+	elif persona.persona_disponibilita.filter(turno=turno, tipo="Disponibile") and diff.days<settings_calendario.CANC_MIN:
+		verifica=False
+		errore='Troppo vicino (intervallo minore di '+str(settings_calendario.CANC_MIN)+' giorni)'
+	elif persona.persona_disponibilita.filter(turno=turno, tipo="Disponibile") and diff.days<settings_calendario.CANC_MAX:
+		verifica=False
+		errore='Troppo lontano (intervallo maggiore di '+str(settings_calendario.CANC_MAX)+' giorni)'		
 	elif diff.days<settings_calendario.DISP_MIN:
 		verifica=False
 		errore='Troppo vicino (intervallo minore di '+str(settings_calendario.DISP_MIN)+' giorni)'
@@ -320,7 +326,7 @@ def disponibilita_verifica_tempo(request, turno):
 		verifica=True
 		errore=''
 	else:
-		(verifica,errore)=verifica_intervallo(turno)
+		(verifica,errore)=verifica_intervallo(turno,request.user.get_profile())
 	#cprint errore
 	#print diff.days
 	return (verifica,errore)
@@ -524,28 +530,32 @@ def impostazioni(request):
 
 @user_passes_test(lambda u: u.is_superuser)
 def nuovo_tipo_turno(request):
-	azione = 'nuovo'
+	azione = 'Nuovo'
 	if request.method == 'POST': # If the form has been submitted...
-		tipo_turno_form = TipoTurnoForm(request.POST) # A form bound to the POST data
-		if tipo_turno_form.is_valid():
-			tipo_turno_form.save()
+		form = TipoTurnoForm(request.POST) # A form bound to the POST data
+		form.helper.form_action = '/impostazioni/tipo_turno/nuovo/'
+		if form.is_valid():
+			form.save()
 			return HttpResponseRedirect('/impostazioni/') # Redirect after POST
 	else:
-		tipo_turno_form = TipoTurnoForm()
-	return render_to_response('form_tipo_turno.html',{'tipo_turno_form':tipo_turno_form,'azione':azione,'request':request}, RequestContext(request))
+		form = TipoTurnoForm()
+		form.helper.form_action = '/impostazioni/tipo_turno/nuovo/'
+	return render_to_response('form_tipo_turno.html',{'form':form,'azione':azione,'request':request}, RequestContext(request))
 
 @user_passes_test(lambda u: u.is_superuser)
 def modifica_tipo_turno(request, tipo_turno_id):
-	azione = 'modifica';
+	azione = 'Modifica';
 	tipo_turno = TipoTurno.objects.get(id=tipo_turno_id)
 	if request.method == 'POST': # If the form has been submitted...
-		tipo_turno_form = TipoTurnoForm(request.POST, instance=tipo_turno) # necessario per modificare la riga preesistente
-		if tipo_turno_form.is_valid():
-			tipo_turno_form.save()
+		form = TipoTurnoForm(request.POST, instance=tipo_turno) # necessario per modificare la riga preesistente
+		form.helper.form_action = '/impostazioni/tipo_turno/modifica/'+str(tipo_turno.id)+'/'
+		if form.is_valid():
+			form.save()
 			return HttpResponseRedirect('/impostazioni/') # Redirect after POST
 	else:
-		tipo_turno_form = TipoTurnoForm(instance=tipo_turno)
-	return render_to_response('form_tipo_turno.html',{'tipo_turno_form': tipo_turno_form,'azione': azione, 'tipo_turno': tipo_turno,'request':request}, RequestContext(request))
+		form = TipoTurnoForm(instance=tipo_turno)
+		form.helper.form_action = '/impostazioni/tipo_turno/modifica/'+str(tipo_turno.id)+'/'
+	return render_to_response('form_tipo_turno.html',{'form': form,'azione': azione, 'tipo_turno': tipo_turno,'request':request}, RequestContext(request))
 
 @user_passes_test(lambda u: u.is_superuser)
 def elimina_tipo_turno(request,tipo_turno_id):
@@ -741,7 +751,6 @@ def nuovo_requisito(request,tipo_turno_id):
 @user_passes_test(lambda u: u.is_superuser)
 def modifica_requisito(request,requisito_id):
 	azione = 'modifica'
-
 	requisito = Requisito.objects.get(id=requisito_id)
 	if request.method == 'POST': # If the form has been submitted...
 		form = RequisitoForm(request.POST, instance=requisito) # necessario per modificare la riga preesistente
