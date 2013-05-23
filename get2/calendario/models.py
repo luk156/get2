@@ -123,7 +123,7 @@ class MansioneForm(forms.ModelForm):
 			),
 			Field(
         		'icona',
-				template = 'form_templates/radioselect_inline.htmodal(ml',
+				template = 'form_templates/radioselect_inline.html',
 			),
 			FormActions(
 				Submit('save', 'Invia', css_class="btn-primary")
