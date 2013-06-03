@@ -9,22 +9,70 @@
 
 	<div class="tab-pane {%if forloop.first %} active{% endif%}" id="tabs-{{ forloop.counter }}">
 
-	<div id="placeholder-{{ forloop.counter }}" style="width:800px;height:300px; margin:10px;"></div>
-
+	<div id="container-{{ forloop.counter }}" style="min-width: 200px; height: 400px; margin: 0 auto"></div>
 
 	{% if statistica = "Turni totali" %}
 		<script type="text/javascript">
-		$(document).ready(function() {
-			$.plot($("#placeholder-{{ forloop.counter }}"),   [ { label: "Turni totali", data: [
-		{% for d in dati|slice:":10"%}
-		[{{forloop.counter}}, {{d.tot_turni}}],
-		{% endfor %}
-		 ], bars: { show: true }}], {xaxis: { ticks:[
-		{% for d in dati|slice:":10"%}
-		[{{forloop.counter}}+0.5,"{{d}}"],
-		{% endfor%}
-		] }} );
-		});
+		
+
+		$(function () {
+		        $('#container-{{ forloop.counter }}').highcharts({
+		            chart: {
+		                type: 'column',
+		                margin: [ 50, 50, 100, 80]
+		            },
+		            title: {
+		                text: ''
+		            },
+		            xAxis: {
+		                categories: [
+		                    {% for d in dati|slice:":10"%}
+								"{{d}}",
+							{% endfor%}
+		                ],
+		                labels: {
+		                    rotation: -45,
+		                    align: 'right',
+		                    style: {
+		                        fontSize: '13px',
+		                        fontFamily: 'Verdana, sans-serif'
+		                    }
+		                }
+		            },
+		            yAxis: {
+		                min: 0,
+		                title: {
+		                    text: 'Turni'
+		                }
+		            },
+		            legend: {
+		                enabled: false
+		            },
+		            series: [{
+		                name: 'Population',
+		                data: [
+		                    {% for d in dati|slice:":10"%}
+								{{d.tot_turni}},
+							{% endfor%}
+		                ],
+		                dataLabels: {
+		                    enabled: true,
+		                    rotation: -90,
+		                    color: '#FFFFFF',
+		                    align: 'right',
+		                    x: 4,
+		                    y: 10,
+		                    style: {
+		                        fontSize: '13px',
+		                        fontFamily: 'Verdana, sans-serif'
+		                    }
+		                }
+		            }]
+		        });
+		    });
+		
+
+
 		</script>
 		<table class="table table-striped" >
 		<thead>
@@ -40,18 +88,67 @@
 	{% endif %}
 
 	{% if statistica = "Punteggi totali" %}
-		<script type="text/javascript">
-		$(document).ready(function() {
-			$.plot($("#placeholder-{{ forloop.counter }}"),   [ { label: "Punteggi totali", data: [
-		{% for d in dati|slice:":10"%}
-		[{{forloop.counter}}, {{d.tot_punti}}],
-		{% endfor %}
-		 ], bars: { show: true }}], {xaxis: { ticks:[
-		{% for d in dati|slice:":10"%}
-		[{{forloop.counter}}+0.5,"{{d}}"],
-		{% endfor%}
-		] }} );
-		});
+
+		<script type="text/javascript">			
+			$(function () {
+		        $('#container-{{ forloop.counter }}').highcharts({
+		            chart: {
+		                type: 'column',
+		                margin: [ 50, 50, 100, 80],
+		                width: $('#tabs-1').width()
+		            },
+		            title: {
+		                text: ''
+		            },
+		            xAxis: {
+		                categories: [
+		                    {% for d in dati|slice:":10"%}
+								"{{d}}",
+							{% endfor %}
+		                ],
+		                labels: {
+		                    rotation: -45,
+		                    align: 'right',
+		                    style: {
+		                        fontSize: '13px',
+		                        fontFamily: 'Verdana, sans-serif'
+		                    }
+		                }
+		            },
+		            yAxis: {
+		                min: 0,
+		                title: {
+		                    text: 'Punti'
+		                }
+		            },
+		            legend: {
+		                enabled: false
+		            },
+		            series: [{
+		                name: 'Population',
+		                data: [
+		                    {% for d in dati|slice:":10"%}
+								{{d.tot_punti}},
+							{% endfor%}
+		                ],
+		                dataLabels: {
+		                    enabled: true,
+		                    rotation: -90,
+		                    color: '#FFFFFF',
+		                    align: 'right',
+		                    x: 4,
+		                    y: 10,
+		                    style: {
+		                        fontSize: '13px',
+		                        fontFamily: 'Verdana, sans-serif'
+		                    }
+		                }
+		            }]
+		        });
+		    });
+
+
+		
 		</script>
 		<table class="table table-striped" >
 		<thead>

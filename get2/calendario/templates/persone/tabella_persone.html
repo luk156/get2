@@ -6,7 +6,6 @@
 		<a class="btn" name="UnCheckAll" onClick="uncheckAll()"><i class="icon-check-empty"></i> Annulla selezione</a>
 	</div>
 	<div class=" pull-right">
-		<form action="/persone/aggiungilista/" method="get"  class="form-inline">
 		Se selezionati: <select name="azione">
 			<option value="">---
 			<option value="aggiungi_g">aggiungi al gruppo
@@ -17,22 +16,43 @@
 		<select name="default_select">
 		<option value="">---  
 		</select>
-		<input type="submit" class="btn" value="applica">
+		<input type="submit" class="btn" value="applica" onclick="aggiungi_rimuovi()">
 	</div>
 	
 <div class="span7">
 
 <script type="text/javascript">
+	function aggiungi_rimuovi() {
+		persone = ''
+		url= '/persone/aggiungilista/'
+		azione = $("select[name='azione']").val();
+		if (azione !=""){
+			arg = $("select[name='arg']").val();
+			if (arg!=""){
+				$('.ck_persona:checkbox').each(function() {if (this.checked) {
+               		persone = persone + '_' + this.value;
+           		}})
+           		persone = persone.substr(1);
+           		url = url + azione +"/"+ arg +"/"+ persone + "/"
+				window.location = url;
+			}
+			else {
+				alert("Seleziona un argomento");
+			}
+			
+		}
+		else {
+			alert("Seleziona una azione");
+		}
+
+	}
+
 	function checkAll() {
-	  checkboxes = document.getElementsByName('persone_id');
-	  for(var i in checkboxes)
-		checkboxes[i].checked = true;
+		$('.ck_persona:checkbox').prop("checked",true);
 	}
 
 	function uncheckAll() {
-	  checkboxes = document.getElementsByName('persone_id');
-	  for(var i in checkboxes)
-		checkboxes[i].checked = false;
+		$('.ck_persona:checkbox').prop("checked",false);
 	}
 
 	function persona_stato(selettore){
@@ -46,11 +66,11 @@
 	var select_mansioni;
 	$(window).load(function(){
 		select_enable = $("select[name='default_select']");
-		select_gruppi = $("<select>").prop("name", "gruppo_id").append($("<option value=''>---</option>"));
+		select_gruppi = $("<select>").prop("name", "arg").append($("<option value=''>---</option>"));
 		{% for gruppo in gruppi %}
 			select_gruppi.append($("<option>").prop("value", "{{gruppo.id}}").text("{{gruppo.nome}}"));
 		{% endfor %}
-		select_mansioni = $("<select>").prop("name", "mansione_id").append($("<option value=''>---</option>"));
+		select_mansioni = $("<select>").prop("name", "arg").append($("<option value=''>---</option>"));
 		{% for mansione in mansioni %}
 			select_mansioni.append($("<option>").prop("value", "{{mansione.id}}").text("{{mansione.nome}}"));
 		{% endfor %}
@@ -80,7 +100,7 @@
 
 {% for persona in persone %}
 	<tr id="persona-{{persona.id}}">
-		<td><input type="checkbox" name="persone_id" value="{{persona.id}}"></td>
+		<td><input type="checkbox" class="ck_persona"  value="{{persona.id}}"></td>
 		<td data-title="Nome"><a href="/persone/visualizza/{{persona.id}}"><i class="icon-search"></i> {{persona}}</a></td>
 		<td data-title="Mansioni">{% for m in persona.competenze.all %} <span class="badge-mansione">{{m}}</span> {% endfor %}</td>
 		<td data-title="Gruppi">{% for g in persona.componenti_gruppo.all %} <span class="badge-gruppo">{{g}}</span> {% endfor %}</td>
