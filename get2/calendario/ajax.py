@@ -6,7 +6,7 @@ from get2.calendario.views import *
 from dajaxice.utils import deserialize_form
 import pdb
 from django.template.loader import render_to_string
-
+from django.template import Context, Template
 @dajaxice_register
 def mansione_form(request, form):
     dajax = Dajax()
@@ -176,9 +176,6 @@ def elimina_tipo_turno(request,turno_id):
 @dajaxice_register
 def disp(request, turno_id, mansione_id, persona_id, disp):
 	dajax = Dajax()
-	#pdb.set_trace()
-	#import time
-	#time.sleep(5)
 	p=Persona.objects.get(id=persona_id)
 	t=Turno.objects.get(id=turno_id)
 	#pdb.set_trace()
@@ -186,14 +183,28 @@ def disp(request, turno_id, mansione_id, persona_id, disp):
 		d=nuova_disponibilita(request, turno_id, mansione_id, persona_id, disp)
 		if not d[0]:
 			dajax.script('$(".bottom-right").notify({ message: { text: "Errore'+str(d[1])+'" }}).show();')
-	elif request.user.is_staff:
+		d=Disponibilita.objects.get(persona=p,turno=t)
+		temp = Template('<div class="input-prepend input-append small"><span class="add-on"><i class="icon-comment"></i></span><input id="note-disp-{{d.id}}" type="text" value="{{d.note}}"><button class="btn" type="button" onclick="nota_disponibilita({{d.id}});">salva</button></div></br>{{d.creata_da}}:{{d.ultima_modifica|date:"d M"}} {{d.ultima_modifica|time:"H:i"}}')
+		c = Context({"d": d,})
+		dajax.assign('#disponibilita-'+str(p.id), 'innerHTML', temp.render(c))	
+	elif request.user.is_superuser:
 		d=Disponibilita.objects.get(persona=p,turno=t)
 		d.delete()
+		dajax.assign('#disponibilita-'+str(p.id), 'innerHTML', '')	
 	html_anteprima = render_to_string( 'turno.html', { 't': t, 'request':request } )
 	dajax.assign('div #anteprima', 'innerHTML', html_anteprima+'<div style="clear:both;"></div>')
 	dajax.script('$(".bottom-right").notify({ message: { text: "Aggiornata disponibilita per '+str(p)+'" }}).show();')
 	dajax.script('$(".h6-mansione-'+mansione_id+'").addClass("mansione-sel");')
 	dajax.script("$('#loading').addClass('hidden');")
+	return dajax.json()
+
+@dajaxice_register
+def disp_nota(request,disp_id,nota):
+	dajax = Dajax()
+	d=Disponibilita.objects.get(id=disp_id)
+	d.note=str(nota)
+	d.save()
+	dajax.script('$(".bottom-right").notify({ message: { text: "Nota modificata" }}).show();')
 	return dajax.json()
 
 @dajaxice_register

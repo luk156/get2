@@ -1,6 +1,10 @@
 
 {% load template_filters %}
-
+<script>
+	$(document).ready(function(){
+		$(".tp").tooltip();
+	});
+</script>
 
 <div class="turno span7" id="turno-{{t.id}}" >
 	
@@ -69,7 +73,7 @@
 						{% if disp.mansione = requisito.mansione and disp.tipo = 'Disponibile' %}
 							<li class="persona-turno"><i class="{{disp.mansione.icona}}" style="color:{{disp.mansione.colore}}"></i> 
 								{% if request.user.is_authenticated or touch == "yes" %}
-					 				{{disp.persona}}
+					 				{{disp.persona}} {% if disp.note %}<i class="tp icon-comment" data-toggle="tooltip" title="{{disp.note}}"></i>{% endif %}
 								{% else %}
 					 				----
 								{% endif %}
