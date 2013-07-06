@@ -100,6 +100,9 @@ ICONE = (
 	('icon-bolt','icon-bolt'),
 	)
 
+class Calendario(models.Model):
+	nome =models.CharField('Nome',max_length=20)
+
 class Mansione(models.Model):
 	nome =models.CharField('Nome',max_length=20)
 	descrizione = models.TextField('Descrizione estesa')
@@ -310,6 +313,7 @@ class Turno(models.Model):
 	tipo = models.ForeignKey(TipoTurno, blank=True, null=True, on_delete=models.SET_NULL)
 	occorrenza = models.ForeignKey(Occorrenza, blank=True, null=True)
 	valore = models.IntegerField('Punteggio',default=1)
+	calendario = models.ForeignKey(Calendario, null=True, on_delete=models.SET_NULL, default=1)
 	def verifica_requisito(self,requisito):
 		#pdb.set_trace()
 		if requisito.necessario:
@@ -362,6 +366,7 @@ class TurnoForm(forms.ModelForm):
 			),
 			Field('tipo'),
 			Field('valore'),
+			Field('calendario'),
 			FormActions(
 				Submit('save', 'Modifica', css_class="btn-primary")
 			)
@@ -396,6 +401,7 @@ class TurnoFormRipeti(TurnoForm):
 			),
 			Field('tipo'),
 			Field('valore'),
+			Field('calendario'),
 			Fieldset(
 				'<span id="ripeti-switch" onclick="ripeti_toggle()"><i class="icon-chevron-down"></i> Ripeti turno</span>'
 			),
