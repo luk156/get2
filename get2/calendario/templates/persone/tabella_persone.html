@@ -2,8 +2,8 @@
 
 <div class="row-fluid">
 	<div class="pull-left">
-		<a class="btn" name="CheckAll" onClick="checkAll()"><i class="icon-check"></i> Seleziona tutto</a>
-		<a class="btn" name="UnCheckAll" onClick="uncheckAll()"><i class="icon-check-empty"></i> Annulla selezione</a>
+		<a class="btn" name="CheckAll" onClick="$('.ck_persona:checkbox').prop('checked',true);"><i class="icon-check"></i> Seleziona tutto</a>
+		<a class="btn" name="UnCheckAll" onClick="$('.ck_persona:checkbox').prop('checked',false);"><i class="icon-check-empty"></i> Annulla selezione</a>
 	</div>
 	<div class=" pull-right">
 		Se selezionati: <select name="azione">
@@ -47,13 +47,6 @@
 
 	}
 
-	function checkAll() {
-		$('.ck_persona:checkbox').prop("checked",true);
-	}
-
-	function uncheckAll() {
-		$('.ck_persona:checkbox').prop("checked",false);
-	}
 
 	function persona_stato(selettore){
 	value=selettore.options[selettore.selectedIndex].value;
