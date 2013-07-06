@@ -33,6 +33,11 @@ function disp(selettore){
 	Dajaxice.get2.calendario.disp(Dajax.process,{'turno_id':dati[0],'mansione_id':dati[1],'persona_id':dati[2],'disp':dati[3]});
 	
 }
+
+function nota_disponibilita(disp_id){
+	selettore=$('#note-disp-'+disp_id)
+	Dajaxice.get2.calendario.disp_nota(Dajax.process,{'disp_id':disp_id,'nota':selettore.val()});
+}
 </script>
 
 <div class="row-fluid">
@@ -92,7 +97,10 @@ function disp(selettore){
 							  var s = $('#sel-{{persona.id}}');
 							  $("#sel-{{persona.id}} option:first").remove();
 							  s.prepend("<option value=''>{{d.mansione}} </option>");
-							  $("#sel-{{persona.id}} option:first").prop('selected', true);}
+							  $("#sel-{{persona.id}} option:first").prop('selected', true);
+							  $('#disponibilita-{{persona.id}}').html('<div class="input-prepend input-append small"><span class="add-on"><i class="icon-comment"></i></span><input id="note-disp-{{d.id}}" type="text" value="{{d.note}}"><button class="btn" type="button" onclick="nota_disponibilita({{d.id}});">salva</button></div></br>{{d.creata_da}}:{{d.ultima_modifica|date:"d M"}} {{d.ultima_modifica|time:"H:i"}}');
+							  
+							}
 							);
 					  </script> 
 					 {% endif %}
@@ -100,7 +108,10 @@ function disp(selettore){
 					  <script type="text/javascript">
 						$(document).ready(function(){
 							$('#sel-{{persona.id}} option').filter(function() { return this.text == '{{d.get_tipo_display}}'; }).prop('selected', true);
-							$('#disponibilita-{{persona.id}}').html('{{d.creata_da}}:{{d.ultima_modifica|date:"d M"}} {{d.ultima_modifica|time:"H:i"}}');
+							{% if not request.user.is_superuser %}
+								$("#sel-{{persona.id}} option:first").remove();
+							{% endif %}
+							$('#disponibilita-{{persona.id}}').html('<div class="input-prepend input-append small"><span class="add-on"><i class="icon-comment"></i></span><input id="note-disp-{{d.id}}" type="text" value="{{d.note}}"><button class="btn" type="button" onclick="nota_disponibilita({{d.id}});">salva</button></div></br>{{d.creata_da}}:{{d.ultima_modifica|date:"d M"}} {{d.ultima_modifica|time:"H:i"}}');
 							}
 						);
 					  </script> 
@@ -113,10 +124,13 @@ function disp(selettore){
 					<td data-title="telefono2">{{persona.tel2}}</td>
 					<td data-title="Disponibilita" class="disponibilita">
 						<SELECT NAME="stato" class="span7" ONCHANGE="disp(this);" id="sel-{{persona.id}}">
-				<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/-">----
-				{%for key,value in DISPONIBILITA %}
-				<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/{{key}}">{{value}}{% endfor%}
-				</SELECT>
+							<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/-">----
+							{%for key,value in DISPONIBILITA %}
+								<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/{{key}}">{{value}}
+							{% endfor%}
+							</SELECT>
+						</br>
+
 				<div id="disponibilita-{{persona.id}}"></div>
 					</td>
 					</tr>
@@ -149,6 +163,7 @@ $(document).ready(function(){
 			4: function(node, table, cellIndex){ 
 				return $('select option:selected',node).text();  },
 		},
+		sortList: [[4,1]],
 		theme : "bootstrap",widthFixed: true,headerTemplate : '{content} {icon}',widgets : [ "uitheme", "filter", "zebra" ],
 		widgetOptions : {zebra : ["even", "odd"], filter_reset : ".reset",	}
 		});
