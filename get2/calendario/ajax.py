@@ -204,6 +204,9 @@ def disp_nota(request,disp_id,nota):
 	d=Disponibilita.objects.get(id=disp_id)
 	d.note=str(nota)
 	d.save()
+	t=d.turno
+	html_anteprima = render_to_string( 'turno.html', { 't': t, 'request':request } )
+	dajax.assign('div #anteprima', 'innerHTML', html_anteprima+'<div style="clear:both;"></div>')
 	dajax.script('$(".bottom-right").notify({ message: { text: "Nota modificata" }}).show();')
 	return dajax.json()
 
