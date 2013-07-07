@@ -3,7 +3,7 @@
 
 {% block header %}
 	{% if request.user.is_staff %}
-		<a class="btn pull-right" href="/calendario/turno/nuovo"><i class="icon-plus"> </i> Nuovo Turno</a><h4 class="header">
+		<a class="btn pull-right" href="/turno/{{cal_id}}/nuovo"><i class="icon-plus"> </i> Nuovo Turno</a><h4 class="header">
 			Calendario
 		</h4>
 	{% endif %}
@@ -29,11 +29,11 @@
 	<div class="span7">
     <ul class="pager">
     <li class="previous">
-    <a href="/calendario/settindietro" onclick="$('#loading').removeClass('hidden');"><i class="icon-chevron-left"></i> Indietro</a>
+    <a href="/calendario/{{cal_id}}/settindietro" onclick="$('#loading').removeClass('hidden');"><i class="icon-chevron-left"></i> Indietro</a>
     </li>
-    <li><a href="/calendario/oggi" onclick="$('#loading').removeClass('hidden');"><i class="icon-home"></i> Oggi</a></li>
+    <li><a href="/calendario/{{cal_id}}/oggi" onclick="$('#loading').removeClass('hidden');"><i class="icon-home"></i> Oggi</a></li>
     <li class="next">
-    <a href="/calendario/settavanti" onclick="$('#loading').removeClass('hidden');">Avanti <i class="icon-chevron-right"></i></a>
+    <a href="/calendario/{{cal_id}}/settavanti" onclick="$('#loading').removeClass('hidden');">Avanti <i class="icon-chevron-right"></i></a>
     </li>
     </div>
 </div>
@@ -63,11 +63,11 @@
 	<div class="span7">
     <ul class="pager">
     <li class="previous">
-    <a href="/calendario/settindietro"><i class="icon-chevron-left"></i> Indietro</a>
+    <a href="/calendario/{{cal_id}}/settindietro"><i class="icon-chevron-left"></i> Indietro</a>
     </li>
-    <li><a href="/calendario/oggi"><i class="icon-home"></i> Oggi</a></li>
+    <li><a href="/calendario/{{cal_id}}/oggi"><i class="icon-home"></i> Oggi</a></li>
     <li class="next">
-    <a href="/calendario/settavanti">Avanti <i class="icon-chevron-right"></i></a>
+    <a href="/calendario/{{cal_id}}/settavanti">Avanti <i class="icon-chevron-right"></i></a>
     </li>
     </div>
 </div>

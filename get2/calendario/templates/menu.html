@@ -1,6 +1,8 @@
 
 <ul class="nav">
-	<li class="calendario"><a href="/calendario/"><i class="i-menu calendario"></i></br>Calendario</a></li>
+	{% for c in calendari %}
+		<li class="calendario{{c.id}}"><a href="/calendario/{{c.id}}"><i class="i-menu calendario"></i></br>{{c.nome}}</a></li>
+	{% endfor %}
 	<li class="persone staff"><a href="/persone/"><i class="i-menu persone"></i></br>Persone</a></li>
 	<li class="statistiche user"><a href="/statistiche/"><i class="i-menu statistiche"></i></br>Statistiche</a></li>
 	<li class="utenti staff"><a href="/utenti/"><i class="i-menu utenti"></i></br>Utenti</a></li>
@@ -13,6 +15,10 @@
 
 <script>
 	var url="{{request.path}}";
-	$("li."+url.split("/")[1]).addClass("active");
+	if (url.split("/")[1]!="calendario") {
+		$("li."+url.split("/")[1]).addClass("active"); }
+	else {
+		$("li."+url.split("/")[1]+url.split("/")[2]).addClass("active"); }
+	
 </script>
 

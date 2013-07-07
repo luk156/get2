@@ -115,7 +115,7 @@ giorni[6] = "Domenica";
 				{% for c in calendari %}
 				
 					<tr id="impostazioni_calendario-{{c.id}}">
-						<td data-title="Nome">{{c.nome}}</td>
+						<td data-title="Nome">{{c.nome}} ( {{c.priorita}} )</td>
 						<td data-title="Operazioni">
 							<div class="btn-group superuser">
 							  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">

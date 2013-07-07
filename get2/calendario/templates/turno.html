@@ -23,7 +23,7 @@
 					<i class="hidden-phone icon-edit" style="color:white"></i>
 				</a>
 				<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
-					<li><a href="/calendario/turno/modifica/{{t.id}}">Modifica</a></li>
+					<li><a href="/turno/modifica/{{t.id}}">Modifica</a></li>
 					<li><a href="#elimina-turno-{{t.id}}" data-toggle="modal">Elimina</a></li>
 				</ul>
 			</div>
@@ -34,7 +34,7 @@
 				</a>
 				<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
 					{%for g in gruppi%}
-						<li><a href="/calendario/disponibilita_gruppo/{{t.id}}/{{g.id}}">{{g}}</a></li>
+						<li><a href="/disponibilita_gruppo/{{t.id}}/{{g.id}}">{{g}}</a></li>
 					{%endfor%}
 				</ul>
 			</div>
@@ -47,7 +47,7 @@
 					<h6 class="h6-mansione-{{requisito.mansione.id}}">{{requisito.mansione}} 
 					
 						{% if request.user.is_staff %}
-							<a href="/calendario/cerca_persona/{{t.id}}/{{requisito.mansione.id}}">
+							<a href="/cerca_persona/{{t.id}}/{{requisito.mansione.id}}">
 						{% endif %}
 					{% if requisito.sufficiente %}
 						<span class="badge badge-info pull-right">
@@ -140,14 +140,14 @@
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Annulla</button>
 		<div class="btn-group">
-		  <a href="/calendario/turno/elimina/{{t.id}}"  class="btn btn-primary">Elimina Turno</a>
+		  <a href="/turno/elimina/{{t.id}}"  class="btn btn-primary">Elimina Turno</a>
 			{% if t.occorrenza %}<button class="btn  btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span>{% endif %}
 		  </button>
 		  {% if t.occorrenza %}
 		  <ul class="dropdown-menu">
-			<li><a href="/calendario/turno/elimina_occorrenza/{{t.occorrenza.id}}">Elimina turno e tutte le successive occorrenze</a></li>
+			<li><a href="/turno/elimina_occorrenza/{{t.occorrenza.id}}">Elimina turno e tutte le successive occorrenze</a></li>
 			{% if request.user.is_superuser %}
-			<li><a href="/calendario/turno/elimina_occorrenza_tot/{{t.occorrenza.id}}">Elimina turno e TUTTE le occorrenze</a></li>
+			<li><a href="/turno/elimina_occorrenza_tot/{{t.occorrenza.id}}">Elimina turno e TUTTE le occorrenze</a></li>
 			{% endif %}
 		  </ul>
 		  {% endif %}
@@ -192,13 +192,13 @@
 				<script>
 					function disponibilita_{{t.id}}(mansione){
 						persona="{{request.user.get_profile.id}}"
-						if (mansione!=""){url="/calendario/disponibilita/{{t.id}}/" +mansione+ "/" +persona+ "/Disponibile/";}
+						if (mansione!=""){url="/disponibilita/{{t.id}}/" +mansione+ "/" +persona+ "/Disponibile/";}
 						window.location = url;}
 				</script>
 			{% else %}
 				<script>
 					function disponibilita_{{t.id}}(){
-						var url="/calendario/rimuovi_disponibilita/{{request.user.get_profile|gia_disponibile:t.id}}";
+						var url="/rimuovi_disponibilita/{{request.user.get_profile|gia_disponibile:t.id}}";
 						window.location = url;}
 				</script>
 				<button class="btn btn-primary" type="button" onclick="disponibilita_{{t.id}}();">Rimuovi disponibilita'</button>

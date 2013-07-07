@@ -101,7 +101,26 @@ ICONE = (
 	)
 
 class Calendario(models.Model):
-	nome =models.CharField('Nome',max_length=20)
+	nome = models.CharField('Nome',max_length=20)
+	priorita = models.IntegerField('priorita', default=0, )
+	class Meta:
+		ordering = ['priorita']
+	def __unicode__(self):
+		return '%s' % (self.nome)
+		
+class CalendarioForm(forms.ModelForm):
+	class Meta:
+		model = Calendario
+	def __init__(self, *args, **kwargs):
+		self.helper = FormHelper()
+		self.helper.layout = Layout(
+			Field('nome'),
+			Field('priorita'),
+			FormActions(
+				Submit('save', 'Invia', css_class="btn-primary")
+			)
+		)
+		super(CalendarioForm, self).__init__(*args, **kwargs)
 
 class Mansione(models.Model):
 	nome =models.CharField('Nome',max_length=20)

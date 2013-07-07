@@ -278,17 +278,16 @@ span.img_applica{
 }
 
 #contenuto{
-background-color:#fff;
-border-top:1px solid #777;
-border-left:1px solid #777;
-border-bottom:1px solid #777;
-border-top-left-radius:1em;
-border-bottom-left-radius:1em;
+	background-color:#fff;
+	border-top:1px solid #777;
+	border-left:1px solid #777;
+	border-bottom:1px solid #777;
+	border-top-left-radius:1em;
+	border-bottom-left-radius:1em;
 /*height: auto !important;*/
  	box-shadow:1px 2px 3px #bbb inset;
  	overflow: auto;
 /* 	z-index:10;*/
- 	
  	min-width:1000px;
 }
 
@@ -321,7 +320,7 @@ ul {
 	text-indent:-9999px;
 	display: block;
 	overflow: hidden; 
-    	height:64px; 
+    height:64px; 
 }
 
 #menu2 li.avanti {

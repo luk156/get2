@@ -5,6 +5,8 @@ register = template.Library()
 from get2.calendario.views import *
 from django.forms.models import model_to_dict
 
+
+
 @register.filter
 def verifica_requisito(instance, arg):
 	#pdb.set_trace()
