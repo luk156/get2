@@ -12,7 +12,7 @@
 
 {% block header %}
 		<h4 class="header">
-			<a href="/calendario/">Calendario</a>
+			<a href="/calendario/{{t.calendario.id}}">Calendario</a>
 			<i class="icon-angle-right"></i>
 			{{t.inizio|date}} ({{t.inizio|time:"H:i"}} - {{t.fine|time:"H:i"}})
 			<i class="icon-angle-right"></i>
