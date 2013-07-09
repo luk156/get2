@@ -82,6 +82,6 @@ urlpatterns += patterns('django.contrib.auth.views',
 
 urlpatterns += patterns('',
     (r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name':'login.html'} ),
-    (r'^accounts/logout/$', 'django.contrib.auth.views.logout', {'next_page': '/calendario/'}),
+    (r'^accounts/logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}),
     )
 

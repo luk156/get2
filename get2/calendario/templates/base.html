@@ -88,7 +88,7 @@
 					</div>
 				{%else%}
 					<form method="post" action="{% url 'django.contrib.auth.views.login' %}" class="navbar-form pull-right">{% csrf_token %}
-					<input type="hidden" name="next" value="/calendario/" />
+					<input type="hidden" name="next" value="{{request.path}}" />
 					<input id="id_username" type="text" name="username" class="input" placeholder="Utente">
 					<input type="password" name="password" id="id_password" class="input" placeholder="Password">
 					<input type="submit" value=" Accedi " class="btn btn-primary"></form>
