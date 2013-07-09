@@ -15,6 +15,7 @@ urlpatterns = patterns('',
 urlpatterns += patterns('get2.calendario',
 	# calendario
 	(r'^$','views.home'),
+	(r'^calendario/$', 'views.home'),
 	(r'^touch/(?P<v>\w+)$', 'views.touch'),
 	(r'^calendario/(?P<cal_id>\w+)/$', 'views.calendario'),
 	(r'^calendario/(?P<cal_id>\w+)/(?P<azione>\w+)$', 'views.calendarioazione'),
