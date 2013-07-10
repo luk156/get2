@@ -248,9 +248,10 @@ def calendario(request,cal_id):
 	return risposta
 
 def calendarioazione(request,cal_id,azione):
-	start = datetime.datetime(int(request.COOKIES['anno']),int(request.COOKIES['mese']),int(request.COOKIES['giorno']))
 	if azione == 'oggi':
 		start = datetime.datetime.today()
+	else:
+		start = datetime.datetime(int(request.COOKIES['anno']),int(request.COOKIES['mese']),int(request.COOKIES['giorno']))
 	if azione == 'avanti':
 		start += datetime.timedelta(days=1)
 	if azione == 'indietro':
