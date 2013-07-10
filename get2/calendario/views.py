@@ -369,8 +369,9 @@ def nuova_disponibilita(request, turno_id, mansione_id, persona_id, disponibilit
 
 def disponibilita_url(request, turno_id, mansione_id, persona_id, disponibilita):
 	d=nuova_disponibilita(request, turno_id, mansione_id, persona_id, disponibilita)
+	t=Turno.objects.get(id=turno_id)
 	if d[0]:
-		return HttpResponseRedirect('/calendario')
+		return HttpResponseRedirect('/calendario/'+str(t.calendario.id))
 	else:
 		print d[1]
 		
@@ -632,7 +633,7 @@ def nuovo_turno(request, cal_id):
 	azione = 'Aggiungi'
 	if request.method == 'POST': # If the form has been submitted...
 		form = TurnoFormRipeti(request.POST) # A form bound to the POST data
-		form.helper.form_action = '/calendario/turno/nuovo/'
+		form.helper.form_action = '/turno/'+str(cal_id)+'/nuovo/'
 		if form.is_valid():
 			data = form.cleaned_data
 			if not data.get('ripeti'):
@@ -659,11 +660,11 @@ def nuovo_turno(request, cal_id):
 						t.occorrenza=o
 						t.save()
 					start+=delta
-			return HttpResponseRedirect('/calendario/') # Redirect after POST
+			return HttpResponseRedirect('/calendario/'+str(cal_id)) # Redirect after POST
 	else:
 		c=Calendario.objects.get(id=cal_id)
 		form = TurnoFormRipeti(initial={'calendario': c})
-		form.helper.form_action = '/calendario/turno/nuovo/'
+		form.helper.form_action = '/turno/'+str(cal_id)+'/nuovo/'
 	return render(request,'form_turno.html',{'form': form,'azione': azione,'request':request})
 	
 @user_passes_test(lambda u:u.is_staff)
@@ -672,7 +673,7 @@ def modifica_turno(request, turno_id):
 	turno = Turno.objects.get(id=turno_id)
 	if request.method == 'POST': # If the form has been submitted...
 		form = TurnoForm(request.POST, instance=turno) # necessario per modificare la riga preesistente
-		form.helper.form_action = '/calendario/turno/modifica/'+str(turno.id)+'/' 
+		form.helper.form_action = '/turno/modifica/'+str(turno.id)+'/' 
 		if form.is_valid():
 			data = form.cleaned_data
 			form.save()
@@ -694,10 +695,10 @@ def modifica_turno(request, turno_id):
 					o.inizio=i
 					o.fine=f
 					o.save()
-			return HttpResponseRedirect('/calendario/') # Redirect after POST
+			return HttpResponseRedirect('/calendario/'+str(turno.calendario.id)) # Redirect after POST
 	else:
 		form = TurnoForm(instance=turno)
-		form.helper.form_action = '/calendario/turno/modifica/'+str(turno.id)+'/'
+		form.helper.form_action = '/turno/modifica/'+str(turno.id)+'/'
 		if turno.occorrenza:
 			form.helper.layout[4].append(Fieldset("Il turno fa parte di una occorrenza","modifica_futuri"))
 			if request.user.is_superuser:
@@ -707,24 +708,27 @@ def modifica_turno(request, turno_id):
 @user_passes_test(lambda u:u.is_staff)
 def elimina_turno(request, turno_id):
 	t = Turno.objects.get(id=turno_id)
+	cal_id=t.calendario.id
 	t.delete()
-	return HttpResponseRedirect('/calendario/')
+	return HttpResponseRedirect('/calendario/'+str(cal_id))
 
 @user_passes_test(lambda u:u.is_staff)
 def elimina_turno_occorrenza_succ(request, occorrenza_id):
 	o=Occorrenza.objects.get(id=occorrenza_id)
 	turni = Turno.objects.filter(occorrenza=o, inizio__gte=datetime.datetime.now())
+	cal_id=turni[0].calendario.id
 	for t in turni:
 		t.delete()
-	return HttpResponseRedirect('/calendario/')
+	return HttpResponseRedirect('/calendario/'+str(cal_id))
 
 @user_passes_test(lambda u: u.is_superuser)
 def elimina_turno_occorrenza(request, occorrenza_id):
 	o=Occorrenza.objects.get(id=occorrenza_id)
 	turni = Turno.objects.filter(occorrenza=o)
+	cal_id=turni[0].calendario.id
 	for t in turni:
 		t.delete()
-	return HttpResponseRedirect('/calendario/')
+	return HttpResponseRedirect('/calendario/'+str(cal_id))
 
 #### fine turno ####
 
