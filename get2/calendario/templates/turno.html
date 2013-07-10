@@ -170,7 +170,7 @@
 				<legend>Seleziona la mansione che vuoi ricoprire:</legend>
 				{% for requisito in t.tipo.req_tipo_turno.all %}
 					{% if requisito.mansione in request.user.get_profile.competenze.all and not requisito.extra %}
-						{% if t|gia_disponibili:requisito <= requisito.massimo %}
+						{% if t|gia_disponibili:requisito < requisito.massimo %}
 								<a href="#" onclick="disponibilita_{{t.id}}({{requisito.mansione.id}});" class="btn btn-primary btn-block btn-large"><i class="{{requisito.mansione.icona}}"></i> {{requisito.mansione}}</a></br>
 						{% endif %}
 					{% endif %}

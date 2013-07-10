@@ -365,6 +365,9 @@ class Turno(models.Model):
 		return Turno.objects.filter( (models.Q(inizio__lte=i) & models.Q(fine__gte=f)) | models.Q(inizio__range=(i ,f)) | models.Q(fine__range=(i,f)) ).exclude(id=self.id)
 	def mansioni(self):
 		return Mansione.objects.filter(req_mansione__tipo_turno=self.tipo)
+	def verifica_disponibilita(self,disponibilita):
+		#prova ad ggiungere la disponibilita e verifico che il turno sia sempre ok
+		return True
 	def save(self, *args, **kwargs):
 		self.inizio = self.inizio.replace(second=0)
 		self.fine = self.fine.replace(second=0)
