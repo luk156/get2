@@ -17,8 +17,11 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import user_passes_test
 
 def home(request):
-	c=Calendario.objects.all()[0]
-	return redirect('/calendario/'+str(c.id)+'/oggi')
+	if Calendario.objects.all():
+		c=Calendario.objects.all()[0]
+		return redirect('/calendario/'+str(c.id)+'/oggi')
+	else:
+		return redirect('/impostazioni/calendario/nuovo/')
 
 ####   touch   ####
 
