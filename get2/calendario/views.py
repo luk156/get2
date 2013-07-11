@@ -472,17 +472,20 @@ def modifica_password_utente(request,utente_id):
 
 #### inizio mansioni ####
 @user_passes_test(lambda u: u.is_superuser)
-def nuovo_mansione(request):
+def nuovo_mansione(request, padre_id):
+	m=None
+	if padre_id!='0':
+		m=Mansione.objects.get(id=padre_id)
 	azione = 'nuovo'
 	if request.method == 'POST': # If the form has been submitted...
 		form = MansioneForm(request.POST) # A form bound to the POST data
-		form.helper.form_action = '/impostazioni/mansione/nuovo/'
+		form.helper.form_action = '/impostazioni/mansione/nuovo/'+str(padre_id)+'/'
 		if form.is_valid():
 			form.save()
 			return HttpResponseRedirect('/impostazioni') # Redirect after POST
 	else:
-		form = MansioneForm()
-		form.helper.form_action = '/impostazioni/mansione/nuovo/'
+		form = MansioneForm(initial={'padre': m,})
+		form.helper.form_action = '/impostazioni/mansione/nuovo/'+str(padre_id)+'/'
 	return render(request,'form_mansione.html',{'request':request, 'form': form,'azione': azione})	
 	
 @user_passes_test(lambda u: u.is_superuser)
@@ -517,7 +520,7 @@ def impostazioni(request):
 		'tipi_turno':TipoTurno.objects.all(),
 		'calendari':Calendario.objects.all(),
 		'tipo_turno_form':TipoTurnoForm(),
-		'mansioni':Mansione.objects.all(),
+		'mansioni':Mansione.objects.filter(padre__isnull=True),
 		'impostazioni_notifica_utente':Impostazioni_notifica.objects.all(),
 		'request':request})
 

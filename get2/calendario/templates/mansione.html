@@ -1,0 +1,18 @@
+
+{# filename: mansione.html #}
+<ul>
+{% for m in mansioni %}
+	<li>
+	<i class="{{m.icona}} icon-2x icona" style="color:{{m.colore}}"></i> {{ m }} ({{m.descrizione}})
+		<div class="btn-group pull-right">
+		<a href="/impostazioni/mansione/nuovo/{{m.id}}" class="btn btn-small"><i class="icon-plus"></i></a>
+		<a href="/impostazioni/mansione/modifica/{{m.id}}" class="btn btn-small"><i class="icon-edit"></i></a>
+		<a href="/impostazioni/mansione/elimina/{{m.id}}" class="btn btn-small"><i class="icon-trash"></i></a></div>
+	    {% with "mansione.html" as filename %}
+	    {% with m.children.all as mansioni %}
+	        {% include filename %}
+	    {% endwith %}
+	    {% endwith %}
+    </li>
+{% endfor %}
+</ul>

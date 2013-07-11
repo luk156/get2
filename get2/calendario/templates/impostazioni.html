@@ -29,29 +29,7 @@ giorni[6] = "Domenica";
 				<h5>Mansioni</h5>
 			</div>
 			<div class="box-content">
-				<table class="table table-striped no-more-tables">
-					<thead>
-						<th>Nome</th><th>Descrizione</th><th>Icona</th><th>Operazioni</th>
-					</thead>
-				{% for mansione in mansioni %}
-					<tr class="" id="mansione-{{mansione.id}}">
-					<td data-title="Nome">{{mansione}}</td>
-					<td data-title="Descrizione">{{mansione.descrizione}}</td>
-					<td data-title="Icona"><i class="{{mansione.icona}} icon-2x icona" style="color:{{mansione.colore}}"></i></td>
-					<td data-title="Operazioni">
-						<div class="btn-group superuser">
-						  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-							<i class="icon-cog"></i> Azioni
-							<span class="caret"></span>
-						  </a>
-						  <ul class="dropdown-menu">
-							<li><a href="/impostazioni/mansione/modifica/{{mansione.id}}"><i class="icon-edit"></i> modifica</a></li>
-							<li><a href="/impostazioni/mansione/elimina/{{mansione.id}}" ><i class="icon-trash"></i> elimina</a></li>
-						  </ul>
-						</div>
-					</td></tr>
-				{% endfor %}
-				</table>
+				{% include "mansione.html" %}
 			</div>
 		</div>
 		</div>

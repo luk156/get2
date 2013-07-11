@@ -85,9 +85,21 @@ class MultiSelectField(models.Field):
     def value_to_string(self, obj):
         value = self._get_val_from_obj(obj)
         return self.get_db_prep_value(value)
+
+class SelfForeignKey(models.ForeignKey):
+    def pre_save(self, instance, add):
+        manager = instance.__class__.objects
+        ancestor_id = getattr(instance, self.attname)
+        while ancestor_id is not None:
+            if ancestor_id == instance.id:
+                return None
+            ancestor = manager.get(id=ancestor_id)
+            ancestor_id = getattr(ancestor, self.attname)
+        return getattr(instance, self.attname)
         
 from south.modelsinspector import add_introspection_rules  
 add_introspection_rules([], ["^get2\.calendario\.models\.MultiSelectField"]) 
+add_introspection_rules([], ["^get2\.calendario\.models\.SelfForeignKey"]) 
 
 ICONE = (
 	('icon-user','icon-user'),
@@ -127,9 +139,14 @@ class Mansione(models.Model):
 	descrizione = models.TextField('Descrizione estesa')
 	icona = models.TextField('Icona', choices=ICONE, default='icon-user' )
 	colore = models.TextField('Colore', default='#aaa' )
+	padre=SelfForeignKey('self', null=True, blank=True, related_name='children')
 	def __unicode__(self):
 		return '%s' % (self.nome)
-	# Milite tipo A, milite tipo B, centralinista ecc... 
+	# Milite tipo A, milite tipo B, centralinista ecc...
+	def root(self):
+		if self.padre:
+			return False
+		return True
 
 class MansioneForm(forms.ModelForm):
 	class Meta:
@@ -139,6 +156,7 @@ class MansioneForm(forms.ModelForm):
 		self.helper.layout = Layout(
 			Field('nome'),
 			Field('descrizione'),
+			Field('padre'),
 			Field(
 				'colore',
 				template = 'form_templates/color.html'
@@ -152,6 +170,7 @@ class MansioneForm(forms.ModelForm):
 			)
 		)
 		super(MansioneForm, self).__init__(*args, **kwargs)
+		self.fields['padre'].queryset = Mansione.objects.exclude(id__exact=self.instance.id)
 
 STATI=(('disponibile','Disponibile'),('ferie','In ferie'),('malattia','In malattia'),('indisponibile','Indisponibile'))
 
@@ -279,8 +298,8 @@ class TipoTurnoForm(forms.ModelForm):
 
 class Requisito(models.Model):
 	mansione=models.ForeignKey(Mansione, related_name="req_mansione")
-	massimo=models.IntegerField('Maggiore o uguale', default=0)
-	minimo=models.IntegerField('Minore o uguale', default=0)
+	minimo=models.IntegerField('Maggiore o uguale', default=0)
+	massimo=models.IntegerField('Minore o uguale', default=0)
 	tipo_turno=models.ForeignKey(TipoTurno, related_name="req_tipo_turno",)
 	necessario=models.BooleanField('Necessario')
 	sufficiente=models.BooleanField('Sufficiente')
@@ -294,8 +313,8 @@ class RequisitoForm(forms.ModelForm):
 		self.helper = FormHelper()
 		self.helper.layout = Layout(
 			Field('mansione'),
-			Field('massimo'),
 			Field('minimo'),
+			Field('massimo'),
 			Field('necessario'),
 			Field('sufficiente'),
 			Field('extra'),
