@@ -66,3 +66,4 @@ def data_festa(instance):
 	elif prefestivo(instance):
 		class_data='prefestivo'
 	return class_data
+

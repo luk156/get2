@@ -148,6 +148,15 @@ class Mansione(models.Model):
 			return False
 		return True
 
+def capacita(mansione_id):
+	mansione=Mansione.objects.get(id=mansione_id)
+	c=[mansione,]
+	if mansione.padre:
+		c+=capacita(mansione.padre.id)
+	print c
+	return c
+
+
 class MansioneForm(forms.ModelForm):
 	class Meta:
 		model = Mansione
@@ -352,14 +361,20 @@ class Turno(models.Model):
 	occorrenza = models.ForeignKey(Occorrenza, blank=True, null=True)
 	valore = models.IntegerField('Punteggio',default=1)
 	calendario = models.ForeignKey(Calendario, null=True, on_delete=models.SET_NULL, default=1)
-	def verifica_requisito(self,requisito):
+	def verifica_requisito(self,requisito,mansione_id=0,persona_id=0):
 		#pdb.set_trace()
 		if requisito.necessario:
 			contatore=0
 			for d in self.turno_disponibilita.filter(tipo="Disponibile").all():
-				if (not requisito.extra and d.mansione==requisito.mansione):
+				if (not requisito.extra and requisito.mansione in capacita(d.mansione.id)):
 					contatore+=1
 				if (requisito.extra and requisito.mansione in d.persona.competenze.all()):
+					contatore+=1
+			if mansione_id!=0 and persona_id!=0:
+				p = Persona.objects.get(id=persona_id)
+				if (not requisito.extra and requisito.mansione in capacita(mansione_id)):
+					contatore+=1
+				if (requisito.extra and requisito.mansione in p.competenze.all()):
 					contatore+=1
 			if contatore>requisito.massimo and requisito.massimo!=0:
 				return False
@@ -384,8 +399,10 @@ class Turno(models.Model):
 		return Turno.objects.filter( (models.Q(inizio__lte=i) & models.Q(fine__gte=f)) | models.Q(inizio__range=(i ,f)) | models.Q(fine__range=(i,f)) ).exclude(id=self.id)
 	def mansioni(self):
 		return Mansione.objects.filter(req_mansione__tipo_turno=self.tipo)
-	def verifica_disponibilita(self,disponibilita):
-		#prova ad ggiungere la disponibilita e verifico che il turno sia sempre ok
+	def verifica_disponibilita(self,mansione_id,persona_id):
+		for r in self.tipo.req_tipo_turno.all():
+			if self.verifica_requisito(r) and not self.verifica_requisito(r,mansione_id=mansione_id,persona_id=persona_id):
+				return False
 		return True
 	def save(self, *args, **kwargs):
 		self.inizio = self.inizio.replace(second=0)
