@@ -402,8 +402,8 @@ class TurnoForm(forms.ModelForm):
 		data = self.cleaned_data
 		if data.get('inizio')>data.get('fine'):
 			raise forms.ValidationError('Il turno termina prima di iniziare! controlla inizio e fine')
-		if data.get('inizio').day!=data.get('fine').day:
-			raise forms.ValidationError('Il turno deve terminare nello stesso giorno')
+		if (data.get('fine')-data.get('inizio')).days>0:
+			raise forms.ValidationError('Il turno deve durare al massimo 24H')
 		return data
 		
 class TurnoFormRipeti(TurnoForm):
@@ -448,8 +448,8 @@ class TurnoFormRipeti(TurnoForm):
 		ripeti=data.get('ripeti')
 		da=data.get('ripeti_da')
 		al=data.get('ripeti_al')
-		if data.get('inizio').day!=data.get('fine').day:
-			raise forms.ValidationError('Il turno deve terminare nello stesso giorno')
+		if (data.get('fine')-data.get('inizio')).days>0:
+			raise forms.ValidationError('Il turno deve durare al massimo 24H')
 		if data.get('inizio')>data.get('fine'):
 			raise forms.ValidationError('Il turno termina prima di iniziare! controlla inizio e fine')
 		if ripeti and (da==None or al==None):

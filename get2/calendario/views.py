@@ -650,6 +650,7 @@ def nuovo_turno(request, cal_id):
 				delta = datetime.timedelta(days=1)
 				data['tipo']=data['tipo'].id
 				data['occorrenza']=o.id
+				data['calendario']=data['calendario'].id
 				#pdb.set_trace()
 				while (start.date()<=stop):
 					data['inizio']=start
@@ -690,6 +691,7 @@ def modifica_turno(request, turno_id):
 					o.tipo=turno.tipo
 					o.valore=turno.valore
 					o.identificativo=turno.identificativo
+					o.calendario=turno.calendario
 					i=o.inizio.replace(hour=turno.inizio.hour, minute=turno.inizio.minute)
 					f=o.fine.replace(hour=turno.fine.hour, minute=turno.fine.minute)
 					o.inizio=i
