@@ -3,7 +3,7 @@
 <ul>
 {% for m in mansioni %}
 	<li>
-	<i class="{{m.icona}} icon-2x icona" style="color:{{m.colore}}"></i> {{ m }} ({{m.descrizione}})
+	<i class="{{m.icona}} icon-2x icona" style="color:{{m.colore}}"></i> {{ m }} (<small>{{m.descrizione}}</small>)
 		<div class="btn-group pull-right">
 		<a href="/impostazioni/mansione/nuovo/{{m.id}}" class="btn btn-small"><i class="icon-plus"></i></a>
 		<a href="/impostazioni/mansione/modifica/{{m.id}}" class="btn btn-small"><i class="icon-edit"></i></a>
