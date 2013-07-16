@@ -9,13 +9,15 @@
 <div class="turno span7" id="turno-{{t.id}}" >
 	
 	<div class="titolo-turno titolo-turno-{{t.coperto}}" id="titolo-turno-{{t.id}}"
-	{% if request.user.get_profile and  not request.user.is_staff %} onclick="$('#disponibilita-turno-{{t.id}}').modal('show');"
+	{% if request.user.get_profile and  not request.user.is_staff %} onclick="Dajaxice.get2.calendario.mansioni_disponibili(Dajax.process,{'turno_id':{{t.id}}}); $('#disponibilita-turno-{{t.id}}').modal('show');"
 	{% endif %}
 	>
 		<h5><i class="icon-time icon-white"></i> {{t.inizio|time:"H:i"}} - {{t.fine|time:"H:i"}}</h5>
 		{% if t.identificativo %}
 		<h6> {{t.identificativo}}</h6>
+
 		{% endif %}
+
 		{%if request.user.is_staff %}
 			<div class="dropdown edit-turno">
 				<a data-toggle="dropdown" class="dropdown-toggle pull-right " id="modifica-turno-{{t.id}}">
@@ -41,7 +43,7 @@
 		{% endif %}
 	</div>	
 	{% for requisito in t.tipo.req_tipo_turno.all %}
-		{% if not requisito.extra %}
+		{% if requisito.clickabile  %}
 			{%if request.user.is_staff %}	
 				<div class="mansione-calendario">
 					<h6 class="h6-mansione-{{requisito.mansione.id}}">{{requisito.mansione}} 
@@ -83,10 +85,18 @@
 					</ul>
 				</div>
 		{% endif %}
-		{% if requisito.extra and request.user.is_staff %}
+		{% if  not requisito.clickabile  and request.user.is_staff %}
 				<div class="mansione-calendario">
-					<h6 class="h6-mansione-{{requisito.mansione.id}}"><i class="icon-asterisk"></i> {{requisito.mansione}}
-					<span class="badge badge-warning pull-right">
+					<h6 class="h6-mansione-{{requisito.mansione.id}}">
+					
+					{% if requisito.extra %}<i class="icon-asterisk"></i> {% endif %}
+
+					{{requisito.mansione}}
+					{% if t|verifica_requisito:requisito  %}
+						<span class="badge badge-success pull-right">
+					{% else %}
+						<span class="badge badge-important pull-right">
+					{% endif %}
 						{% if requisito.minimo != 0 %}
 							&ge;{{requisito.minimo}}
 						{% endif %}
@@ -168,13 +178,9 @@
 		{% if t|turno_intervallo_disponibilita:request.user.get_profile %}
 			{% if not request.user.get_profile|gia_disponibile:t %}
 				<legend>Seleziona la mansione che vuoi ricoprire:</legend>
-				{% for requisito in t.tipo.req_tipo_turno.all %}
-					{% if requisito.mansione in request.user.get_profile.competenze.all and not requisito.extra %}
-						{% if t|gia_disponibili:requisito < requisito.massimo %}
-								<a href="#" onclick="disponibilita_{{t.id}}({{requisito.mansione.id}});" class="btn btn-primary btn-block btn-large"><i class="{{requisito.mansione.icona}}"></i> {{requisito.mansione}}</a></br>
-						{% endif %}
-					{% endif %}
-				{% endfor %}
+				<div id="mansioni-turno{{t.id}}">
+				<i class="icon-spinner icon-spin icon-2x"></i>
+				</div>
 			{% else %}
 				Vuoi cancellarti dal turno del {{t.inizio|date:"d M"}}, ore {{t.inizio|time:"H:i"}} - {{t.fine|time:"H:i"}}?
 			{% endif %}

@@ -235,13 +235,16 @@ def calendario(request,cal_id):
 	touch=""
 	if request.COOKIES.has_key('touch'):
 		touch=request.COOKIES['touch']
+	
 
 	calendario = []
 	calendario.append(giorni)
 	calendario.append(turni)
+
 	calendario=zip(*calendario)
 	tipo_turno=TipoTurno.objects.all()
 	gruppi=Gruppo.objects.all()
+	
 	corpo=render(request,'calendario.html',{'calendario':calendario,'cal_id':cal_id,'start':start,'request':request,'tipo_turno':tipo_turno,'gruppi':gruppi,'touch':touch})
 	risposta = HttpResponse(corpo)
 	risposta.set_cookie('anno', value=anno)

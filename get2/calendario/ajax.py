@@ -248,3 +248,14 @@ def occorrenze(request,occ_id,turno_id):
 	dajax.script('$("div#occorrenze-'+str(turno_id)+'").slideDown();')
 	return dajax.json()	
 
+@dajaxice_register
+def mansioni_disponibili(request,turno_id):
+    dajax=Dajax()
+    html=''
+    t=Turno.objects.get(id=turno_id)
+    for requisito in t.tipo.req_tipo_turno.all():
+        if requisito.mansione in request.user.get_profile().competenze.all() and requisito.clickabile():
+            if not requisito.mansione in t.mansioni_indisponibili(request.user.get_profile().id):
+                html+='<a href="#" onclick="disponibilita_'+str(t.id)+'('+str(requisito.mansione.id)+');" class="btn btn-primary btn-block btn-large"><i class="'+str(requisito.mansione.icona)+'"></i> '+str(requisito.mansione)+'</a></br>'
+    dajax.assign("#mansioni-turno"+str(t.id), "innerHTML", html)
+    return dajax.json() 

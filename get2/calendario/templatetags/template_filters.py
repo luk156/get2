@@ -67,3 +67,7 @@ def data_festa(instance):
 		class_data='prefestivo'
 	return class_data
 
+@register.filter
+def mansioni_indisp(instance, arg):
+	#return "ciao"
+	return instance.mansioni_indisponibili(arg)

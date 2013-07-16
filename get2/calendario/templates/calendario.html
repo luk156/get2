@@ -52,16 +52,19 @@
     <p><strong>{{ error_message }}</strong></p>
   {% endif %}
 
-{% for giorno, turno in calendario %}
+{% for giorno, turno, turno_mansioni in calendario %}
     <div id="giorno-{{forloop.counter}}" class="giorno span1" >
 		<div class="row">
 			<div class="span7 titolo-giorno {% cycle 'giorno1' 'giorno2' %}">
 				<header><h4 class="{{giorno|data_festa}}">{{giorno|date:"D d M"}}</h4></header>
 			</div>
 		</div>
-	{% for t in turno%}
-		<div class="row">
+	{% for t in turno %}
+		<div class="row"> 
+        {{turno_mansioni}}
 			{% include "turno.html" %}
+        
+        
 		</div>
 	{% endfor %}
 	</div>
