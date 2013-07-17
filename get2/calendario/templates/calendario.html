@@ -5,7 +5,7 @@
 {% block header %}
 	{% if request.user.is_staff %}
         <div class="btn-group pull-right">
-            <a class="btn " href="#" onclick="$('#filtro_calendario').slideDown();"><i class="icon-filter"> </i> Filtra</a>
+            <a class="btn {% if request.session.form_data %}active{% endif %}" href="#" onclick="$('#filtro_calendario').slideDown(); $(this).addClass('active');"><i class="icon-filter"> </i> Filtra</a>
             <a class="btn " href="/turno/{{cal_id}}/nuovo"><i class="icon-plus"> </i> Nuovo Turno</a>
         </div>
         <h4 class="header">

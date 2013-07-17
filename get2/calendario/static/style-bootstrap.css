@@ -476,3 +476,13 @@ Back to top button
 	height: 100px;
 	width:100%;
 }
+
+#filtro_calendario{
+	padding-left: 10px;
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 5px;
+}
+
+#filtro_calendario form {
+    margin: 0px 0px 5px;
+}
