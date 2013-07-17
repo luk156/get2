@@ -6,7 +6,7 @@
 	});
 </script>
 
-<div class="turno span7" id="turno-{{t.id}}" >
+<div class="turno span7 {{forloop.counter}} {{t.inizio|time:"H"}}-{{t.fine|time:"H"}}" id="turno-{{t.id}}" >
 	
 	<div class="titolo-turno titolo-turno-{{t.coperto}}" id="titolo-turno-{{t.id}}"
 	{% if request.user.get_profile and  not request.user.is_staff %} onclick="Dajaxice.get2.calendario.mansioni_disponibili(Dajax.process,{'turno_id':{{t.id}}}); $('#disponibilita-turno-{{t.id}}').modal('show');"

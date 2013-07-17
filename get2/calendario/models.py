@@ -110,6 +110,8 @@ ICONE = (
 	('icon-stethoscope','icon-stethoscope'),
 	('icon-eye-open','icon-eye-open'),
 	('icon-bolt','icon-bolt'),
+	('icon-male','icon-male'),
+	('icon-female','icon-female'),
 	)
 
 class Calendario(models.Model):

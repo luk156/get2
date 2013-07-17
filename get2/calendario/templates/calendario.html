@@ -84,4 +84,31 @@
     </div>
 </div>
 
+<script type="text/javascript">
+$(document).ready(function(){
+    turni=new Array();
+
+    $(".turno").each(function ()
+    {
+        turni[turni.length]=[ $(this).attr("class").split(/\s+/)[3].split("-")[0] ,$(this).attr("class").split(/\s+/)[3].split("-")[1] , $(this).attr("id") ];
+    });
+       // Function to get the Max value in Array
+    Array.max = function( array ){
+        return Math.max.apply( Math, array );
+    };
+
+    // Function to get the Min value in Array
+    Array.min = function( array ){
+       return Math.min.apply( Math, array );
+    };
+
+    function transpose( a ) {
+    return Object.keys(a[0]).map( function (c) { return a.map(function (r) { return r[c]; }); } );
+    };
+
+    primo_orario=Array.min(transpose(turni)[0]));
+
+});
+</script>
+
 {% endblock %}
