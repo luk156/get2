@@ -72,7 +72,7 @@
 	<div class='notifications bottom-right'></div>
 	<div class="navbar navbar-static-top">
 		<div class="navbar-inner">
-			<a class="brand" href="/"> GeT 2.0</a>
+			<a class="brand" href="/">GeT | <span style="color: #084B8A;">{{titolo}}</span></a>
 				{% if request.user.id%}
 					<div class="btn-group pull-right">
 						<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
@@ -120,7 +120,13 @@
 					
 				</div>
 			</div>
+			
 		</div>
+	</div>
+	<div id="footer">
+				<i class="icon-cogs"></i> Sviluppato da Matteo Lucchesi | 
+				<a href="http://matteo.luccalug.it"><i class="icon-globe"></i> matteo.luccalug.it</a>
+				| <i class="icon-envelope-alt"></i> matteo@luccalug.it 
 	</div>
 </body>
 </html>

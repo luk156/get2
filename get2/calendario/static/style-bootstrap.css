@@ -205,7 +205,7 @@ h5,h6 {
 	background-color: #fff;
 	padding:3px;
 	box-shadow: 0px 0px 5px #444;
-	margin-bottom:120px;
+	margin-bottom:10px;
 }
 
 
@@ -215,6 +215,10 @@ h5,h6 {
     margin-bottom: 5px;
     border-bottom: 1px solid #999;
     margin-right: 10px;
+}
+
+h4.header {
+	padding-left: 15px !important;
 }
 
 .pager {
@@ -461,4 +465,14 @@ Back to top button
 
 #back-top a:hover {
 	color:rgba(50,50,50,0.2);
+}
+
+#footer {
+	color: #777;
+	font-size: 16px;
+	margin-top:4px;
+	text-align: center;
+	padding-top: 2px;
+	height: 100px;
+	width:100%;
 }

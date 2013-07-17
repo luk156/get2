@@ -88,7 +88,8 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.eggs.Loader',
 )
 
-TEMPLATE_CONTEXT_PROCESSORS = ('get2.calendario.context_processors.calendari',)
+TEMPLATE_CONTEXT_PROCESSORS = ('get2.calendario.context_processors.calendari',
+    'get2.calendario.context_processors.titolo')
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
