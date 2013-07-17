@@ -52,7 +52,7 @@
     <p><strong>{{ error_message }}</strong></p>
   {% endif %}
 
-{% for giorno, turno, turno_mansioni in calendario %}
+{% for giorno, turno in calendario %}
     <div id="giorno-{{forloop.counter}}" class="giorno span1" >
 		<div class="row">
 			<div class="span7 titolo-giorno {% cycle 'giorno1' 'giorno2' %}">
@@ -61,7 +61,6 @@
 		</div>
 	{% for t in turno %}
 		<div class="row"> 
-        {{turno_mansioni}}
 			{% include "turno.html" %}
         
         
@@ -85,30 +84,16 @@
 </div>
 
 <script type="text/javascript">
-$(document).ready(function(){
-    turni=new Array();
-
-    $(".turno").each(function ()
+ for (var i=1;i<9;i++)
     {
-        turni[turni.length]=[ $(this).attr("class").split(/\s+/)[3].split("-")[0] ,$(this).attr("class").split(/\s+/)[3].split("-")[1] , $(this).attr("id") ];
-    });
-       // Function to get the Max value in Array
-    Array.max = function( array ){
-        return Math.max.apply( Math, array );
-    };
-
-    // Function to get the Min value in Array
-    Array.min = function( array ){
-       return Math.min.apply( Math, array );
-    };
-
-    function transpose( a ) {
-    return Object.keys(a[0]).map( function (c) { return a.map(function (r) { return r[c]; }); } );
-    };
-
-    primo_orario=Array.min(transpose(turni)[0]));
-
-});
+        var h_max=0;
+        $(".turno."+i).each(function(){ 
+            h=$(this).offset().top + $(this).height() + 8;
+            if (h>h_max){h_max=h;}
+        });
+        console.log(h_max);
+        $(".turno."+(i+1).toString()).each(function(){ $(this).offset({top:h_max}) });
+    }
 </script>
 
 {% endblock %}
