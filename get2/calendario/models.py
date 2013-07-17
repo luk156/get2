@@ -306,6 +306,7 @@ class TipoTurnoForm(forms.ModelForm):
 		super(TipoTurnoForm, self).__init__(*args, **kwargs)
 
 
+
 class Requisito(models.Model):
 	mansione=models.ForeignKey(Mansione, related_name="req_mansione")
 	minimo=models.IntegerField('Maggiore o uguale', default=0)
@@ -349,11 +350,22 @@ GIORNO = (
   )
 
 GIORNO_EXT = GIORNO + (
+  (103, 'feriale'),
   (101, 'prefestivo'),
   (102, 'festivo'),
-  (103, 'feriale'),
   (99, 'qualsiasi'),
   )
+
+class FiltroCalendario(forms.Form):
+	giorni = forms.MultipleChoiceField( label = "",	choices = GIORNO_EXT[0:10], required = False, )
+	def __init__(self, *args, **kwargs):
+		self.helper = FormHelper()
+		self.helper.layout = Layout(
+			InlineCheckboxes('giorni'),
+			ButtonHolder( Submit('submit', 'Filtra', css_class='button white'), ),)
+		self.helper.form_method = 'post'
+		#self.helper.form_action = 'submit_survey'
+		super(FiltroCalendario, self).__init__(*args, **kwargs)
 
 class Occorrenza(models.Model):
 	pass

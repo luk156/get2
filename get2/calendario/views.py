@@ -1,6 +1,6 @@
 # Create your views here.
 
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, QueryDict
 from get2.calendario.models import *
 from django.shortcuts import render_to_response, redirect, render
 import calendar,datetime,locale
@@ -207,35 +207,53 @@ def prefestivo(giorno):
 
 def calendario(request,cal_id):
 	c=Calendario(id=cal_id)
-	if request.COOKIES.has_key('anno'):
-		anno=int(request.COOKIES['anno'])
-	else:
-		anno=datetime.datetime.today().year
 
-	if request.COOKIES.has_key('mese'):
-		mese=int(request.COOKIES['mese'])
+	if 'start' in request.session:
+		start=request.session['start']
 	else:
-		mese=datetime.datetime.today().month
+		start=datetime.datetime.today()
 
-	if request.COOKIES.has_key('giorno'):
-		giorno=int(request.COOKIES['giorno'])
-	else:
-		giorno=datetime.datetime.today().day
+	form = FiltroCalendario()
+	if request.method == 'POST': 
+		form = FiltroCalendario(request.POST)
+		if form.is_valid():
+			request.session['form_data'] = form.cleaned_data
+	
+	if 'form_data' in request.session:
+		form = FiltroCalendario(initial=request.session.get('form_data'))
+		g=request.session['form_data']['giorni']
+		if len(g)==0:
+			request.session.pop('form_data')
 
-	start=datetime.datetime(anno,mese,giorno,1)
+	#start=datetime.datetime(anno,mese,giorno,1)
 	giorni = []
 	turni = []
-	for i in range(0,7):
-		giorni.append(start)
-		stop = start + datetime.timedelta(days=1)
-		turni.append(Turno.objects.filter(inizio__range=(start, stop),calendario=c).order_by('inizio', 'tipo__priorita'))
-		start = start + datetime.timedelta(days=1)
-	start = datetime.datetime(anno,mese,giorno,1)
+	i=0
+	#pdb.set_trace()
+	s=start
+	if request.session.get('form_data'):
+		while i<7:
+			if (str(start.weekday()) in g) or (('101' in g) and prefestivo(start)) or (('102' in g) and festivo(start)) or ('99' in g) or (('103' in g) and (not prefestivo(start) and not festivo(start)) ):
+				giorni.append(start)
+				i=i+1
+				stop = start + datetime.timedelta(days=1)
+				turni.append(Turno.objects.filter(inizio__range=(start, stop),calendario=c).order_by('inizio', 'tipo__priorita'))
+			start = start + datetime.timedelta(days=1)
+		stop = start
+		start = s
+	else:
+		while i<7:
+			giorni.append(start)
+			stop = start + datetime.timedelta(days=1)
+			turni.append(Turno.objects.filter(inizio__range=(start, stop),calendario=c).order_by('inizio', 'tipo__priorita'))
+			start = start + datetime.timedelta(days=1)
+			i=i+1
+		stop = start
+		start = s
 	
 	touch=""
 	if request.COOKIES.has_key('touch'):
 		touch=request.COOKIES['touch']
-	
 
 	calendario = []
 	calendario.append(giorni)
@@ -245,11 +263,10 @@ def calendario(request,cal_id):
 	tipo_turno=TipoTurno.objects.all()
 	gruppi=Gruppo.objects.all()
 	
-	corpo=render(request,'calendario.html',{'calendario':calendario,'cal_id':cal_id,'start':start,'request':request,'tipo_turno':tipo_turno,'gruppi':gruppi,'touch':touch})
+	corpo=render(request,'calendario.html',{'form_filtro':form, 'calendario':calendario,'cal_id':cal_id,'start':start,'request':request,'tipo_turno':tipo_turno,'gruppi':gruppi,'touch':touch})
 	risposta = HttpResponse(corpo)
-	risposta.set_cookie('anno', value=anno)
-	risposta.set_cookie('mese', value=mese)
-	risposta.set_cookie('giorno', value=giorno)
+	request.session['start'] = start
+	request.session['stop'] = stop
 	risposta.set_cookie('sezione', value='calendario')
 	return risposta
 
@@ -257,7 +274,7 @@ def calendarioazione(request,cal_id,azione):
 	if azione == 'oggi':
 		start = datetime.datetime.today()
 	else:
-		start = datetime.datetime(int(request.COOKIES['anno']),int(request.COOKIES['mese']),int(request.COOKIES['giorno']))
+		start = request.session['start']
 	if azione == 'avanti':
 		start += datetime.timedelta(days=1)
 	if azione == 'indietro':
@@ -267,9 +284,7 @@ def calendarioazione(request,cal_id,azione):
 	if azione == 'settindietro':
 		start -= datetime.timedelta(days=7)
 	risposta = HttpResponseRedirect('/calendario/'+str(cal_id))
-	risposta.set_cookie('anno', value=start.year)
-	risposta.set_cookie('mese', value=start.month)
-	risposta.set_cookie('giorno', value=start.day)
+	request.session['start'] = start
 	return risposta
 	
 @user_passes_test(lambda u:u.is_staff)

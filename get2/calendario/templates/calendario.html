@@ -1,5 +1,6 @@
 {% extends "base.html" %} 
 {% load template_filters %}
+{% load crispy_forms_tags %}
 
 {% block header %}
 	{% if request.user.is_staff %}
@@ -30,9 +31,9 @@
 <!--	<span class="persona-draggable"> Matteo Lucchesi </span>-->
 <!--</div>-->
 <div class="row-fluid">
-    <div class="span7 hide" id="filtro_calendario">
-        <h2>prova!</h2>
-    </div>
+    <div class="span7 {% if not request.session.form_data %}hide{% endif %}" id="filtro_calendario">
+        {% crispy form_filtro %}
+    </div> 
 </div>
 <div class="row-fluid">	
 	<div class="span7">
