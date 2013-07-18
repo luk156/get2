@@ -85,6 +85,7 @@
 </div>
 
 <script type="text/javascript">
+if ($(window).width()>756){
  for (var i=1;i<9;i++)
     {
         var h_max=0;
@@ -94,7 +95,7 @@
         });
         console.log(h_max);
         $(".turno."+(i+1).toString()).each(function(){ $(this).offset({top:h_max}) });
-    }
+    }};
 </script>
 
 {% endblock %}
