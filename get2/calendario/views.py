@@ -212,6 +212,7 @@ def calendario(request,cal_id):
 		start=request.session['start']
 	else:
 		start=datetime.datetime.today()
+	start=start.replace(hour=1,second=0,microsecond=0)
 
 	form = FiltroCalendario()
 	if request.method == 'POST': 
