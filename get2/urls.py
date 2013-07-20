@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import *
 from django.views.generic import TemplateView
-
 from dajaxice.core import dajaxice_autodiscover, dajaxice_config
+
 dajaxice_autodiscover()
 
 # Uncomment the next two lines to enable the admin:
@@ -21,6 +21,7 @@ urlpatterns += patterns('get2.calendario',
 	(r'^calendario/(?P<cal_id>\w+)/(?P<azione>\w+)$', 'views.calendarioazione'),
 	# persone
 	(r'^persone/$', 'views.elenco_persona'),
+	(r'^persone/export/$', 'views.export_persona'),
 	(r'^persone/nuovo/$', 'views.nuovo_persona'),
 	(r'^persone/modifica/(?P<persona_id>\w+)/$', 'views.modifica_persona'),
 	(r'^persone/visualizza/(?P<persona_id>\w+)/$', 'views.visualizza_persona'),
