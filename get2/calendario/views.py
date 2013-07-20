@@ -125,7 +125,7 @@ def touch(request,v):
 	return risposta
 
 ####   persona   ####
-
+@user_passes_test(lambda u:u.is_staff)
 def export_persona(request):
     # Create the HttpResponse object with the appropriate CSV header
     return export_csv(request, Persona.objects.all(), [('nome','nome'),
