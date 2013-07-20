@@ -130,6 +130,7 @@ def export_persona(request):
     # Create the HttpResponse object with the appropriate CSV header
     return export_csv(request, Persona.objects.all(), [('nome','nome'),
     	('cognome','cognome'),
+    	('E-mail','user.email'),
     	('indirizzo','indirizzo'),
     	('nascita','nascita'),
     	('tel1','tel1'),
