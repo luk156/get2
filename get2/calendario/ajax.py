@@ -187,10 +187,10 @@ def disp(request, turno_id, mansione_id, persona_id, disp):
 		temp = Template('<div class="input-prepend input-append small"><span class="add-on"><i class="icon-comment"></i></span><input id="note-disp-{{d.id}}" type="text" value="{{d.note}}"><button class="btn" type="button" onclick="nota_disponibilita({{d.id}});">salva</button></div></br>{{d.creata_da}}:{{d.ultima_modifica|date:"d M"}} {{d.ultima_modifica|time:"H:i"}}')
 		c = Context({"d": d,})
 		dajax.assign('#disponibilita-'+str(p.id), 'innerHTML', temp.render(c))	
-	elif request.user.is_superuser:
+	elif request.user.is_staff:
 		d=Disponibilita.objects.get(persona=p,turno=t)
 		d.delete()
-		dajax.assign('#disponibilita-'+str(p.id), 'innerHTML', '')	
+		dajax.assign('#disponibilita-'+str(p.id), 'innerHTML', '')
 	html_anteprima = render_to_string( 'turno.html', { 't': t, 'request':request } )
 	dajax.assign('div #anteprima', 'innerHTML', html_anteprima+'<div style="clear:both;"></div>')
 	dajax.script('$(".bottom-right").notify({ message: { text: "Aggiornata disponibilita per '+str(p)+'" }}).show();')
