@@ -360,6 +360,7 @@ class FiltroCalendario(forms.Form):
 	giorni = forms.MultipleChoiceField( label = "",	choices = GIORNO_EXT[0:10], required = False, )
 	def __init__(self, *args, **kwargs):
 		self.helper = FormHelper()
+		self.helper.form_id = 'FiltroCalendario'
 		self.helper.layout = Layout(
 			InlineCheckboxes('giorni'),
 			ButtonHolder( Submit('submit', 'Filtra', css_class='button white'), ),)
