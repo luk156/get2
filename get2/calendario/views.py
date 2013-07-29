@@ -8,14 +8,13 @@ from django.db.models import Q, Count, Sum
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AdminPasswordChangeForm 
-from django.contrib.auth.decorators import login_required
 import pdb
 from django.template import RequestContext
 from django.forms.formsets import formset_factory
 import get2.calendario.settings_calendario as settings_calendario
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import user_passes_test
-
+from django.contrib.auth.decorators import login_required
 import csv, codecs
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -110,6 +109,8 @@ def export_csv(request, queryset, export_data, filter_by=None, file_name='export
     rsp['Content-Disposition'] = 'attachment; filename=%s' % filename.encode('utf-8')
     return rsp
 
+
+
 def home(request):
 	if Calendario.objects.all():
 		c=Calendario.objects.all()[0]
@@ -142,6 +143,7 @@ def export_persona(request):
     	('note','note'),
     	])
 
+@user_passes_test(lambda u:u.is_staff)
 def elenco_persona(request):
 	#if request.user.is_staff:
 	persone = Persona.objects.all().order_by('cognome')
@@ -506,7 +508,8 @@ def disponibilita_url(request, turno_id, mansione_id, persona_id, disponibilita)
 		return HttpResponseRedirect('/calendario/'+str(t.calendario.id))
 	else:
 		print d[1]
-		
+
+@user_passes_test(lambda u:u.is_staff)		
 def disponibilita_gruppo(request,turno_id,gruppo_id):
 	turno=Turno.objects.get(id=turno_id)
 	gruppo=Gruppo.objects.get(id=gruppo_id)
@@ -875,6 +878,7 @@ elenco_statistiche=("Turni totali",
 				"Punteggi totali",
 			)
 
+@login_required
 def statistiche(request):
 	#se l' intervallo non e specificato prendo tutto
 	dati=statistiche_intervallo(request,datetime.date(2000,1,1),datetime.datetime.now().date())
@@ -940,7 +944,7 @@ def elimina_requisito(request,requisito_id):
 #### fine requisito ####
 
 #### inizio pagina persona ####
-
+@login_required
 def visualizza_persona(request,persona_id):
 	persona = Persona.objects.get(id=persona_id)
 	if request.user.is_staff or request.user.get_profile()==persona:
