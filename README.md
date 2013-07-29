@@ -23,6 +23,23 @@ A questo punto possono essere creati i turni di cui ho bisogno, fornendo l'orari
 
 Le persone dotate di un account hanno la possibilità di vedere da casa chi è già inserito all'interno del calendario ma possono anche rendersi disponibili o cancellarsi da un turno autonomamente.
 
+##Componenti da installare
+
+Per funzionare correttamente GeT necessita dei seguenti componenti aggiuntivi da installare:
+
+*   django-crispy-forms
+*   django-dajax
+*   django-dajaxice
+*   south
+
+I componenti sono installabili con `easy_install` con il seguente comando:
+
+    easy_install django-crispy-forms django-dajax django-dajaxice south
+    
+oppure con `pip` con il comando:
+
+    pip install django-crispy-forms django-dajax django-dajaxice south
+
 ##Screenshot
 
 ![Calendario](http://matteo.luccalug.it/wp-content/uploads/2013/03/calendario.png "Calendario")
