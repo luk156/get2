@@ -35,6 +35,7 @@ urlpatterns += patterns('get2.calendario',
 	(r'^utenti/nuovo/$', 'views.nuovo_utente'),
 	(r'^utenti/modifica/(?P<utente_id>\w+)/password/$', 'views.modifica_password_utente'),
 	(r'^utenti/modifica/(?P<utente_id>\w+)/$', 'views.modifica_utente'),
+	(r'^utenti/elimina/(?P<utente_id>\w+)/$', 'views.elimina_utente'),
 	# mansioni
 	(r'^impostazioni/mansione/nuovo/(?P<padre_id>\w+)/$', 'views.nuovo_mansione'),
 	(r'^impostazioni/mansione/modifica/(?P<mansione_id>\w+)/$', 'views.modifica_mansione'),

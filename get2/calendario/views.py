@@ -588,6 +588,12 @@ def modifica_utente(request,utente_id):
 		form = UserChangeForm2(instance=user)
 	return render(request,'form_utente.html',{'request':request, 'form': form,'azione': azione, 'user': user,})
 
+@user_passes_test(lambda u:u.is_superuser)
+def elimina_utente(request,utente_id):	
+	user = User.objects.get(id=utente_id)
+	user.delete()
+	return HttpResponseRedirect('/utenti/') # Redirect after POST
+
 @user_passes_test(lambda u:u.is_staff)
 def modifica_password_utente(request,utente_id):
 	user = User.objects.get(id=utente_id)

@@ -54,10 +54,12 @@ def elimina_utente(request,utente_id):
 	dajax = Dajax()
 	if request.user.is_staff:
 		if (not user.is_staff or request.user.is_superuser):
-			#user.delete()
+			user.delete()
 			dajax.remove('#utente-'+str(utente_id))
 		else:
-			pass
+			dajax.script('$(".bottom-right").notify({ message: { text: "Solo l\'amministratore puo\' eliminare questo utente" }}).show();')
+    else:
+        dajax.script('$(".bottom-right").notify({ message: { text: "Solo un membro dello staff puo\' eliminare un utente" }}).show();')      
 	dajax.script("$('#loading').addClass('hidden');")
 	return dajax.json()
 

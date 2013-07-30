@@ -123,3 +123,18 @@ function utente_staff(selettore){
 </script>
 
 {% endblock %}
+
+
+{% for utente in utenti %}
+<div id="elimina-utente-{{utente.id}}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-body">
+		<div class="alert alert-error">
+			<h5><i class="icon-warning-sign icon-2x"></i> Vuoi veramente eliminare l'utente {{utente}}?</h5>
+		</div>
+	</div>
+	<div class="modal-footer">
+	<button class="btn" data-dismiss="modal" aria-hidden="true">Annulla</button>
+	<button class="btn btn-primary" data-dismiss="modal" onclick="">Elimina</button>
+	</div>
+</div>
+{% endfor %}
