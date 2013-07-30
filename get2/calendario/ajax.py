@@ -58,8 +58,8 @@ def elimina_utente(request,utente_id):
 			dajax.remove('#utente-'+str(utente_id))
 		else:
 			dajax.script('$(".bottom-right").notify({ message: { text: "Solo l\'amministratore puo\' eliminare questo utente" }}).show();')
-    else:
-        dajax.script('$(".bottom-right").notify({ message: { text: "Solo un membro dello staff puo\' eliminare un utente" }}).show();')      
+	else:
+		dajax.script('$(".bottom-right").notify({ message: { text: "Solo un membro dello staff puo\' eliminare un utente" }}).show();')      
 	dajax.script("$('#loading').addClass('hidden');")
 	return dajax.json()
 
