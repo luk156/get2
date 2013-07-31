@@ -6,3 +6,9 @@ def calendari(request):
 
 def titolo(request):
 	return {'titolo': settings_calendario.TITOLO }
+
+def analytics(request):
+	return {'analytics': settings_calendario.ANALYTICS }
+
+def dominio(request):
+	return {'dominio': settings_calendario.DOMINIO }
