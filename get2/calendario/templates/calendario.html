@@ -1,4 +1,4 @@
-{% extends "base.html" %} 
+{% extends "base.html" %}
 {% load template_filters %}
 {% load crispy_forms_tags %}
 
@@ -47,9 +47,9 @@
 <div class="row-fluid">
     <div class="span7 {% if not request.session.form_data %}hide{% endif %}" id="filtro_calendario">
         {% crispy form_filtro %}
-    </div> 
+    </div>
 </div>
-<div class="row-fluid">	
+<div class="row-fluid">
 	<div class="span7">
     <ul class="pager">
     <li class="previous">
@@ -75,17 +75,17 @@
 			</div>
 		</div>
 	{% for t in turno %}
-		<div class="row"> 
+		<div class="row">
 			{% include "turno.html" %}
-        
-        
+
+
 		</div>
 	{% endfor %}
 	</div>
 {% endfor %}
 </div>
 
-<div class="row-fluid">	
+<div class="row-fluid">
 	<div class="span7">
     <ul class="pager">
     <li class="previous">
@@ -99,17 +99,17 @@
 </div>
 
 <script type="text/javascript">
-if ($(window).width()>756){
- for (var i=1;i<9;i++)
-    {
-        var h_max=0;
-        $(".turno."+i).each(function(){ 
-            h=$(this).offset().top + $(this).height() + 8;
-            if (h>h_max){h_max=h;}
-        });
-        console.log(h_max);
-        $(".turno."+(i+1).toString()).each(function(){ $(this).offset({top:h_max}) });
-    }};
-</script>
+// if ($(window).width()>756){
+//  for (var i=1;i<9;i++)
+//     {
+//         var h_max=0;
+//         $(".turno."+i).each(function(){
+//             h=$(this).offset().top + $(this).height() + 8;
+//             if (h>h_max){h_max=h;}
+//         });
+//         console.log(h_max);
+//         $(".turno."+(i+1).toString()).each(function(){ $(this).offset({top:h_max}) });
+//     }};
+ </script>
 
 {% endblock %}
