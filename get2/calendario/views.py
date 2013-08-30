@@ -7,7 +7,7 @@ import calendar,datetime,locale
 from django.db.models import Q, Count, Sum
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import AdminPasswordChangeForm 
+from django.contrib.auth.forms import AdminPasswordChangeForm
 import pdb
 from django.template import RequestContext
 from django.forms.formsets import formset_factory
@@ -28,18 +28,18 @@ def export_csv(request, queryset, export_data, filter_by=None, file_name='export
         object_id=None, not_available='n.a.', require_permission=None):
     '''
     Export objects from a queryset
-    
+
     @param queryset: the queryset containing a list of objects
     @param export_data: a dictionary of the form 'path.to.data': 'Column Title'
     @param filter_by: filter the queryset by this column__condition and object_id
     @param file_name: the file name offered in the browser or a callable
-    @param object_id: if file_name is callable and object_id is given, then the 
+    @param object_id: if file_name is callable and object_id is given, then the
         file_name is determined by calling file_name(object_id)
-    @param not_available: the default data if a given object in export_data 
+    @param not_available: the default data if a given object in export_data
         is not available
-    @param require_permission: only user's havig the required permission can 
+    @param require_permission: only user's havig the required permission can
         access this view
-        
+
     Example usage:
     'queryset': User.objects.all(),
     'filter_by': 'is_active',
@@ -50,36 +50,36 @@ def export_csv(request, queryset, export_data, filter_by=None, file_name='export
         ('get_profile.some_profile_var', 'Some data'),
         ]
     '''
-    if require_permission and not (request.user.is_authenticated() and 
+    if require_permission and not (request.user.is_authenticated() and
                        request.user.has_perm(require_permission)):
         return redirect_to_login(request.path)
     queryset = queryset._clone()
     if filter_by and object_id:
         queryset = queryset.filter(**{'%s' % filter_by: object_id})
-    
+
     def get_attr(object, attrs=None):
         if attrs == None or attrs == []:
             return object
         current = attrs.pop(0)
         try:
-            return get_attr(callable(getattr(object, current)) and 
-                        getattr(object, current)() or 
+            return get_attr(callable(getattr(object, current)) and
+                        getattr(object, current)() or
                         getattr(object, current), attrs)
         except (ObjectDoesNotExist, AttributeError):
             return not_available
-    
+
     def stream_csv(data):
         sio = StringIO()
         writer = csv.writer(sio)
         writer.writerow(data)
         return sio.getvalue()
-    
+
     def streaming_response_generator():
         yield codecs.BOM_UTF8
         yield stream_csv(zip(*export_data)[0])
         import django.db.models.query
         for item in queryset.iterator():
-            
+
             row = []
             for attr in zip(*export_data)[1]:
                 obj = get_attr(item, attr.split('.'))
@@ -101,9 +101,9 @@ def export_csv(request, queryset, export_data, filter_by=None, file_name='export
                     res = str(res)
                 row.append(res)
             yield stream_csv(row)
-    
-    rsp = HttpResponse(streaming_response_generator(), 
-                        mimetype='text/csv', 
+
+    rsp = HttpResponse(streaming_response_generator(),
+                        mimetype='text/csv',
                         content_type='text/csv; charset=utf-8')
     filename = object_id and callable(file_name) and file_name(object_id) or file_name
     rsp['Content-Disposition'] = 'attachment; filename=%s' % filename.encode('utf-8')
@@ -170,7 +170,7 @@ def nuovo_persona(request):
 	return render(request,'form_persona.html',{'request':request,'form': form,'azione': azione,})
 	#else:
 	#	return render(request,'staff-no.html')
-	
+
 @user_passes_test(lambda u:u.is_staff)
 def modifica_persona(request,persona_id):
 	azione = 'modifica'
@@ -208,7 +208,7 @@ def nuovo_gruppo(request):
 	return render(request,'form_gruppo.html',{'request':request,'form': form,'azione': azione,})
 	#else:
 	#	return render(request,'staff-no.html')
-	
+
 @user_passes_test(lambda u:u.is_staff)
 def modifica_gruppo(request,gruppo_id):
 	azione = 'modifica'
@@ -229,7 +229,7 @@ def elimina_gruppo(request,gruppo_id):
 	p=Gruppo.objects.get(id=gruppo_id)
 	p.delete()
 	return HttpResponseRedirect('/persone/')
-	
+
 @user_passes_test(lambda u:u.is_staff)
 def gruppoaggiungi(request, gruppo_id, per_id):
 	g=Gruppo.objects.get(id=gruppo_id)
@@ -237,7 +237,7 @@ def gruppoaggiungi(request, gruppo_id, per_id):
 	g.componenti.add(v)
 	g.save
 	return HttpResponseRedirect('/persone/')
-	
+
 @user_passes_test(lambda u:u.is_staff)
 def aggiungilista(request,azione,arg,persone):
 	for per_id in persone.rsplit('_'):
@@ -327,11 +327,11 @@ def calendario(request,cal_id):
 	start=start.replace(hour=1,second=0,microsecond=0)
 
 	form = FiltroCalendario()
-	if request.method == 'POST': 
+	if request.method == 'POST':
 		form = FiltroCalendario(request.POST)
 		if form.is_valid():
 			request.session['form_data'] = form.cleaned_data
-	
+
 	if 'form_data' in request.session:
 		form = FiltroCalendario(initial=request.session.get('form_data'))
 		g=request.session['form_data']['giorni']
@@ -363,7 +363,7 @@ def calendario(request,cal_id):
 			i=i+1
 		stop = start
 		start = s
-	
+
 	touch=""
 	if request.COOKIES.has_key('touch'):
 		touch=request.COOKIES['touch']
@@ -375,7 +375,7 @@ def calendario(request,cal_id):
 	calendario=zip(*calendario)
 	tipo_turno=TipoTurno.objects.all()
 	gruppi=Gruppo.objects.all()
-	
+
 	corpo=render(request,'calendario.html',{'form_filtro':form, 'calendario':calendario,'cal_id':cal_id,'start':start,'request':request,'tipo_turno':tipo_turno,'gruppi':gruppi,'touch':touch})
 	risposta = HttpResponse(corpo)
 	request.session['start'] = start
@@ -399,7 +399,7 @@ def calendarioazione(request,cal_id,azione):
 	risposta = HttpResponseRedirect('/calendario/'+str(cal_id))
 	request.session['start'] = start
 	return risposta
-	
+
 @user_passes_test(lambda u:u.is_staff)
 def cerca_persona(request, turno_id, mansione_id):
 	mansione=Mansione.objects.get(id=mansione_id)
@@ -424,7 +424,7 @@ def verifica_intervallo(turno,persona):
 		errore='Troppo vicino (intervallo minore di '+str(settings_calendario.CANC_MIN)+' giorni)'
 	elif persona.persona_disponibilita.filter(turno=turno, tipo="Disponibile") and diff.days<settings_calendario.CANC_MAX:
 		verifica=False
-		errore='Troppo lontano (intervallo maggiore di '+str(settings_calendario.CANC_MAX)+' giorni)'		
+		errore='Troppo lontano (intervallo maggiore di '+str(settings_calendario.CANC_MAX)+' giorni)'
 	elif diff.days<settings_calendario.DISP_MIN:
 		verifica=False
 		errore='Troppo vicino (intervallo minore di '+str(settings_calendario.DISP_MIN)+' giorni)'
@@ -463,7 +463,7 @@ def disponibilita_risolvi_contemporaneo(request,persona_id,contemporaneo):
 		for d in Disponibilita.objects.filter(persona_id=persona_id,turno=contemporaneo):
 			if d.tipo=="Disponibile":
 				persona= Persona.objects.get(id=persona_id)
-				notifica_disponibilita(request,persona,contemporaneo,'Non piu disponibile per impegno contemporaneo',contemporaneo.mansione)
+				notifica_disponibilita(request,persona,contemporaneo,'Non piu disponibile per impegno contemporaneo',d.mansione)
 			rimuovi_disponibilita(request,d.id)
 
 
@@ -509,7 +509,7 @@ def disponibilita_url(request, turno_id, mansione_id, persona_id, disponibilita)
 	else:
 		print d[1]
 
-@user_passes_test(lambda u:u.is_staff)		
+@user_passes_test(lambda u:u.is_staff)
 def disponibilita_gruppo(request,turno_id,gruppo_id):
 	turno=Turno.objects.get(id=turno_id)
 	gruppo=Gruppo.objects.get(id=gruppo_id)
@@ -535,18 +535,18 @@ def notifica_disponibilita(request,persona,turno,tipo_disponibilita,mansione):
 		notifica.destinatario_id=settings_calendario.ID_ADMIN_NOTIFICHE # se non c'e regola va al admin
 		notifica.save()
 	return True
-	
+
 @user_passes_test(lambda u:u.is_staff)
 def elenco_notifica(request):
 	u=request.user
 	notifiche=Notifica.objects.filter(destinatario=u).order_by('data').reverse()
 	return render(request,'notifiche.html',{'notifiche':notifiche,'request':request})
-	
+
 @user_passes_test(lambda u: u.is_staff)
 def elimina_notifica(request,notifica_id):
 	n=Notifica.objects.get(id=notifica_id)
 	n.delete()
-	return HttpResponseRedirect('/notifiche/')	
+	return HttpResponseRedirect('/notifiche/')
 
 ####   fine notifica   ####
 
@@ -560,7 +560,7 @@ def elenco_utente(request):
 	return risposta
 	#else:
 	#	return render(request,'staff-no.html')
-	
+
 @user_passes_test(lambda u:u.is_staff)
 def nuovo_utente(request):
 	#if request.user.is_staff:
@@ -589,7 +589,7 @@ def modifica_utente(request,utente_id):
 	return render(request,'form_utente.html',{'request':request, 'form': form,'azione': azione, 'user': user,})
 
 @user_passes_test(lambda u:u.is_superuser)
-def elimina_utente(request,utente_id):	
+def elimina_utente(request,utente_id):
 	user = User.objects.get(id=utente_id)
 	user.delete()
 	return HttpResponseRedirect('/utenti/') # Redirect after POST
@@ -605,7 +605,7 @@ def modifica_password_utente(request,utente_id):
 	else:
 		form = AdminPasswordChangeForm(user=user)
 	return render(request,'form_password_utente.html',{'request':request, 'form': form, 'user': user,})
-	
+
 ####   fine utenti   ####
 
 #### inizio mansioni ####
@@ -624,23 +624,23 @@ def nuovo_mansione(request, padre_id):
 	else:
 		form = MansioneForm(initial={'padre': m,})
 		form.helper.form_action = '/impostazioni/mansione/nuovo/'+str(padre_id)+'/'
-	return render(request,'form_mansione.html',{'request':request, 'form': form,'azione': azione})	
-	
+	return render(request,'form_mansione.html',{'request':request, 'form': form,'azione': azione})
+
 @user_passes_test(lambda u: u.is_superuser)
 def modifica_mansione(request, mansione_id):
 	azione = 'modifica'
 	mansione = Mansione.objects.get(id=mansione_id)
 	if request.method == 'POST': # If the form has been submitted...
 		form = MansioneForm(request.POST, instance=mansione) # necessario per modificare la riga preesistente
-		form.helper.form_action = '/impostazioni/mansione/modifica/'+str(mansione.id)+'/' 
+		form.helper.form_action = '/impostazioni/mansione/modifica/'+str(mansione.id)+'/'
 		if form.is_valid():
 			form.save()
 			return HttpResponseRedirect('/impostazioni/') # Redirect after POST
 	else:
 		form = MansioneForm(instance=mansione)
-		form.helper.form_action = '/impostazioni/mansione/modifica/'+str(mansione.id)+'/' 
+		form.helper.form_action = '/impostazioni/mansione/modifica/'+str(mansione.id)+'/'
 	return render(request,'form_mansione.html',{'form':form,'azione': azione, 'mansione': mansione,'request':request})
-	
+
 @user_passes_test(lambda u: u.is_superuser)
 def elimina_mansione(request,mansione_id):
 	m=Mansione.objects.get(id=mansione_id)
@@ -733,7 +733,7 @@ def elimina_tipo_turno(request,tipo_turno_id):
 	t.delete()
 	return HttpResponseRedirect('/impostazioni/')
 
-@user_passes_test(lambda u: u.is_staff)	
+@user_passes_test(lambda u: u.is_staff)
 def nuovo_impostazioni_notifica(request):
 	azione = 'nuovo'
 	if request.method == 'POST': # If the form has been submitted...
@@ -753,13 +753,13 @@ def modifica_impostazioni_notifica(request, impostazioni_notifica_id):
 	impostazioni_notifica = Impostazioni_notifica.objects.get(id=impostazioni_notifica_id)
 	if request.method == 'POST': # If the form has been submitted...
 		impostazioni_notifica_form = Impostazioni_notificaForm(request.POST, instance=impostazioni_notifica)
-		impostazioni_notifica_form.helper.form_action = '/impostazioni/notifica/modifica/'+str(impostazioni_notifica.id)+'/' 
+		impostazioni_notifica_form.helper.form_action = '/impostazioni/notifica/modifica/'+str(impostazioni_notifica.id)+'/'
 		if impostazioni_notifica_form.is_valid():
 			impostazioni_notifica_form.save()
 			return HttpResponseRedirect('/impostazioni/#tabs-notifiche') # Redirect after POST
 	else:
 		impostazioni_notifica_form = Impostazioni_notificaForm(instance=impostazioni_notifica)
-		impostazioni_notifica_form.helper.form_action = '/impostazioni/notifica/modifica/'+str(impostazioni_notifica.id)+'/' 
+		impostazioni_notifica_form.helper.form_action = '/impostazioni/notifica/modifica/'+str(impostazioni_notifica.id)+'/'
 	return render(request,'form_impostazioni_statistiche.html',{'form': impostazioni_notifica_form,'azione': azione, 'impostazioni_notifica': impostazioni_notifica,'request':request})
 
 @user_passes_test(lambda u: u.is_staff)
@@ -811,14 +811,14 @@ def nuovo_turno(request, cal_id):
 		form = TurnoFormRipeti(initial={'calendario': c})
 		form.helper.form_action = '/turno/'+str(cal_id)+'/nuovo/'
 	return render(request,'form_turno.html',{'form': form,'azione': azione,'request':request})
-	
+
 @user_passes_test(lambda u:u.is_staff)
 def modifica_turno(request, turno_id):
 	azione = 'Modifica';
 	turno = Turno.objects.get(id=turno_id)
 	if request.method == 'POST': # If the form has been submitted...
 		form = TurnoForm(request.POST, instance=turno) # necessario per modificare la riga preesistente
-		form.helper.form_action = '/turno/modifica/'+str(turno.id)+'/' 
+		form.helper.form_action = '/turno/modifica/'+str(turno.id)+'/'
 		if form.is_valid():
 			data = form.cleaned_data
 			form.save()
@@ -924,7 +924,7 @@ def nuovo_requisito(request,tipo_turno_id):
 	else:
 		form = RequisitoForm(initial={'necessario': True,})
 		form.helper.form_action = '/impostazioni/tipo_turno/aggiungi_requisito/'+str(t_turno.id)+'/'
-	return render(request,'form_requisito.html',{'request':request, 'tipo_turno': t_turno, 'form': form,'azione': azione})	
+	return render(request,'form_requisito.html',{'request':request, 'tipo_turno': t_turno, 'form': form,'azione': azione})
 
 @user_passes_test(lambda u: u.is_superuser)
 def modifica_requisito(request,requisito_id):
