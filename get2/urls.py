@@ -10,6 +10,8 @@ dajaxice_autodiscover()
 
 urlpatterns = patterns('',
     url(dajaxice_config.dajaxice_url, include('dajaxice.urls')),
+    # statistiche
+    url(r'^statistiche/', include('statistiche.urls')),
 )
 
 urlpatterns += patterns('get2.calendario',
@@ -65,8 +67,6 @@ urlpatterns += patterns('get2.calendario',
 	(r'^impostazioni/notifica/nuovo/$', 'views.nuovo_impostazioni_notifica'),
 	(r'^impostazioni/notifica/modifica/(?P<impostazioni_notifica_id>\w+)/$', 'views.modifica_impostazioni_notifica'),
 	(r'^impostazioni/notifica/elimina/(?P<impostazioni_notifica_id>\w+)/$', 'views.elimina_impostazioni_notifica'),
-	# statistiche
-	(r'^statistiche/', 'views.statistiche'),
 	# notifiche
    	(r'^notifiche/$', 'views.elenco_notifica'),
    	(r'^notifiche/elimina/(?P<notifica_id>\w+)/$', 'views.elimina_notifica'),
