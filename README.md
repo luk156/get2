@@ -34,11 +34,11 @@ Per funzionare correttamente GeT necessita dei seguenti componenti aggiuntivi da
 
 I componenti sono installabili con `easy_install` con il seguente comando:
 
-    easy_install django-crispy-forms django-dajax django-dajaxice south
+    easy_install django-crispy-forms django-dajax django-dajaxice south python-dateutil
     
 oppure con `pip` con il comando:
 
-    pip install django-crispy-forms django-dajax django-dajaxice south
+    pip install django-crispy-forms django-dajax django-dajaxice south python-dateutil
 
 ##Screenshot
 
