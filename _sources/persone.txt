@@ -18,7 +18,9 @@ Attraverso questo modulo è possibile gestire l'anagrafica del personale.
 
 Aggiungere una persona
 ----------------------
-Per aggiungere una persona è sufficiente utilizzare il bottone |A|
+
+Per aggiungere una persona è sufficiente utilizzare il bottone |A|, si aprirà un form di inseriemnto dei dati, una volta compilati almeno i campi obbligatori (contraddistinti dall'asterisco) verrà creata una nuova persona.
+
 
 Modificare/eliminare una persona
 --------------------------------
