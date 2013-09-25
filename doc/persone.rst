@@ -10,7 +10,9 @@ E' possibile accedere alla sezione "persone" dal menu principale:
 
 Le persone
 ==========
-Attraverso questo modulo è possibile gestire l'anagrafica del personale. 
+Attraverso questo modulo è possibile gestire l'anagrafica del personale.
+
+La tabella "persone" ne riporta le informazioni principali , esse risultano automaticamente ordinate per cognome ma è possibile selezionare un diverso ordinamento facendo click sul titolo delle colonne. Tramite i campi |D| è possibile filtrare le persone in base al loro nome,mansioni,gruppi,stato e note (per tornare alla lista completa e sufficente cancellare il contenuto inserito).
 
 .. figure:: img/persone-ok.png
 	:align: center
@@ -18,7 +20,9 @@ Attraverso questo modulo è possibile gestire l'anagrafica del personale.
 
 Aggiungere una persona
 ----------------------
-Per aggiungere una persona è sufficiente utilizzare il bottone |A|
+
+Per aggiungere una persona è sufficiente utilizzare il bottone |A|, si aprirà un form di inseriemnto dei dati, una volta compilati almeno i campi obbligatori (contraddistinti dall'asterisco) verrà creata una nuova persona.
+
 
 Modificare/eliminare una persona
 --------------------------------
@@ -33,6 +37,10 @@ Per modificare/eliminare una persona è sufficiente utilizzare il selettore |G|.
 	
 	eliminando una persona vengono eliminate anche tutte le sue disponibilità passate e quindi le sue statitistiche
 
+Visualizzare i dettagli
+_______________________
+
+E' possible visualizzare tutti i dettagli di una persona attraverso il link |E|
 
 Stato di una persona
 --------------------
@@ -47,6 +55,12 @@ Una persona può essere in uno dei seguenti stati:
 Solo nel caso in cui sia disponible sarà possibile aggiungerla ad un turno, se negli stati ferie o malattia sarà comunque visibile nella ricerca anche se non sarà possibile modificarne la disponibilità, nel caso in cui risulti indisponibile non verrà mostrata nella pagina di ricerca.
 
 Per modificare lo stato di una persona è sufficiente utilizzare il selettore indicato dalla lettera |F|
+
+Esportazione
+____________
+
+Tramite la bottone |B| è possibile esportare l'elenco delle persone comprensivo delle di tutte le informazioni in formato .csv 
+
 
 I gruppi
 ========
