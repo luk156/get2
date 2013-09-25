@@ -10,7 +10,9 @@ E' possibile accedere alla sezione "persone" dal menu principale:
 
 Le persone
 ==========
-Attraverso questo modulo è possibile gestire l'anagrafica del personale. 
+Attraverso questo modulo è possibile gestire l'anagrafica del personale.
+
+La tabella PERSONE riporta le informazioni principali delle persone inserite, le persone risultano automaticamente ordinate per conome ma è possibile selezionare l'ordinamento clickando sul titolo delle colonne, tramite i campi |D| è possibile filtrare le persone in base al loro nome,mansioni,gruppi,stato e note.
 
 .. figure:: img/persone-ok.png
 	:align: center
