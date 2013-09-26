@@ -1,0 +1,10 @@
+************
+Impostazioni
+************
+
+.. _mansioni-label:
+	
+	
+Le mansioni
+===========
+

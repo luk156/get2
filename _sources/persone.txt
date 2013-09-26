@@ -1,4 +1,5 @@
 
+.. _persone-label:
 
 **********
 Le persone
@@ -7,6 +8,11 @@ E' possibile accedere alla sezione "persone" dal menu principale:
 
 .. image:: img/persone_menu.png
 	:align: center
+
+.. note::
+
+	Questa sezione è accessibile solo ai membri dello staff o amministratori
+
 
 Le persone
 ==========
@@ -34,7 +40,7 @@ Per modificare/eliminare una persona è sufficiente utilizzare il selettore |G|.
 
 .. warning::
 	
-	eliminando una persona vengono eliminate anche tutte le sue disponibilità passate e quindi le sue statitistiche
+	eliminando una persona vengono eliminate anche tutte le sue disponibilità passate e quindi le sue statistiche
 
 Visualizzare i dettagli
 _______________________
@@ -84,6 +90,12 @@ Aggiungere persone ad un gruppo
 -------------------------------
 
 Per aggiungere o rimuovere una o più persone ad un gruppo è necessario tornare alla sezione PERSONE, selezionarle ed utilizzare il menu posto in alto a destra |C|
+
+Modificare/eliminare un gruppo
+--------------------------------
+
+Per modificare/eliminare un gruppo è sufficiente utilizzare il selettore |B1|.
+
 
 .. |A| image:: img/A.png
 .. |B| image:: img/B.png
