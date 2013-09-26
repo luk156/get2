@@ -944,7 +944,7 @@ tr.requisiti-elenco td {
 	font-size:13px;
 }
 
-span.aggiungi_requisito{
+span.aggiungi_requisito {
 	display:block;
 	line-height:14px;
 	float:right;
@@ -955,3 +955,7 @@ span.aggiungi_requisito{
 	border-radius:0.2em;
 }
 
+ul#mansioni-lista li {
+	background: #ccc;
+	padding-left: 14px; 
+}

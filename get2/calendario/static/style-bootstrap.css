@@ -486,3 +486,8 @@ Back to top button
 #filtro_calendario form {
     margin: 0px 0px 5px;
 }
+
+ul#mansioni-lista li {
+	border-top:1px solid #dedede;
+	padding-top: 2px;
+}
