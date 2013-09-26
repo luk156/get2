@@ -382,7 +382,7 @@ class Turno(models.Model):
 	def verifica_requisito(self,requisito,mansione_id=0,persona_competenze=0):	
 		if requisito.necessario:
 			contatore=0
-			for d in self.turno_disponibilita.filter(tipo="Disponibile").all():
+			for d in self.turno_disponibilita.filter(tipo="Disponibile").exclude(mansione__isnull=True).all():
 				if not requisito.extra:
 					if (requisito.mansione in capacita(d.mansione.id)):
 						contatore+=1

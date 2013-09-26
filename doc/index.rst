@@ -15,4 +15,6 @@ Il software è completamente personalizzabile e può essere adattato ai più dis
    :maxdepth: 2
 
    Introduzione <introduzione.rst>
+   Impostazioni <impostazioni.rst>
    Le persone <persone.rst>
+
