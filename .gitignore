@@ -4,5 +4,5 @@
 get2/settings.py
 ./static
 get2/calendario/settings_calendario.py
-
+get2/static
 
