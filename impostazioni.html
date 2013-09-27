@@ -26,7 +26,8 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/translations.js"></script>
     <link rel="top" title="GeT - Gestionale per turni 1.0 documentation" href="index.html" />
-    <link rel="prev" title="Le persone" href="persone.html" /> 
+    <link rel="next" title="Le persone" href="persone.html" />
+    <link rel="prev" title="Introduzione" href="introduzione.html" /> 
   </head>
   <body>
     <div class="related">
@@ -37,6 +38,9 @@
              accesskey="I">indice</a></li>
         <li class="right" >
           <a href="persone.html" title="Le persone"
+             accesskey="N">successivo</a> |</li>
+        <li class="right" >
+          <a href="introduzione.html" title="Introduzione"
              accesskey="P">precedente</a> |</li>
         <li><a href="index.html">GeT</a> &raquo;</li> 
       </ul>
@@ -49,8 +53,72 @@
             
   <div class="section" id="impostazioni">
 <h1>Impostazioni<a class="headerlink" href="#impostazioni" title="link permanente per questa intestazione">¶</a></h1>
+<p>E&#8217; possibile accedere alla sezione &#8220;impostazioni&#8221; dal menu principale:</p>
+<img alt="_images/impostazioni_menu.png" class="align-center" src="_images/impostazioni_menu.png" />
+<div class="admonition note">
+<p class="first admonition-title">Nota</p>
+<p class="last">Questa sezione è accessibile solo ai membri dello staff o amministratori</p>
+</div>
 <div class="section" id="le-mansioni">
 <span id="mansioni-label"></span><h2>Le mansioni<a class="headerlink" href="#le-mansioni" title="link permanente per questa intestazione">¶</a></h2>
+<img alt="_images/mansioni.png" class="align-center" src="_images/mansioni.png" />
+<p>Le mansioni rappresentano le attività che possono essere svolte dalle persone all&#8217;interno di un turno. Esse possono essere create a proprio piacimento e vengono utilizzare per definire i requisiti delle varie tipologie di turno.</p>
+<p>Le mansioni sono classificate gerarchicamente, in questo modo la persona in grado di svolgere una determinata mansione sarà automaticamente in grado di svolgere anche tutte le sue mansioni figlie. Es. un volontario con capacità di svolgere la mansione di soccorso avanzato  sarà automaticamente in grado di svolgere anche la mansione di soccorso base se correttamente configurata.</p>
+<div class="section" id="aggiungere-una-mansione">
+<h3>Aggiungere una mansione<a class="headerlink" href="#aggiungere-una-mansione" title="link permanente per questa intestazione">¶</a></h3>
+<p>Per aggiungere una mansione è sufficente utilizzare il bottone &#8220;aggiungi mansione&#8221;, nel form successivo sarà richiesto all&#8217;operatore di inserire il nome, la descrizione e l&#8217;eventuale mansione padre. Infine è necessario selezionare un colore ed un icona da assegnare alla mansione che risulterà visibile nella grafica del calendario.</p>
+</div>
+<div class="section" id="modificare-eliminare-una-mansione">
+<h3>Modificare/eliminare una mansione<a class="headerlink" href="#modificare-eliminare-una-mansione" title="link permanente per questa intestazione">¶</a></h3>
+<p>Per modificare/eliminare una mansione è sufficiente utilizzare il selettore nell&#8217;ultima colonna.</p>
+<div class="admonition note">
+<p class="first admonition-title">Nota</p>
+<p class="last">I membri dello staff possono modificare i dati ma solo gli ammnstratori posso eliminare una mansione</p>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Avvertimento</p>
+<p class="last">Eliminando una mansione vengono eliminati anche tutti i requisiti che la utilizzano</p>
+</div>
+</div>
+</div>
+<div class="section" id="notifiche">
+<h2>Notifiche<a class="headerlink" href="#notifiche" title="link permanente per questa intestazione">¶</a></h2>
+<img alt="_images/notifiche.png" class="align-center" src="_images/notifiche.png" />
+<p>Quando una persona utilizzando il proprio utente aggiunge o rimuove la sua disponibilità ad un turno viene automaticamente inviata una notifica all&#8217;amministratore.</p>
+<p>In questa sezione è possibile definire nuove regole di notifica per i membri dello staff. Facendo click su &#8220;AGGIUNGI REGOLA&#8221; si aprirà un form in cui inserire il destinatario delle notifiche, i giorni della settimana per cui sarà avvisato e l&#8217;eventuale tipologia di turno.</p>
+</div>
+<div class="section" id="calendario">
+<h2>Calendario<a class="headerlink" href="#calendario" title="link permanente per questa intestazione">¶</a></h2>
+<img alt="_images/imp_calendario.png" class="align-center" src="_images/imp_calendario.png" />
+<p>Il calendario rappresenta il contenitore per i turni, ogni calendario creato è raggiungibile tramite il menu principale. Utilizzare più calendari permette di suddividere i turni ed avere così una rappresentazione grafica meno ingobrante. Per creare un nuovo calendario è sufficiente utilizzare il bottone &#8220;AGGIUNGI CALENDARIO&#8221;</p>
+<div class="admonition note">
+<p class="first admonition-title">Nota</p>
+<p class="last">Solo gli ammnistratori posso creare, modificare o eliminare un calendario</p>
+</div>
+</div>
+<div class="section" id="tipi-di-turno">
+<h2>Tipi di Turno<a class="headerlink" href="#tipi-di-turno" title="link permanente per questa intestazione">¶</a></h2>
+<img alt="_images/tipo_turno.png" class="align-center" src="_images/tipo_turno.png" />
+<p>I turni sono suddivisi in tipologie, quest&#8217;ultime si rendono necessarie per definirne i requisiti che dovrà soddisfare.</p>
+<div class="section" id="aggiungere-un-tipo-di-turno">
+<h3>Aggiungere un tipo di turno<a class="headerlink" href="#aggiungere-un-tipo-di-turno" title="link permanente per questa intestazione">¶</a></h3>
+<p>Per aggiungere un tipo di turno è sufficiente utilizzare il bottone &#8220;AGGIUNGI TIPO TURNO&#8221;, nel form successivo sarà possibile specificarne il nome,la priorità ed un messaggio di errore da visualizzare ad un utente che cerchi di modificare la propria disponibilità fuori dagli intervalli temporali ammessi (può essere utilizzato per inserire un recapito del responsabile di quel turno). La priorità definisce quale tipologia di turno deve essere visualizzata per prima nel caso che sul calendario siano presenti due turni che iniziano contemporaneamente.</p>
+</div>
+<div class="section" id="i-requisiti">
+<h3>I requisiti<a class="headerlink" href="#i-requisiti" title="link permanente per questa intestazione">¶</a></h3>
+<p>Una volta creata una tipologia di turno è possibile aggiungervi un requisito tramite l&#8217;apposito bottone &#8220;AZIONI -&gt; AGGIUNGI REQUISITO&#8221;.</p>
+<img alt="_images/requisito.png" class="align-center" src="_images/requisito.png" />
+<p>Di seguito sono illustrati i campi che compongono il form di creazione:</p>
+<ul class="simple">
+<li><strong>mansione</strong>: indica la mansione su cui vogliamo porre la condizione</li>
+<li><strong>maggiore o uguale</strong>: indica il numero minimo di persone che devono essere disponbili a svolgere questa mansione (se 0 indica che non c&#8217;è un minimo)</li>
+<li><strong>minore o uguale</strong>: indica il numero massimo di persone che possono essere disponbili a svolgere questa mansione (se 0 indica che non c&#8217;è un massimo)</li>
+<li><strong>necessario</strong>: se selezionato indica che questo requisito DEVE essere soddisfatto affinchè il turno risulti coperto</li>
+<li><strong>sufficiente</strong>: se selezionato basta che questo requisito sia soddisfatto per far apparire il turno coperto indipendentemente da tutti gli altri requisiti</li>
+<li><strong>nascosto</strong>: se selezionato il requisito verrà verificato ma non sarà possibile dare la disponbilità per la relativa mansione (può essere utilizzato ad esempio per limitare il numero dei volontari presenti su un mezzo)</li>
+<li><strong>extra</strong>: se selezioanto il requisito viene verificato su tutte le capacita delle persone disponibili, <em>indipendentemente dal loro ruolo</em> nel turno (può essere utilizzato ad esempio per limitare il numero dei volontari di sesso femminile)</li>
+</ul>
+</div>
 </div>
 </div>
 
@@ -63,14 +131,28 @@
   <h3><a href="index.html">Tabella dei contenuti</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Impostazioni</a><ul>
-<li><a class="reference internal" href="#le-mansioni">Le mansioni</a></li>
+<li><a class="reference internal" href="#le-mansioni">Le mansioni</a><ul>
+<li><a class="reference internal" href="#aggiungere-una-mansione">Aggiungere una mansione</a></li>
+<li><a class="reference internal" href="#modificare-eliminare-una-mansione">Modificare/eliminare una mansione</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#notifiche">Notifiche</a></li>
+<li><a class="reference internal" href="#calendario">Calendario</a></li>
+<li><a class="reference internal" href="#tipi-di-turno">Tipi di Turno</a><ul>
+<li><a class="reference internal" href="#aggiungere-un-tipo-di-turno">Aggiungere un tipo di turno</a></li>
+<li><a class="reference internal" href="#i-requisiti">I requisiti</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 
   <h4>Argomento precedente</h4>
+  <p class="topless"><a href="introduzione.html"
+                        title="capitolo precedente">Introduzione</a></p>
+  <h4>Argomento successivo</h4>
   <p class="topless"><a href="persone.html"
-                        title="capitolo precedente">Le persone</a></p>
+                        title="capitolo successivo">Le persone</a></p>
   <h3>Questa pagina</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/impostazioni.txt"
@@ -101,6 +183,9 @@
              >indice</a></li>
         <li class="right" >
           <a href="persone.html" title="Le persone"
+             >successivo</a> |</li>
+        <li class="right" >
+          <a href="introduzione.html" title="Introduzione"
              >precedente</a> |</li>
         <li><a href="index.html">GeT</a> &raquo;</li> 
       </ul>
