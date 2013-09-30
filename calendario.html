@@ -1,0 +1,192 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Il calendario &mdash; GeT - Gestionale per turni 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="top" title="GeT - Gestionale per turni 1.0 documentation" href="index.html" />
+    <link rel="next" title="Le persone" href="persone.html" />
+    <link rel="prev" title="Il turno" href="turno.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigazione</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Indice generale"
+             accesskey="I">indice</a></li>
+        <li class="right" >
+          <a href="persone.html" title="Le persone"
+             accesskey="N">successivo</a> |</li>
+        <li class="right" >
+          <a href="turno.html" title="Il turno"
+             accesskey="P">precedente</a> |</li>
+        <li><a href="index.html">GeT</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="il-calendario">
+<h1>Il calendario<a class="headerlink" href="#il-calendario" title="link permanente per questa intestazione">¶</a></h1>
+<img alt="_images/calendario_menu.png" class="align-center" src="_images/calendario_menu.png" />
+<p>Il calendario è il contenitore dei <a class="reference internal" href="turno.html"><em>turni</em></a>, essi vengono rappresentati disposti su sette colonne in ordine cronologico.</p>
+<blockquote>
+<div><div class="admonition note">
+<p class="first admonition-title">Nota</p>
+<p class="last">Se due turni inziano contemporaneamente verrannò ordinato secondo la priorità del <a class="reference internal" href="impostazioni.html#tipo-turno-label"><em>tipo di turno</em></a></p>
+</div>
+</div></blockquote>
+<p>GeT può gestire più calendari contemporaneamente riconoscibili dalla medesima icona nel menu principale.</p>
+<div class="section" id="visualizzazione-del-calendario">
+<h2>Visualizzazione del calendario<a class="headerlink" href="#visualizzazione-del-calendario" title="link permanente per questa intestazione">¶</a></h2>
+<p>La visualizzazione del calendario varia secondo il seguente schema:</p>
+<ul class="simple">
+<li>Utente non loggato</li>
+<li>Utente semplice</li>
+<li>Membro dello staff</li>
+</ul>
+<div class="section" id="calendario-utente-non-loggato">
+<h3>Calendario utente non loggato<a class="headerlink" href="#calendario-utente-non-loggato" title="link permanente per questa intestazione">¶</a></h3>
+<img alt="_images/calendario_sloggato.png" class="align-center" src="_images/calendario_sloggato.png" />
+<p>Se si accede al calendario senza prima aver effettuato il login non saranno visibili i nomi delle persone segnate. Saranno però già riconoscibili i turni coperti e non in base al loro colore (verde coperto, rosso non coperto).</p>
+</div>
+<div class="section" id="calendario-utente-semplice">
+<h3>Calendario utente semplice<a class="headerlink" href="#calendario-utente-semplice" title="link permanente per questa intestazione">¶</a></h3>
+<img alt="_images/calendario_utente.png" class="align-center" src="_images/calendario_utente.png" />
+<p>Quando il calendario è visualizzato da un utente semplice dopo aver effettuato il login appariranno i nomi delle persone già segnate e tutti i turni diventeranno clickabili.</p>
+<img alt="_images/utente_disponibilita.png" class="align-center" src="_images/utente_disponibilita.png" />
+<p>Facendo click su un turno è possibili modificare la propria disponibilità. Se la modifica avviene entro i tempi preimpostati verrà mostrata una finestra di dialogo che permetterà all&#8217;utente di selezionare la mansione che vuole ricoprire. Se il click avviene su un turno per cui l&#8217;utente si è già reso disponbile egli sarà in grado di cancellarsi. In entrambi i casi verrà inviata una <a class="reference internal" href="notifiche.html"><em>notifica</em></a> all&#8217;utente dello staff predisposto.</p>
+<blockquote>
+<div><div class="admonition note">
+<p class="first admonition-title">Nota</p>
+<p class="last">I limiti temporali entro cui è possibile segnarsi o cancellarsi da un turno vengono impostati all&#8217; interno di un file di configurazione predefinito</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Nota</p>
+<p class="last">La mansioni che saranno mostrate all&#8217;utente per potersi segnare vengono selezionate dal software in modo che non vadano in conflitto con i requisiti pre-impostati (se ad esempio è necessario massimo una autista e un utente si è già segnato nessun altro potrà farlo)</p>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="calendario-per-lo-staff">
+<h3>Calendario per lo staff<a class="headerlink" href="#calendario-per-lo-staff" title="link permanente per questa intestazione">¶</a></h3>
+<img alt="_images/calendario_staff.png" class="align-center" src="_images/calendario_staff.png" />
+<p>Quando è stato effettuato il login come menbro dello staff la visualizzazione del calendario risulta completa di tutte le informazioni sia sulle persone disponibili sia dei requisiti del singolo turno.</p>
+<p>All&#8217;interno del turno appaiono tutte le mansioni e sulla destra sono indicati i requisiti numerici all&#8217;interno di un badge colorato. Esso può essere dei seguenti colori:</p>
+<ul class="simple">
+<li><strong>verde</strong>: requisito soddisfatto</li>
+<li><strong>rosso</strong>: requisito non soddisfatto</li>
+<li><strong>blu</strong>: requisito sufficiente</li>
+<li><strong>grigio</strong>: requisito non necessario</li>
+</ul>
+<p>Facendo click sul badge si aprirà la pagina di ricerca delle persone per quella mansione.</p>
+<blockquote>
+<div><div class="admonition note">
+<p class="first admonition-title">Nota</p>
+<p class="last">se un requisito è indicato come <em>extra</em> apparirà un asterisco alla sua sinistra</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Nota</p>
+<p class="last">se un requisito è indicato come <em>nascosto</em> non risulterà clickabile e sarà visibile solo allo staff</p>
+</div>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="filtrare-i-turni">
+<h2>Filtrare i turni<a class="headerlink" href="#filtrare-i-turni" title="link permanente per questa intestazione">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Tabella dei contenuti</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Il calendario</a><ul>
+<li><a class="reference internal" href="#visualizzazione-del-calendario">Visualizzazione del calendario</a><ul>
+<li><a class="reference internal" href="#calendario-utente-non-loggato">Calendario utente non loggato</a></li>
+<li><a class="reference internal" href="#calendario-utente-semplice">Calendario utente semplice</a></li>
+<li><a class="reference internal" href="#calendario-per-lo-staff">Calendario per lo staff</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#filtrare-i-turni">Filtrare i turni</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Argomento precedente</h4>
+  <p class="topless"><a href="turno.html"
+                        title="capitolo precedente">Il turno</a></p>
+  <h4>Argomento successivo</h4>
+  <p class="topless"><a href="persone.html"
+                        title="capitolo successivo">Le persone</a></p>
+  <h3>Questa pagina</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/calendario.txt"
+           rel="nofollow">Mostra sorgente</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Ricerca veloce</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Vai" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Inserisci un termine di ricerca un modulo, classe o nome di funzione
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigazione</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Indice generale"
+             >indice</a></li>
+        <li class="right" >
+          <a href="persone.html" title="Le persone"
+             >successivo</a> |</li>
+        <li class="right" >
+          <a href="turno.html" title="Il turno"
+             >precedente</a> |</li>
+        <li><a href="index.html">GeT</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Matteo Lucchesi.
+      Creato con <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

@@ -41,6 +41,8 @@ Per modificare/eliminare una mansione è sufficiente utilizzare il selettore nel
 	
 	Eliminando una mansione vengono eliminati anche tutti i requisiti che la utilizzano
 
+.. _impo_notifiche-label:
+
 Notifiche
 ===========
 
@@ -64,6 +66,7 @@ Il calendario rappresenta il contenitore per i turni, ogni calendario creato è 
 
 	Solo gli ammnistratori posso creare, modificare o eliminare un calendario
 
+.. _tipo_turno-label:
 
 Tipi di Turno
 =============
