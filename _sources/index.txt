@@ -15,9 +15,10 @@ Il software è completamente personalizzabile e può essere adattato ai più dis
    :maxdepth: 2
 
    Introduzione <introduzione.rst>
-   Impostazioni <impostazioni.rst>
-   I turni <turno.rst>
-   Il calendario <calendario.rst>  
    Le persone <persone.rst>
+   Impostazioni <impostazioni.rst>
+   Il calendario <calendario.rst>
+   Il turno <turno.rst>
+   Le disponibilità <disponibilita.rst>
    Notifiche <notifiche.rst>
 

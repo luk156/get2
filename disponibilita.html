@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Il turno &mdash; GeT - Gestionale per turni 1.0 documentation</title>
+    <title>Disponibilità &mdash; GeT - Gestionale per turni 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -26,8 +26,8 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/translations.js"></script>
     <link rel="top" title="GeT - Gestionale per turni 1.0 documentation" href="index.html" />
-    <link rel="next" title="Disponibilità" href="disponibilita.html" />
-    <link rel="prev" title="Il calendario" href="calendario.html" /> 
+    <link rel="next" title="Notifiche" href="notifiche.html" />
+    <link rel="prev" title="Il turno" href="turno.html" /> 
   </head>
   <body>
     <div class="related">
@@ -37,10 +37,10 @@
           <a href="genindex.html" title="Indice generale"
              accesskey="I">indice</a></li>
         <li class="right" >
-          <a href="disponibilita.html" title="Disponibilità"
+          <a href="notifiche.html" title="Notifiche"
              accesskey="N">successivo</a> |</li>
         <li class="right" >
-          <a href="calendario.html" title="Il calendario"
+          <a href="turno.html" title="Il turno"
              accesskey="P">precedente</a> |</li>
         <li><a href="index.html">GeT</a> &raquo;</li> 
       </ul>
@@ -51,34 +51,26 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="il-turno">
-<h1>Il turno<a class="headerlink" href="#il-turno" title="link permanente per questa intestazione">¶</a></h1>
-<p>I turni già presentati nella sezione calendario raccolgono le disponibilità o indisponibilità delle persone</p>
-<div class="section" id="creare-un-nuovo-turno">
-<h2>Creare un nuovo turno<a class="headerlink" href="#creare-un-nuovo-turno" title="link permanente per questa intestazione">¶</a></h2>
-<p>Per creare un nuovo turno è sufficiente utilizzare il pulsante &#8220;NUOVO TURNO&#8221; posto in alto a destra nella pagina di visualizzazione del calendario.</p>
-<p>Nella schermata successiva potrà essere indicato un identificativo (opzionale) per riconoscere il turno appena creato.</p>
-<div class="figure align-center">
-<img alt="_images/nuovo_turno.png" src="_images/nuovo_turno.png" />
+  <div class="section" id="disponibilita">
+<h1>Disponibilità<a class="headerlink" href="#disponibilita" title="link permanente per questa intestazione">¶</a></h1>
+<p>La disponibilità rappresenta la relazione tra una persona ed un turno.</p>
+<p>Essa può essere di di 4 tipi:</p>
+<ul class="simple">
+<li>Disponbile</li>
+<li>Indisponbile</li>
+<li>Da richiamare</li>
+<li>Non risponde</li>
+</ul>
+<div class="section" id="creare-rimuovere-disponibilita">
+<h2>Creare/rimuovere disponibilità<a class="headerlink" href="#creare-rimuovere-disponibilita" title="link permanente per questa intestazione">¶</a></h2>
+<p>L&#8217;inserimento o la cancellazione di una disponbilità può avvenire in due modi:
+* La persona dopo aver effettuato il login esegue un click sul turno scelto
+* Un membro dello staff utilizza la pagina di ricerca delle persone o modifica la disponibilità di un gruppo per un turno</p>
+<div class="section" id="ricerca-persone-per-mansione">
+<h3>Ricerca persone per mansione<a class="headerlink" href="#ricerca-persone-per-mansione" title="link permanente per questa intestazione">¶</a></h3>
 </div>
-<p>E&#8217; necessario indicare giorno ed ora di inizio e fine del turno con il vincolo che questo si sviluppi interamente entro un giorno.
-Selezionamo il tipo di turno (quindi anche i requisiti che questo dovrà avere) ed il punteggio.</p>
-<div class="admonition note">
-<p class="first admonition-title">Nota</p>
-<p class="last">Il punteggio viene utilizzato esclusivamente nelle statistiche e può essere utilizzato per attribuire un valore maggiore ad alcuni turni.</p>
-</div>
-<p>Selezionamo infine il calendario che dovrà ospitare il turno.</p>
-<div class="section" id="ripetere-il-turno">
-<h3>Ripetere il turno<a class="headerlink" href="#ripetere-il-turno" title="link permanente per questa intestazione">¶</a></h3>
-<p>Facendo click sulla voce &#8220;RIPETI TURNO&#8221; si apriranno ulteriori campi che permettono di ripetere il turno appena configurato.
-Indicando l&#8217;intervallo di date e selezionando i giorni richiesti il turno verrà replicato su ognuno di questi giorni al medesimo orario.</p>
-<div class="figure align-center">
-<img alt="_images/ripeti_turno.png" src="_images/ripeti_turno.png" />
-</div>
-<div class="admonition note">
-<p class="first admonition-title">Nota</p>
-<p class="last">I turni creati con la funzione &#8220;RIPETI TURNO&#8221; rimangono legati e sarà possibile modificarli o eliminarli contemporaneamente.</p>
-</div>
+<div class="section" id="aggiunta-di-un-gruppo-ad-un-turno">
+<h3>Aggiunta di un gruppo ad un turno<a class="headerlink" href="#aggiunta-di-un-gruppo-ad-un-turno" title="link permanente per questa intestazione">¶</a></h3>
 </div>
 </div>
 </div>
@@ -91,9 +83,10 @@ Indicando l&#8217;intervallo di date e selezionando i giorni richiesti il turno 
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Tabella dei contenuti</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Il turno</a><ul>
-<li><a class="reference internal" href="#creare-un-nuovo-turno">Creare un nuovo turno</a><ul>
-<li><a class="reference internal" href="#ripetere-il-turno">Ripetere il turno</a></li>
+<li><a class="reference internal" href="#">Disponibilità</a><ul>
+<li><a class="reference internal" href="#creare-rimuovere-disponibilita">Creare/rimuovere disponibilità</a><ul>
+<li><a class="reference internal" href="#ricerca-persone-per-mansione">Ricerca persone per mansione</a></li>
+<li><a class="reference internal" href="#aggiunta-di-un-gruppo-ad-un-turno">Aggiunta di un gruppo ad un turno</a></li>
 </ul>
 </li>
 </ul>
@@ -101,14 +94,14 @@ Indicando l&#8217;intervallo di date e selezionando i giorni richiesti il turno 
 </ul>
 
   <h4>Argomento precedente</h4>
-  <p class="topless"><a href="calendario.html"
-                        title="capitolo precedente">Il calendario</a></p>
+  <p class="topless"><a href="turno.html"
+                        title="capitolo precedente">Il turno</a></p>
   <h4>Argomento successivo</h4>
-  <p class="topless"><a href="disponibilita.html"
-                        title="capitolo successivo">Disponibilità</a></p>
+  <p class="topless"><a href="notifiche.html"
+                        title="capitolo successivo">Notifiche</a></p>
   <h3>Questa pagina</h3>
   <ul class="this-page-menu">
-    <li><a href="_sources/turno.txt"
+    <li><a href="_sources/disponibilita.txt"
            rel="nofollow">Mostra sorgente</a></li>
   </ul>
 <div id="searchbox" style="display: none">
@@ -135,10 +128,10 @@ Indicando l&#8217;intervallo di date e selezionando i giorni richiesti il turno 
           <a href="genindex.html" title="Indice generale"
              >indice</a></li>
         <li class="right" >
-          <a href="disponibilita.html" title="Disponibilità"
+          <a href="notifiche.html" title="Notifiche"
              >successivo</a> |</li>
         <li class="right" >
-          <a href="calendario.html" title="Il calendario"
+          <a href="turno.html" title="Il turno"
              >precedente</a> |</li>
         <li><a href="index.html">GeT</a> &raquo;</li> 
       </ul>

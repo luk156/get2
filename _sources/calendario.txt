@@ -57,14 +57,19 @@ Calendario per lo staff
 
 Quando è stato effettuato il login come menbro dello staff la visualizzazione del calendario risulta completa di tutte le informazioni sia sulle persone disponibili sia dei requisiti del singolo turno.
 
-All'interno del turno appaiono tutte le mansioni e sulla destra sono indicati i requisiti numerici all'interno di un badge colorato. Esso può essere dei seguenti colori:
+La visualizzazione del turno per i membri dello staff è la seguente:
+
+.. image:: img/turno.png
+	:align: center
+
+All'interno del turno appaiono tutte le mansioni e sulla destra sono indicati i requisiti numerici all'interno di un badge colorato |E|. Esso può essere dei seguenti colori:
 
 * **verde**: requisito soddisfatto
 * **rosso**: requisito non soddisfatto
 * **blu**: requisito sufficiente
 * **grigio**: requisito non necessario
 
-Facendo click sul badge si aprirà la pagina di ricerca delle persone per quella mansione.
+Facendo click sul badge si aprirà la pagina di ricerca delle persone per quella mansione. si veda la sezione :doc:`disponibilità <disponibilita>` per ulteriori informazioni.
 
  .. note::
  	se un requisito è indicato come *extra* apparirà un asterisco alla sua sinistra
@@ -72,7 +77,22 @@ Facendo click sul badge si aprirà la pagina di ricerca delle persone per quella
  .. note::
  	se un requisito è indicato come *nascosto* non risulterà clickabile e sarà visibile solo allo staff
 
+Nella parte superiore del turno sono indicate l'ora di inizio e fine del turno |A| ed un identificativo opzionale |D|.
 
-Filtrare i turni
+Sono inoltre presenti due bottoni: il primo |B| richiama la pagina di modifica della disponibilità per un gruppo (si faccia ulteriore riferimento alla sezione :doc:`disponibilità <disponibilita>`) ed il secondo |C| permette di modificare o eliminare il turno.
+
+
+Infine in basso |F| è riportata la tipologia del turno. 
+
+
+Filtrare i giorni
 =================
 
+Tramite il bottone in alto a destra "FILTRA" è possibile visualizzare solo determinati giorni della settimana, i giorni feriali, prefestivi o festivi.
+
+.. |A| image:: img/A.png
+.. |B| image:: img/B.png
+.. |C| image:: img/C.png
+.. |D| image:: img/D.png
+.. |E| image:: img/E.png
+.. |F| image:: img/F.png
