@@ -5,6 +5,79 @@ from persone.models import *
 from django.shortcuts import render_to_response, redirect, render
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.decorators import login_required
+
+import csv, codecs
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.views import redirect_to_login
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
+
+def export_csv(request, queryset, export_data, filter_by=None, file_name='exported_data.csv',
+        object_id=None, not_available='n.a.', require_permission=None):
+    if require_permission and not (request.user.is_authenticated() and
+                       request.user.has_perm(require_permission)):
+        return redirect_to_login(request.path)
+    queryset = queryset._clone()
+    if filter_by and object_id:
+        queryset = queryset.filter(**{'%s' % filter_by: object_id})
+
+    def get_attr(object, attrs=None):
+        if attrs == None or attrs == []:
+            return object
+        current = attrs.pop(0)
+        try:
+            return get_attr(callable(getattr(object, current)) and
+                        getattr(object, current)() or
+                        getattr(object, current), attrs)
+        except (ObjectDoesNotExist, AttributeError):
+            return not_available
+
+    def stream_csv(data):
+        sio = StringIO()
+        writer = csv.writer(sio)
+        writer.writerow(data)
+        return sio.getvalue()
+
+    def streaming_response_generator():
+        yield codecs.BOM_UTF8
+        yield stream_csv(zip(*export_data)[0])
+        import django.db.models.query
+        for item in queryset.iterator():
+
+            row = []
+            for attr in zip(*export_data)[1]:
+                obj = get_attr(item, attr.split('.'))
+                #pdb.set_trace()
+                if callable(obj):
+                    res = obj()
+                else:
+                    res = obj
+                if isinstance(res, unicode) is True:
+                    res = res.encode('utf-8')
+                elif isinstance(res, datetime.date) or isinstance(res, datetime.datetime):
+                	res=res.__str__()
+                elif isinstance(res, django.db.models.query.QuerySet) is True:
+                	elenco=''
+                	for i in res:
+                		elenco+=i.__unicode__()+", "
+                	res=elenco
+                elif isinstance(res, str) is False:
+                    res = str(res)
+                row.append(res)
+            yield stream_csv(row)
+
+    rsp = HttpResponse(streaming_response_generator(),
+                        mimetype='text/csv',
+                        content_type='text/csv; charset=utf-8')
+    filename = object_id and callable(file_name) and file_name(object_id) or file_name
+    rsp['Content-Disposition'] = 'attachment; filename=%s' % filename.encode('utf-8')
+    return rsp
+
+
+
+
 ####   persona   ####
 @user_passes_test(lambda u:u.is_staff)
 def export_persona(request):
@@ -18,8 +91,6 @@ def export_persona(request):
     	('tel2','tel2'),
     	('stato','stato'),
     	('competenze','competenze.all'),
-    	('retraining','retraining'),
-    	('retraining_blsd','retraining_blsd'),
     	('note','note'),
     	])
 
