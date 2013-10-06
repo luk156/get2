@@ -127,6 +127,7 @@ INSTALLED_APPS = (
     'dajaxice',
     'dajax',
     'get2.calendario',
+    'persone',
     'crispy_forms',
     #'debug_toolbar',
     # Uncomment the next line to enable the admin:
@@ -164,7 +165,7 @@ LOGGING = {
     }
 }
 
-AUTH_PROFILE_MODULE = 'calendario.Persona'
+AUTH_PROFILE_MODULE = 'persone.Persona'
 
 INTERNAL_IPS = ('127.0.0.1',)
 

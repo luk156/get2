@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     url(dajaxice_config.dajaxice_url, include('dajaxice.urls')),
     # statistiche
     url(r'^statistiche/', include('statistiche.urls')),
+    url(r'^persone/', include('persone.urls')),
 )
 
 urlpatterns += patterns('get2.calendario',
@@ -21,17 +22,6 @@ urlpatterns += patterns('get2.calendario',
 	(r'^touch/(?P<v>\w+)$', 'views.touch'),
 	(r'^calendario/(?P<cal_id>\w+)/$', 'views.calendario'),
 	(r'^calendario/(?P<cal_id>\w+)/(?P<azione>\w+)$', 'views.calendarioazione'),
-	# persone
-	(r'^persone/$', 'views.elenco_persona'),
-	(r'^persone/export/$', 'views.export_persona'),
-	(r'^persone/nuovo/$', 'views.nuovo_persona'),
-	(r'^persone/modifica/(?P<persona_id>\w+)/$', 'views.modifica_persona'),
-	(r'^persone/visualizza/(?P<persona_id>\w+)/$', 'views.visualizza_persona'),
-	(r'^persone/elimina/(?P<persona_id>\w+)/$', 'views.elimina_persona'),
-	(r'^persone/aggiungilista/(?P<azione>\w+)/(?P<arg>\w+)/(?P<persone>\w+)/$', 'views.aggiungilista'),
-	(r'^persone/gruppo/nuovo/$', 'views.nuovo_gruppo'),
-	(r'^persone/gruppo/modifica/(?P<gruppo_id>\w+)/$', 'views.modifica_gruppo'),
-	(r'^persone/gruppo/elimina/(?P<gruppo_id>\w+)/$', 'views.elimina_gruppo'),	
 	# utenti
 	(r'^utenti/$', 'views.elenco_utente'),
 	(r'^utenti/nuovo/$', 'views.nuovo_utente'),
