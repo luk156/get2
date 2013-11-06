@@ -176,3 +176,20 @@ INTERNAL_IPS = ('127.0.0.1',)
 #EMAIL_PORT = your_host_port #For gmail: 587
 
 CRISPY_TEMPLATE_PACK = 'bootstrap' 
+
+
+GET_TITOLO="Test"
+
+#Giorni disponibili per modificare una disponibilita da parte di una persona
+GET_DISP_MIN=1
+GET_DISP_MAX=60
+
+GET_CANC_MIN=2
+GET_CANC_MAX=0
+
+GET_ID_ADMIN_NOTIFICHE=1
+
+GET_ANALYTICS="UA-42859137-1"
+GET_DOMINIO="gis3w.it"
+
+GET_MAIL_NOTIFICA = "no@no.it"
