@@ -244,3 +244,12 @@ def mansioni_disponibili(request,turno_id):
                 html+='<a href="#" onclick="disponibilita_'+str(t.id)+'('+str(requisito.mansione.id)+');" class="btn btn-primary btn-block btn-large"><i class="'+str(requisito.mansione.icona)+'"></i> '+str(requisito.mansione)+'</a></br>'
     dajax.assign("#mansioni-turno"+str(t.id), "innerHTML", html)
     return dajax.json() 
+
+@dajaxice_register
+def elimina_turno(request,turno_id):
+    dajax=Dajax()
+    t=Turno.objects.get(id=turno_id)
+    html_elimina = render_to_string( 'elimina_turno.html', { 't': t, 'request':request } )
+    dajax.assign('div #elimina-turno-'+str(t.id), 'innerHTML', html_elimina)
+    dajax.script("$('#elimina-turno-"+str(t.id)+"').modal('show');")
+    return dajax.json() 
