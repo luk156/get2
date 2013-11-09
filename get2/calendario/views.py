@@ -685,7 +685,7 @@ def nuovo_turno(request, cal_id):
 			return HttpResponseRedirect('/calendario/'+str(cal_id)) # Redirect after POST
 	else:
 		c=Calendario.objects.get(id=cal_id)
-		form = TurnoFormRipeti(initial={'calendario': c})
+		form = TurnoFormRipeti(initial={'calendario': c, 'coperto': False })
 		form.helper.form_action = '/turno/'+str(cal_id)+'/nuovo/'
 	return render(request,'form_turno.html',{'form': form,'azione': azione,'request':request})
 

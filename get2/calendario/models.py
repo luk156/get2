@@ -74,6 +74,16 @@ class Requisito(models.Model):
 	extra=models.BooleanField('Extra', default=False, help_text="Il requisito viene verificato su tutte le capacita delle persone disponibili, indipendentemtne dal loro ruolo nel turno")
 	def clickabile(self):
 		return  not (self.extra or self.nascosto)
+	def save(self, *args, **kwargs):
+		super(Requisito, self).save(*args, **kwargs)
+		for t in Turno.objects.filter(tipo=self.tipo_turno):
+			t.coperto = t.calcola_coperto()
+			t.save()
+	def delete(self, *args, **kwargs):
+		super(Requisito, self).delete(*args, **kwargs)
+		for t in Turno.objects.filter(tipo=self.tipo_turno):
+			t.coperto = t.calcola_coperto()
+			t.save()
 
 class RequisitoForm(forms.ModelForm):
 	class Meta:
@@ -135,6 +145,7 @@ class Turno(models.Model):
 	occorrenza = models.ForeignKey(Occorrenza, blank=True, null=True)
 	valore = models.IntegerField('Punteggio',default=1)
 	calendario = models.ForeignKey(Calendario, null=True, on_delete=models.SET_NULL, default=1)
+	coperto = models.BooleanField(default=False)
 	def verifica_requisito(self,requisito,mansione_id=0,persona_competenze=0):	
 		if requisito.necessario:
 			contatore=0
@@ -161,7 +172,7 @@ class Turno(models.Model):
 			return True
 	def gia_disponibili(self,requisito):
 		return self.turno_disponibilita.filter(tipo="Disponibile",mansione=requisito.mansione).count()
-	def coperto(self):
+	def calcola_coperto(self):
 		if self.tipo:
 			for r in Requisito.objects.filter(tipo_turno=self.tipo_id):
 				if not self.verifica_requisito(r):
@@ -188,6 +199,8 @@ class Turno(models.Model):
 	def save(self, *args, **kwargs):
 		self.inizio = self.inizio.replace(second=0)
 		self.fine = self.fine.replace(second=0)
+		super(Turno, self).save(*args, **kwargs)
+		self.coperto = self.calcola_coperto()
 		super(Turno, self).save(*args, **kwargs)
 
 class TurnoForm(forms.ModelForm):
@@ -287,6 +300,14 @@ class Disponibilita(models.Model):
 	note =  models.TextField( blank=True, null=True, default="")
 	class Meta:
 		ordering = ['mansione']
+	def save(self, *args, **kwargs):
+		super(Disponibilita, self).save(*args, **kwargs)
+		self.turno.coperto = self.turno.calcola_coperto()
+		self.turno.save()
+	def delete(self, *args, **kwargs):
+		super(Disponibilita, self).delete(*args, **kwargs)
+		self.turno.coperto = self.turno.calcola_coperto()
+		self.turno.save()
 
 class Notifica(models.Model):
 	destinatario = models.ForeignKey(User, related_name='destinatario_user')
