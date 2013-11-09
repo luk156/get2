@@ -66,8 +66,6 @@ urlpatterns += patterns('get2.calendario',
 urlpatterns += patterns('django.contrib.auth.views',
     #utente
     #(r'^utente/nuovo/$', 'turni.views.nuovoutente'),
-    (r'^utenti/modifica_password/$', 'password_change'),
-    (r'^utenti/modifica_password/ok/$', 'password_change_done'),
     (r'^utenti/reset/$', 'password_reset'),
     (r'^utenti/reset/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', 'password_reset_confirm'),
     (r'^utenti/reset/completa/$', 'password_reset_complete'),
