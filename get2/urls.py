@@ -26,6 +26,7 @@ urlpatterns += patterns('get2.calendario',
 	(r'^utenti/$', 'views.elenco_utente'),
 	(r'^utenti/nuovo/$', 'views.nuovo_utente'),
 	(r'^utenti/modifica/(?P<utente_id>\w+)/password/$', 'views.modifica_password_utente'),
+	(r'^utenti/modifica/(?P<utente_id>\w+)/password_personale/$', 'views.modifica_password_personale'),
 	(r'^utenti/modifica/(?P<utente_id>\w+)/$', 'views.modifica_utente'),
 	(r'^utenti/elimina/(?P<utente_id>\w+)/$', 'views.elimina_utente'),
 	# mansioni
@@ -74,6 +75,6 @@ urlpatterns += patterns('django.contrib.auth.views',
     )
 
 urlpatterns += patterns('',
-    (r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name':'login.html'} ),
+    (r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name':'registration/login.html'} ),
     (r'^accounts/logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}),
     )

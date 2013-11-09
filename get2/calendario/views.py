@@ -7,7 +7,7 @@ import calendar,datetime,locale
 from django.db.models import Q, Count, Sum
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import AdminPasswordChangeForm
+from django.contrib.auth.forms import AdminPasswordChangeForm, PasswordChangeForm
 import pdb
 from django.template import RequestContext
 from django.forms.formsets import formset_factory
@@ -16,7 +16,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.decorators import login_required
 import csv, codecs
-
+from django.core.exceptions import PermissionDenied
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.views import redirect_to_login
 try:
@@ -403,6 +403,8 @@ def elenco_notifica(request):
 	notifiche=Notifica.objects.filter(destinatario=u).order_by('data').reverse()
 	return render(request,'notifiche.html',{'notifiche':notifiche,'request':request})
 
+#un utente dello staf potrebbe cancellare delle notifiche di altri!!!
+
 @user_passes_test(lambda u: u.is_staff)
 def elimina_notifica(request,notifica_id):
 	n=Notifica.objects.get(id=notifica_id)
@@ -466,6 +468,20 @@ def modifica_password_utente(request,utente_id):
 	else:
 		form = AdminPasswordChangeForm(user=user)
 	return render(request,'form_password_utente.html',{'request':request, 'form': form, 'user': user,})
+
+def modifica_password_personale(request,utente_id):
+	user = User.objects.get(id=utente_id)
+	if request.user.is_staff or request.user==user:
+		if request.method == 'POST': # If the form has been submitted...
+			form = PasswordChangeForm(user=user, data=request.POST)
+			if form.is_valid():
+				form.save()
+				return HttpResponseRedirect('/') # Redirect after POST
+		else:
+			form = PasswordChangeForm(user=user)
+		return render(request,'form_password_personale.html',{'request':request, 'form': form, 'user': user,})
+	else:
+		raise PermissionDenied
 
 ####   fine utenti   ####
 

@@ -165,6 +165,8 @@ LOGGING = {
     }
 }
 
+LOGIN_REDIRECT_URL="/"
+
 AUTH_PROFILE_MODULE = 'persone.Persona'
 
 INTERNAL_IPS = ('127.0.0.1',)
