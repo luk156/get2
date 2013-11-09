@@ -82,11 +82,11 @@
 						<span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
-							<li><a href="/accounts/logout">Esci</a></li>
+							<li><a href="/accounts/logout"><i class="icon-signout"></i> Esci</a></li>
 							{%if request.user.get_profile %}
-								<li><a href="/persone/visualizza/{{request.user.get_profile.id}}">Il mio profilo</a></li>
+								<li><a href="/persone/visualizza/{{request.user.get_profile.id}}"><i class="icon-user"></i> Il mio profilo</a></li>
 							{% endif%}
-							<li><a href="/utenti/modifica/{{request.user.id}}/password_personale/">Modifica password</a></li>
+							<li><a href="/utenti/modifica/{{request.user.id}}/password_personale/"><i class="icon-key"></i> Modifica password</a></li>
 						</ul>
 					</div>
 				{%else%}
@@ -94,7 +94,7 @@
 					<input type="hidden" name="next" value="{{request.path}}" />
 					<input id="id_username" type="text" name="username" class="input" placeholder="Utente">
 					<input type="password" name="password" id="id_password" class="input" placeholder="Password">
-					<input type="submit" value=" Accedi " class="btn btn-primary"></form>
+					<button type="submit" class="btn btn-primary"> Accedi <i class="icon-signin icon-white"></i></button></form>
 				{% endif %}
 		</div>
 	</div>
