@@ -13,7 +13,7 @@
 <div style="margin:10px;">
 
 {% if form.non_field_errors %}
-            <div class="alert alert-error"><p>{{ form.non_field_errors }}</p></div>
+            <div class="alert alert-error"><p>{{ form.non_field_errors }}</p><a class="btn" href="/utenti/reset/"> Recupera la Password <i class="icon-key"></i></a></div>
 {% endif %}
 
 <form method="post" action="{% url 'django.contrib.auth.views.login' %}">{% csrf_token %}
@@ -32,7 +32,10 @@
 
   {% endfor %}
 	<input type="hidden" name="next" value="{{ next }}">
+	<div class="form-actions">
+	
 	<button type="submit" class="btn btn-primary"> Accedi <i class="icon-signin icon-white"></i></button>
+	</div>
 </form>
 
   
