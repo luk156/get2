@@ -1,6 +1,6 @@
 
 {% load template_filters %}
-
+{% with t.turno_disponibilita.all  as alldisp %}
 
 <div class="turno span7 {{forloop.counter}}" id="turno-{{t.id}}" >
 	
@@ -67,8 +67,10 @@
 			{% endif %}
 				<div class="persone">
 					<ul>
-					{% for disp in t.turno_disponibilita.all %}
-						{% if disp.mansione = requisito.mansione and disp.tipo = 'Disponibile' %}
+					
+					
+					{% for disp in alldisp %}
+						{% if disp.mansione.id = requisito.mansione.id and disp.tipo = 'Disponibile' %}
 							<li class="persona-turno"><i class="{{disp.mansione.icona}}" style="color:{{disp.mansione.colore}}"></i> 
 								{% if request.user.is_authenticated or touch == "yes" %}
 					 				{{disp.persona}} {% if disp.note %}<i class="tp icon-comment" data-toggle="tooltip" title="{{disp.note}}"></i>{% endif %}
@@ -78,6 +80,7 @@
 							</li>
 						{% endif %}
 					{% endfor %}
+					
 					</ul>
 				</div>
 		{% endif %}
@@ -111,7 +114,7 @@
 	</div>
 	<div class="persone">
 		<ul>
-	{% for disp in t.turno_disponibilita.all %}
+	{% for disp in alldisp %}
 		{% if disp.mansione not in t.mansioni and disp.tipo = 'Disponibile' %}
 		<script>$('#altre-mansioni-{{t.id}}').removeClass('hide');</script>
 			<li class="persona-turno">
@@ -186,3 +189,4 @@
 	</div>
 </div>
 {% endif %}
+{% endwith %}
