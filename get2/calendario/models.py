@@ -146,12 +146,11 @@ class Turno(models.Model):
 	valore = models.IntegerField('Punteggio',default=1)
 	calendario = models.ForeignKey(Calendario, null=True, on_delete=models.SET_NULL, default=1)
 	coperto = models.BooleanField(default=False)
+	requisiti = models.ManyToManyField(Requisito, blank=True, null=True, related_name='requisiti_turno', through='Cache_requisito')
 	def verifica_requisito(self,requisito,mansione_id=0,persona_competenze=0):	
 		if requisito.necessario:
 			contatore=0
 			if mansione_id!=0 and persona_competenze!=0:
-				#p = Persona.objects.get(id=persona_id)
-				#pdb.set_trace()
 				if (not requisito.extra and requisito.mansione in capacita(mansione_id)):
 					contatore+=1
 				if (requisito.extra and requisito.mansione in persona_competenze):
@@ -171,7 +170,7 @@ class Turno(models.Model):
 		else:
 			return True
 	def gia_disponibili(self,requisito):
-		return self.turno_disponibilita.filter(tipo="Disponibile",mansione=requisito.mansione).count()
+		return self.cache_requisito_set.get(requisito=requisito).persone_disponibili.count()
 	def calcola_coperto(self):
 		if self.tipo:
 			for r in Requisito.objects.filter(tipo_turno=self.tipo_id):
@@ -199,9 +198,25 @@ class Turno(models.Model):
 	def save(self, *args, **kwargs):
 		self.inizio = self.inizio.replace(second=0)
 		self.fine = self.fine.replace(second=0)
+		for r in self.tipo.req_tipo_turno.all():
+			try:
+				cr=Cache_requisito.objects.get(turno=self,requisito=r)
+			except:
+				cr=Cache_requisito(turno=self,requisito=r,verificato=False)
+				cr.save()
+			cr.verificato=self.verifica_requisito(r)
+			cr.persone_disponibili.clear()
+			cr.persone_disponibili.add(*[d.persona for d in self.turno_disponibilita.filter(tipo="Disponibile",mansione=r.mansione)])
+			cr.save()
 		super(Turno, self).save(*args, **kwargs)
 		self.coperto = self.calcola_coperto()
 		super(Turno, self).save(*args, **kwargs)
+
+class Cache_requisito(models.Model):
+    turno = models.ForeignKey(Turno)
+    requisito = models.ForeignKey(Requisito)
+    verificato = models.BooleanField(default=False)
+    persone_disponibili = models.ManyToManyField(Persona, blank=True, null=True, related_name='persone_requisito')
 
 class TurnoForm(forms.ModelForm):
 	modifica_futuri=forms.BooleanField(label="modifica occorrenze future",required=False, help_text="<i class='icon-warning-sign'></i> sara' modificato solo l'orario e non la data!")
@@ -227,7 +242,7 @@ class TurnoForm(forms.ModelForm):
 		self.fields['tipo'].required = True
 	class Meta:
 		model = Turno
-		exclude = ('occorrenza')
+		exclude = ('occorrenza','requisiti')
 	def clean(self):
 		data = self.cleaned_data
 		if data.get('inizio')>data.get('fine'):
