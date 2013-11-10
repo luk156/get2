@@ -205,18 +205,14 @@ class Turno(models.Model):
 				cr=Cache_requisito(turno=self,requisito=r,verificato=False)
 				cr.save()
 			cr.verificato=self.verifica_requisito(r)
-			cr.persone_disponibili.clear()
-			cr.persone_disponibili.add(*[d.persona for d in self.turno_disponibilita.filter(tipo="Disponibile",mansione=r.mansione)])
+			cr.disponibilita.clear()
+			cr.disponibilita=self.turno_disponibilita.filter(tipo="Disponibile",mansione=r.mansione)
 			cr.save()
 		super(Turno, self).save(*args, **kwargs)
 		self.coperto = self.calcola_coperto()
 		super(Turno, self).save(*args, **kwargs)
 
-class Cache_requisito(models.Model):
-    turno = models.ForeignKey(Turno)
-    requisito = models.ForeignKey(Requisito)
-    verificato = models.BooleanField(default=False)
-    persone_disponibili = models.ManyToManyField(Persona, blank=True, null=True, related_name='persone_requisito')
+
 
 class TurnoForm(forms.ModelForm):
 	modifica_futuri=forms.BooleanField(label="modifica occorrenze future",required=False, help_text="<i class='icon-warning-sign'></i> sara' modificato solo l'orario e non la data!")
@@ -323,6 +319,12 @@ class Disponibilita(models.Model):
 		super(Disponibilita, self).delete(*args, **kwargs)
 		self.turno.coperto = self.turno.calcola_coperto()
 		self.turno.save()
+
+class Cache_requisito(models.Model):
+    turno = models.ForeignKey(Turno)
+    requisito = models.ForeignKey(Requisito)
+    verificato = models.BooleanField(default=False)
+    disponibilita = models.ManyToManyField(Disponibilita, blank=True, null=True, related_name='disponibilita_requisito')
 
 class Notifica(models.Model):
 	destinatario = models.ForeignKey(User, related_name='destinatario_user')

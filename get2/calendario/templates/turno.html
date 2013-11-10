@@ -69,10 +69,10 @@
 				<div class="persone">
 					<ul>
 					
-					{% for p in r.persone_disponibili.all %}
-							<li class="persona-turno"><i class="{{r.mansione.icona}}" style="color:{{r.mansione.colore}}"></i> 
+					{% for d in r.disponibilita.all %}
+							<li class="persona-turno"><i class="{{d.mansione.icona}}" style="color:{{d.mansione.colore}}"></i> 
 								{% if request.user.is_authenticated or touch == "yes" %}
-					 				{{p}} {% if disp.note %}<i class="tp icon-comment" data-toggle="tooltip" title="{{disp.note}}"></i>{% endif %}
+					 				{{d.persona}} {% if d.note %}<i class="tp icon-comment" data-toggle="tooltip" title="{{d.note}}"></i>{% endif %}
 								{% else %}
 					 				----
 								{% endif %}
