@@ -149,13 +149,6 @@ class Turno(models.Model):
 	def verifica_requisito(self,requisito,mansione_id=0,persona_competenze=0):	
 		if requisito.necessario:
 			contatore=0
-			for d in self.turno_disponibilita.filter(tipo="Disponibile").exclude(mansione__isnull=True).all():
-				if not requisito.extra:
-					if (requisito.mansione in capacita(d.mansione.id)):
-						contatore+=1
-				else:
-				 	if (requisito.mansione in d.persona.competenze.all() ):
-						contatore+=1
 			if mansione_id!=0 and persona_competenze!=0:
 				#p = Persona.objects.get(id=persona_id)
 				#pdb.set_trace()
@@ -163,8 +156,15 @@ class Turno(models.Model):
 					contatore+=1
 				if (requisito.extra and requisito.mansione in persona_competenze):
 					contatore+=1
-			if contatore>requisito.massimo and requisito.massimo!=0:
-				return False
+			for d in self.turno_disponibilita.filter(tipo="Disponibile").exclude(mansione__isnull=True).all():
+				if not requisito.extra:
+					if (requisito.mansione in capacita(d.mansione.id)):
+						contatore+=1
+				else:
+				 	if (requisito.mansione in d.persona.competenze.all() ):
+						contatore+=1
+				if contatore>requisito.massimo and requisito.massimo!=0:
+					return False
 			if contatore<requisito.minimo and requisito.minimo!=0:
 				return False
 			return True
@@ -353,4 +353,3 @@ class Impostazioni_notificaForm(forms.ModelForm):
 			)
 		)
 		super(Impostazioni_notificaForm, self).__init__(*args, **kwargs)
-
