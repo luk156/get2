@@ -10,7 +10,7 @@ from django.template import Context, Template
 @dajaxice_register
 def aggiorna_statistiche(request,da,al):
         dajax=Dajax()
-        import pdb; pdb.set_trace()
+        #import pdb; pdb.set_trace()
         if (da=="0"):
                 dati=statistiche_intervallo(request,datetime.date(2000,1,1),datetime.datetime.now().date())
                 html_statistiche = render_to_string( 'statistiche/statistiche.html', { 'dati': dati, 'elenco_statistiche': elenco_statistiche, 'request':request } )
