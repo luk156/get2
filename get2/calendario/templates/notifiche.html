@@ -14,7 +14,7 @@ function notifiche(value){
 	var counter = 0;  // counter for checked checkboxes  
 	var i = 0;  // loop variable
 	var url = '';
-	var input_obj = document.getElementsByTagName('input'); 
+	var input_obj = document.getElementsByClassName('ch');
 
 	for (i=0; i < input_obj.length; i++){ 
 		if (input_obj[i].type == 'checkbox' && input_obj[i].checked == true){  
@@ -24,6 +24,7 @@ function notifiche(value){
    		}  
 	if (counter > 0){  
 	url = url.substr(1);
+	alert(url);
 	Dajaxice.get2.calendario.notifiche(Dajax.process,{'option':value,'url':url});
 	}  
 	else alert("Non ci sono notifiche selezionate!");  

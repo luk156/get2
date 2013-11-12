@@ -418,7 +418,7 @@ def elimina_notifica(request,notifica_id):
 def elenco_utente(request):
 	#if request.user.is_staff:
 	utenti = User.objects.all()
-	persone = Persona.objects.all()
+	persone = Persona.objects.all().order_by('cognome','nome')
 	risposta = HttpResponse(render(request,'elenco_utente.html',{'utenti':utenti,'persone':persone,'request':request,}))
 	return risposta
 	#else:

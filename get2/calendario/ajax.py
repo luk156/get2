@@ -114,7 +114,7 @@ def utente_staff(request,user_id):
 @dajaxice_register
 def notifiche(request,option,url):
     dajax = Dajax()
-    #pdb.set_trace()
+    pdb.set_trace()
     i=0
     dajax.assign('#sele','value','')
     for not_id in url.rsplit('_'):
@@ -135,7 +135,7 @@ def notifiche(request,option,url):
             dajax.remove('#not-inv-'+not_id)
             #dajax.alert(request.user.get_profile().nonletti())
     try:
-        non=request.user.get_profile().notifiche_non_lette()
+        non=request.user.pers_user.notifiche_non_lette()
         if non >0:
            dajax.assign('#notifiche-badge','innerHTML',non)
         else:

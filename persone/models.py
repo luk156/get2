@@ -166,7 +166,7 @@ class MansioneForm(forms.ModelForm):
 
 
 class Persona(models.Model):
-	user = models.ForeignKey(User, unique=True, blank=True, null=True, related_name='pers_user')
+	user = models.OneToOneField(User, unique=True, blank=True, null=True, related_name='pers_user')
 	nome = models.CharField('Nome',max_length=200)
 	cognome = models.CharField('Cognome',max_length=200)
 	indirizzo = models.TextField('Indirizzo', blank=True, null=True, )
@@ -181,7 +181,7 @@ class Persona(models.Model):
 	giorniNotificaMail = models.PositiveSmallIntegerField('Giorni di anticipo', choices=GIORNI, default=2, blank=True, null=True )
 	def notifiche_non_lette(self):
 		n=0
-		for m in Notifica.objects.filter(destinatario=self.user):
+		for m in self.user.destinatario_user.all():
 			if(m.letto == False):
 				n+=1
 		return n
