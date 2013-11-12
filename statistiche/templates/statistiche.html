@@ -1,168 +1,66 @@
-<ul class="nav nav-tabs" id="myTab">
-	{% for statistica in elenco_statistiche %}
-		<li {%if forloop.first %} class="active" {% endif%}><a href="#tabs-{{ forloop.counter }}" data-toggle="tab" >{{statistica}}</a></li>
-	{% endfor %}
-</ul>
+{% extends "base.html" %}
+{% load static %}
 
-<div class="tab-content">
-	{% for statistica,dati in dati %}
-
-	<div class="tab-pane {%if forloop.first %} active{% endif%}" id="tabs-{{ forloop.counter }}">
-
-	<div id="container-{{ forloop.counter }}" style="min-width: 200px; height: 400px; margin: 0 auto"></div>
-
-	{% if statistica = "Turni totali" %}
-		<script type="text/javascript">
-		
-
-		$(function () {
-		        $('#container-{{ forloop.counter }}').highcharts({
-		            chart: {
-		                type: 'column',
-		                margin: [ 50, 50, 100, 80]
-		            },
-		            title: {
-		                text: ''
-		            },
-		            xAxis: {
-		                categories: [
-		                    {% for d in dati|slice:":10"%}
-								"{{d}}",
-							{% endfor%}
-		                ],
-		                labels: {
-		                    rotation: -45,
-		                    align: 'right',
-		                    style: {
-		                        fontSize: '13px',
-		                        fontFamily: 'Verdana, sans-serif'
-		                    }
-		                }
-		            },
-		            yAxis: {
-		                min: 0,
-		                title: {
-		                    text: 'Turni'
-		                }
-		            },
-		            legend: {
-		                enabled: false
-		            },
-		            series: [{
-		                name: 'Population',
-		                data: [
-		                    {% for d in dati|slice:":10"%}
-								{{d.tot_turni}},
-							{% endfor%}
-		                ],
-		                dataLabels: {
-		                    enabled: true,
-		                    rotation: -90,
-		                    color: '#FFFFFF',
-		                    align: 'right',
-		                    x: 4,
-		                    y: 10,
-		                    style: {
-		                        fontSize: '13px',
-		                        fontFamily: 'Verdana, sans-serif'
-		                    }
-		                }
-		            }]
-		        });
-		    });
-		
+{% block head %}
+	<script src="/static/js/highcharts/highcharts.js"></script>
+	<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="excanvas.min.js"></script><![endif]-->
+	<link href="/static/css/datetimepicker.css" rel="stylesheet">
+	<script src="/static/js/bootstrap-datetimepicker.min.js"></script>
+	<script src="/static/js/locales/bootstrap-datetimepicker.it.js"></script>
+{% endblock%}
 
 
-		</script>
-		<table class="table table-striped" >
-		<thead>
-		<tr>
-		<th>Posizione</th><th>Persona</th><th>Turni effettuati</th>
-		</tr></thead>
-		{% for d in dati %}
-		<tr>
-		<td>{{forloop.counter}}</td><td>{{d}}</td><td>{{d.tot_turni}}</td>
-		</tr>
-		{% endfor%}
-		</table>
-	{% endif %}
-
-	{% if statistica = "Punteggi totali" %}
-
-		<script type="text/javascript">			
-			$(function () {
-		        $('#container-{{ forloop.counter }}').highcharts({
-		            chart: {
-		                type: 'column',
-		                margin: [ 50, 50, 100, 80],
-		                width: $('#tabs-1').width()
-		            },
-		            title: {
-		                text: ''
-		            },
-		            xAxis: {
-		                categories: [
-		                    {% for d in dati|slice:":10"%}
-								"{{d}}",
-							{% endfor %}
-		                ],
-		                labels: {
-		                    rotation: -45,
-		                    align: 'right',
-		                    style: {
-		                        fontSize: '13px',
-		                        fontFamily: 'Verdana, sans-serif'
-		                    }
-		                }
-		            },
-		            yAxis: {
-		                min: 0,
-		                title: {
-		                    text: 'Punti'
-		                }
-		            },
-		            legend: {
-		                enabled: false
-		            },
-		            series: [{
-		                name: 'Population',
-		                data: [
-		                    {% for d in dati|slice:":10"%}
-								{{d.tot_punti}},
-							{% endfor%}
-		                ],
-		                dataLabels: {
-		                    enabled: true,
-		                    rotation: -90,
-		                    color: '#FFFFFF',
-		                    align: 'right',
-		                    x: 4,
-		                    y: 10,
-		                    style: {
-		                        fontSize: '13px',
-		                        fontFamily: 'Verdana, sans-serif'
-		                    }
-		                }
-		            }]
-		        });
-		    });
+{% block header %}
+		<h4 class="header">Statistiche</h4>
+{% endblock %}
 
 
-		
-		</script>
-		<table class="table table-striped" >
-		<thead>
-		<tr>
-		<th>Posizione</th><th>Persona</th><th>Punteggio</th>
-		</tr></thead>
-		{% for d in dati %}
-		<tr>
-		<td>{{forloop.counter}}</td><td>{{d}}</td><td>{{d.tot_punti}}</td>
-		</tr>
-		{% endfor%}
-		</table>
-	{% endif %}
+{% block main %}
 
+<script>
+function aggiorna_statistiche(){
+	Dajaxice.statistiche.aggiorna_statistiche(Dajax.process,{'da':$("#from").val(),'al':$("#to").val()});
+};
+
+window.onload = function() 
+{ 
+	$(".datetimeinput").datetimepicker({format: 'dd/mm/yyyy hh:ii:ss',autoclose: true,minuteStep: 15,language: 'it'});
+	$(".dateinput").datetimepicker({format: 'dd/mm/yyyy',autoclose: true,minView:2,language: 'it'});
+};
+
+function reset(){
+	$("#from").val('');
+	$("#to").val('');
+	Dajaxice.statistiche.aggiorna_statistiche(Dajax.process,{'da':'0','al':$("#to").val()});
+};
+</script>
+
+<div class="row-fluid">
+	<div class="span1">
+		<div class="box">
+			<div class="box-header">
+				<a href="#" class="pull-right btn" onclick="reset()" ><i class="icon-refresh"></i></a>
+				<h5><i class="icon-cog"></i> Intervallo</h5>
+			</div>
+			<div class="box-content">
+				<fieldset>
+				<label for="from">Inizio</label>
+				<div class="input-append">
+					<input type="text" id="from" name="from" class="span4 dateinput"/>
+					<span class="add-on"><i class="icon-calendar"></i></span>
+				</div>
+				<label for="to">Fine</label>
+				<div class="input-append">
+					<input type="text" id="to" name="to"  class="span4 dateinput"/>
+					<span class="add-on"><i class="icon-calendar"></i></span>
+				</div>
+				<input type="button" value="Applica" class="btn" onclick="aggiorna_statistiche()"/>
+				</fieldset>
+			</div>
+		</div>
 	</div>
-	{% endfor %}
+	<div class="span6" id="stat">
+		{% include "statistiche/statistiche.html" %}
+	</div>
 </div>
+{% endblock %}
