@@ -199,7 +199,7 @@ class Turno(models.Model):
 	def save(self, *args, **kwargs):
 		self.inizio = self.inizio.replace(second=0)
 		self.fine = self.fine.replace(second=0)
-		for c in Cache_requisito.objects.get(turno=self):
+		for c in Cache_requisito.objects.filter(turno=self):
 			c.delete()
 		for r in self.tipo.req_tipo_turno.all():
 			cr=Cache_requisito(turno=self,requisito=r,verificato=False)
