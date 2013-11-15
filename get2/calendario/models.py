@@ -199,12 +199,13 @@ class Turno(models.Model):
 	def save(self, *args, **kwargs):
 		self.inizio = self.inizio.replace(second=0)
 		self.fine = self.fine.replace(second=0)
+		super(Turno, self).save(*args, **kwargs)
 		for c in Cache_requisito.objects.filter(turno=self):
 			c.delete()
 		for r in self.tipo.req_tipo_turno.all():
 			cr=Cache_requisito(turno=self,requisito=r,verificato=False)
+			cr.save()
 			cr.verificato=self.verifica_requisito(r)
-			cr.disponibilita.clear()
 			cr.disponibilita=self.turno_disponibilita.filter(tipo="Disponibile",mansione=r.mansione)
 			cr.save()
 		super(Turno, self).save(*args, **kwargs)
@@ -312,11 +313,9 @@ class Disponibilita(models.Model):
 		ordering = ['mansione']
 	def save(self, *args, **kwargs):
 		super(Disponibilita, self).save(*args, **kwargs)
-		self.turno.coperto = self.turno.calcola_coperto()
 		self.turno.save()
 	def delete(self, *args, **kwargs):
 		super(Disponibilita, self).delete(*args, **kwargs)
-		self.turno.coperto = self.turno.calcola_coperto()
 		self.turno.save()
 
 class Cache_requisito(models.Model):
@@ -324,6 +323,8 @@ class Cache_requisito(models.Model):
     requisito = models.ForeignKey(Requisito)
     verificato = models.BooleanField(default=False)
     disponibilita = models.ManyToManyField(Disponibilita, blank=True, null=True, related_name='disponibilita_requisito')
+    class Meta:
+    	ordering = ['requisito']
 
 class Notifica(models.Model):
 	destinatario = models.ForeignKey(User, related_name='destinatario_user')
