@@ -86,6 +86,7 @@ class Requisito(models.Model):
 			t.save()
 
 class RequisitoForm(forms.ModelForm):
+
 	class Meta:
 		model = Requisito
 		exclude = ('tipo_turno')
@@ -198,12 +199,10 @@ class Turno(models.Model):
 	def save(self, *args, **kwargs):
 		self.inizio = self.inizio.replace(second=0)
 		self.fine = self.fine.replace(second=0)
+		for c in Cache_requisito.objects.get(turno=self):
+			c.delete()
 		for r in self.tipo.req_tipo_turno.all():
-			try:
-				cr=Cache_requisito.objects.get(turno=self,requisito=r)
-			except:
-				cr=Cache_requisito(turno=self,requisito=r,verificato=False)
-				cr.save()
+			cr=Cache_requisito(turno=self,requisito=r,verificato=False)
 			cr.verificato=self.verifica_requisito(r)
 			cr.disponibilita.clear()
 			cr.disponibilita=self.turno_disponibilita.filter(tipo="Disponibile",mansione=r.mansione)
