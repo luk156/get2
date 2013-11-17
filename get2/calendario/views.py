@@ -122,7 +122,7 @@ def home(request):
 
 def touch(request,v):
 	risposta=HttpResponseRedirect('/')
-	risposta.set_cookie('touch', value=v)
+	risposta.set_cookie('touch', max_age=60*60*24*365, value=v)
 	return risposta
 
 
