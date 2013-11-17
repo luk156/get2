@@ -11,7 +11,7 @@ from django.contrib.auth.forms import AdminPasswordChangeForm, PasswordChangeFor
 import pdb
 from django.template import RequestContext
 from django.forms.formsets import formset_factory
-import get2.calendario.settings_calendario as settings_calendario
+from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.decorators import login_required
@@ -280,18 +280,18 @@ def verifica_intervallo(turno,persona):
 	if diff.days<0:
 		verifica=False
 		errore='Turno passato'
-	elif persona.persona_disponibilita.filter(turno=turno, tipo="Disponibile") and diff.days<settings_calendario.CANC_MIN:
+	elif persona.persona_disponibilita.filter(turno=turno, tipo="Disponibile") and diff.days<settings.GET_CANC_MIN:
 		verifica=False
-		errore='Troppo vicino (intervallo minore di '+str(settings_calendario.CANC_MIN)+' giorni)'
-	elif persona.persona_disponibilita.filter(turno=turno, tipo="Disponibile") and diff.days<settings_calendario.CANC_MAX:
+		errore='Troppo vicino (intervallo minore di '+str(settings.GET_CANC_MIN)+' giorni)'
+	elif persona.persona_disponibilita.filter(turno=turno, tipo="Disponibile") and diff.days<settings.GET_CANC_MAX:
 		verifica=False
-		errore='Troppo lontano (intervallo maggiore di '+str(settings_calendario.CANC_MAX)+' giorni)'
-	elif diff.days<settings_calendario.DISP_MIN:
+		errore='Troppo lontano (intervallo maggiore di '+str(settings.GET_CANC_MAX)+' giorni)'
+	elif diff.days<settings.GET_DISP_MIN:
 		verifica=False
-		errore='Troppo vicino (intervallo minore di '+str(settings_calendario.DISP_MIN)+' giorni)'
-	elif diff.days>settings_calendario.DISP_MAX:
+		errore='Troppo vicino (intervallo minore di '+str(settings.GET_DISP_MIN)+' giorni)'
+	elif diff.days>settings.GET_DISP_MAX:
 		verifica=False
-		errore='Troppo lontano (intervallo maggiore di '+str(settings_calendario.DISP_MAX)+' giorni)'
+		errore='Troppo lontano (intervallo maggiore di '+str(settings.GET_DISP_MAX)+' giorni)'
 	else:
 		verifica=True
 		errore=''
