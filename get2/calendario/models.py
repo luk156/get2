@@ -200,15 +200,19 @@ class Turno(models.Model):
 		self.inizio = self.inizio.replace(second=0)
 		self.fine = self.fine.replace(second=0)
 		super(Turno, self).save(*args, **kwargs)
+		requisiti = self.tipo.req_tipo_turno.all()
 		for c in Cache_requisito.objects.filter(turno=self):
-			c.delete()
-		for r in self.tipo.req_tipo_turno.all():
-			cr=Cache_requisito(turno=self,requisito=r,verificato=False)
-			cr.save()
+			if c.requisito not in requisiti:
+				c.delete()
+		for r in requisiti:
+			try:
+				cr=Cache_requisito.objects.get(turno=self,requisito=r)
+			except:
+				cr=Cache_requisito(turno=self,requisito=r,verificato=False)
+				cr.save()
 			cr.verificato=self.verifica_requisito(r)
 			cr.disponibilita=self.turno_disponibilita.filter(tipo="Disponibile",mansione=r.mansione)
 			cr.save()
-		super(Turno, self).save(*args, **kwargs)
 		self.coperto = self.calcola_coperto()
 		super(Turno, self).save(*args, **kwargs)
 

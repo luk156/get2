@@ -7,6 +7,8 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Field, MultiField, HTML
 from crispy_forms.bootstrap import *
 from django.utils.text import capfirst
+from django.db.models import Q
+
 # Create your models here.
 
 class MultiSelectFormField(forms.MultipleChoiceField):
