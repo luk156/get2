@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block head %}
 	<script src="/static/js/highcharts/highcharts.js"></script>
@@ -19,7 +20,20 @@
 
 <script>
 function aggiorna_statistiche(){
-	Dajaxice.statistiche.aggiorna_statistiche(Dajax.process,{'da':$("#from").val(),'al':$("#to").val()});
+	mansioni = "";
+	$('.mansioni:checkbox').each(function() {if (this.checked) {
+        mansioni = mansioni + '_' + this.value;
+    }});
+    mansioni = mansioni.substr(1);
+    if (mansioni==""){alert("seleziona almeno una mansione!"); return;} 		
+    gruppi = "";
+	$('.gruppi:checkbox').each(function() {if (this.checked) {
+        gruppi = gruppi + '_' + this.value;
+    }});
+    gruppi = gruppi.substr(1);
+    if (gruppi==""){alert("seleziona almeno un gruppo!"); return;} 
+	Dajaxice.statistiche.aggiorna_statistiche(Dajax.process,{'da':$("#id_start").val(),'al':$("#id_stop").val(),'mansioni':mansioni,'gruppi':gruppi});
+
 };
 
 window.onload = function() 
@@ -29,15 +43,17 @@ window.onload = function()
 };
 
 function reset(){
-	$("#from").val('');
-	$("#to").val('');
-	Dajaxice.statistiche.aggiorna_statistiche(Dajax.process,{'da':'0','al':$("#to").val()});
+	$("#id_start").val('');
+	$("#id_stop").val('');
+	$('.mansioni').prop('checked',true);
+	$('.gruppi').prop('checked',true);
+	Dajaxice.statistiche.aggiorna_statistiche(Dajax.process,{'da':'0','al':'0','mansioni':'all','gruppi':'all'});
 };
 </script>
 
 <div class="row-fluid">
 	<div class="span1">
-		<div class="box">
+{% comment %} 		<div class="box">
 			<div class="box-header">
 				<a href="#" class="pull-right btn" onclick="reset()" ><i class="icon-refresh"></i></a>
 				<h5><i class="icon-cog"></i> Intervallo</h5>
@@ -56,6 +72,14 @@ function reset(){
 				</div>
 				<input type="button" value="Applica" class="btn" onclick="aggiorna_statistiche()"/>
 				</fieldset>
+			</div>
+		</div> {% endcomment %}
+		<div class="box">
+			<div class="box-header">
+				<h5><i class="icon-filter"></i> Filtra:</h5>
+			</div>
+			<div class="box-content">
+				{% crispy FiltroStatistiche %}
 			</div>
 		</div>
 	</div>

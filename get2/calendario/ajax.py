@@ -7,6 +7,7 @@ from dajaxice.utils import deserialize_form
 import pdb
 from django.template.loader import render_to_string
 from django.template import Context, Template
+
 @dajaxice_register
 def mansione_form(request, form):
     dajax = Dajax()
@@ -27,26 +28,6 @@ def mansione_form(request, form):
     return dajax.json()
 
 
-@dajaxice_register
-def elimina_persona(request,persona_id):
-	dajax = Dajax()
-	if request.user.is_superuser:
-		per=Persona.objects.get(id=persona_id)
-		per.delete()
-		dajax.remove('#persona-'+str(persona_id))
-	dajax.script("$('#loading').addClass('hidden');")
-	return dajax.json()
-
-@dajaxice_register
-def elimina_gruppo(request,gruppo_id):
-	#pdb.set_trace()
-	dajax = Dajax()
-	if request.user.is_staff:
-		gr=Gruppo.objects.get(id=gruppo_id)
-		gr.delete()
-		dajax.remove('#gruppo-'+str(gruppo_id))
-	dajax.script("$('#loading').addClass('hidden');")
-	return dajax.json()
 
 @dajaxice_register
 def elimina_utente(request,utente_id):
@@ -214,15 +195,6 @@ def disp_nota(request,disp_id,nota):
 	dajax.script('$(".bottom-right").notify({ message: { text: "Nota modificata" }}).show();')
 	return dajax.json()
 
-@dajaxice_register
-def persona_stato(request,stato,persona):
-	dajax=Dajax()
-	per=Persona.objects.get(id=persona)
-	per.stato=stato
-	per.save()
-	dajax.script('$(".bottom-right").notify({ message: { text: "Modifiche apportate con successo" }}).show();')
-	dajax.script("$('#loading').addClass('hidden');")
-	return dajax.json()
 
 @dajaxice_register
 def occorrenze(request,occ_id,turno_id):
