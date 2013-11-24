@@ -11,8 +11,8 @@ class FiltroStatistiche(forms.Form):
 	lista_gruppi = [('all','senza gruppo')]
 	lista_mansioni = Mansione.objects.all().values_list('id','nome')
 	lista_gruppi += Gruppo.objects.all().values_list('id','nome')
-	mansioni = forms.MultipleChoiceField( label = "",	choices = lista_mansioni, initial = [x[0] for x in lista_mansioni], required = False, )
-	gruppi = forms.MultipleChoiceField( label = "",	choices = lista_gruppi,initial = [x[0] for x in lista_gruppi],  required = False, )
+	mansioni = forms.MultipleChoiceField( label = "",	choices = lista_mansioni, initial = [x[0] for x in lista_mansioni], required = False,  widget = forms.CheckboxSelectMultiple,)
+	gruppi = forms.MultipleChoiceField( label = "",	choices = lista_gruppi,initial = [x[0] for x in lista_gruppi],  required = False,  widget = forms.CheckboxSelectMultiple,)
 	start =  forms.DateField(label = "dal:", required = False,)
 	stop = forms.DateField(label = "al:", required = False,)
 	def __init__(self, *args, **kwargs):
@@ -24,10 +24,10 @@ class FiltroStatistiche(forms.Form):
 				AppendedText('stop', '<i class="icon-calendar"></i>',  css_class="dateinput"),
 				),
 			Fieldset('<h6>Mansioni</h6>',
-				InlineCheckboxes('mansioni', css_class="mansioni"),
+				Field('mansioni', css_class="mansioni"),
 				),
 			Fieldset('<h6>Gruppi</h6>',
-				InlineCheckboxes('gruppi', css_class="gruppi"),
+				Field('gruppi', css_class="gruppi"),
 				),
 			FormActions(
 			    Button('save', 'Filtra', onclick="aggiorna_statistiche();", css_class="btn-primary"),
