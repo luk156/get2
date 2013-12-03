@@ -129,6 +129,7 @@ INSTALLED_APPS = (
     'get2.calendario',
     'persone',
     'crispy_forms',
+    #'gcm',
     #'debug_toolbar',
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
@@ -179,6 +180,7 @@ INTERNAL_IPS = ('127.0.0.1',)
 
 CRISPY_TEMPLATE_PACK = 'bootstrap' 
 
+GCM_APIKEY = "<api_key>"
 
 GET_TITOLO="Test"
 

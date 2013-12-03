@@ -76,3 +76,7 @@ urlpatterns += patterns('',
     (r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name':'registration/login.html'} ),
     (r'^accounts/logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}),
     )
+
+#urlpatterns = patterns('',
+#    url(r'', include('gcm.urls')),
+#)

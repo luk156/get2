@@ -43,7 +43,14 @@
 		                min: 0,
 		                title: {
 		                    text: 'Turni'
-		                }
+		                },
+		                stackLabels: {
+                    		enabled: true,
+                    		style: {
+                        		fontWeight: 'bold',
+                        		color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                    			}
+                		}
 		            },
 		            legend: {
 		                enabled: false

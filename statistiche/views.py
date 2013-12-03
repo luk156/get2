@@ -32,13 +32,16 @@ def statistiche_intervallo(request, inizio = datetime.date(2000,1,1), fine = dat
 	dati.append(elenco_statistiche)
 	stat=[]
 	if senza_gruppo:
-		stat.append(Persona.objects.exclude().filter(Q(Q(componenti_gruppo__isnull=True) | Q(componenti_gruppo__in=gruppi)),persona_disponibilita__tipo="Disponibile", persona_disponibilita__mansione__in=mansioni, persona_disponibilita__turno__inizio__gte=inizio, persona_disponibilita__turno__fine__lte=fine ).annotate(tot_turni=Count('persona_disponibilita')).order_by("-tot_turni"))
-		stat.append(Persona.objects.exclude().filter(Q(Q(componenti_gruppo__isnull=True) | Q(componenti_gruppo__in=gruppi)),persona_disponibilita__tipo="Disponibile", persona_disponibilita__mansione__in=mansioni, persona_disponibilita__turno__inizio__gte=inizio, persona_disponibilita__turno__fine__lte=fine ).annotate(tot_punti=Sum('persona_disponibilita__turno__valore')).order_by("-tot_punti"))
+		dettaglio_turni=[]
+		for persona in Persona.objects.filter(Q(Q(componenti_gruppo__isnull=True) | Q(componenti_gruppo__in=gruppi)),persona_disponibilita__tipo="Disponibile", persona_disponibilita__mansione__in=mansioni, persona_disponibilita__turno__inizio__gte=inizio, persona_disponibilita__turno__fine__lte=fine ):
+			dettaglio_turni.append(Mansione.objects.filter(mansione_disponibilita__persona=persona).annotate(tot_turni=Count('mansione_disponibilita')).order_by("-tot_turni"))
+		stat.append(Persona.objects.filter(Q(Q(componenti_gruppo__isnull=True) | Q(componenti_gruppo__in=gruppi)),persona_disponibilita__tipo="Disponibile", persona_disponibilita__mansione__in=mansioni, persona_disponibilita__turno__inizio__gte=inizio, persona_disponibilita__turno__fine__lte=fine ).annotate(tot_turni=Count('persona_disponibilita')).order_by("-tot_turni"))
+		stat.append(Persona.objects.filter(Q(Q(componenti_gruppo__isnull=True) | Q(componenti_gruppo__in=gruppi)),persona_disponibilita__tipo="Disponibile", persona_disponibilita__mansione__in=mansioni, persona_disponibilita__turno__inizio__gte=inizio, persona_disponibilita__turno__fine__lte=fine ).annotate(tot_punti=Sum('persona_disponibilita__turno__valore')).order_by("-tot_punti"))
 	else:
-		stat.append(Persona.objects.exclude().filter(componenti_gruppo__in=gruppi,persona_disponibilita__tipo="Disponibile", persona_disponibilita__mansione__in=mansioni, persona_disponibilita__turno__inizio__gte=inizio, persona_disponibilita__turno__fine__lte=fine ).annotate(tot_turni=Count('persona_disponibilita')).order_by("-tot_turni"))
-		stat.append(Persona.objects.exclude().filter(componenti_gruppo__in=gruppi,persona_disponibilita__tipo="Disponibile", persona_disponibilita__mansione__in=mansioni, persona_disponibilita__turno__inizio__gte=inizio, persona_disponibilita__turno__fine__lte=fine ).annotate(tot_punti=Sum('persona_disponibilita__turno__valore')).order_by("-tot_punti"))
+		stat.append(Persona.objects.filter(componenti_gruppo__in=gruppi,persona_disponibilita__tipo="Disponibile", persona_disponibilita__mansione__in=mansioni, persona_disponibilita__turno__inizio__gte=inizio, persona_disponibilita__turno__fine__lte=fine ).annotate(tot_turni=Count('persona_disponibilita')).order_by("-tot_turni"))
+		stat.append(Persona.objects.filter(componenti_gruppo__in=gruppi,persona_disponibilita__tipo="Disponibile", persona_disponibilita__mansione__in=mansioni, persona_disponibilita__turno__inizio__gte=inizio, persona_disponibilita__turno__fine__lte=fine ).annotate(tot_punti=Sum('persona_disponibilita__turno__valore')).order_by("-tot_punti"))
 
-	#pdb.set_trace()
+	pdb.set_trace()
 	dati.append(stat)
 	dati=zip(*dati)
 	#risp=Persona.objects.filter(persona_disponibilita__tipo="Disponibile").annotate(tot_turni=Count('persona_disponibilita'))
