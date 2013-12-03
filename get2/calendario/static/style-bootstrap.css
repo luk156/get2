@@ -491,3 +491,7 @@ ul#mansioni-lista li {
 	border-top:1px solid #dedede;
 	padding-top: 2px;
 }
+
+input {
+   max-width: 100%;
+} 

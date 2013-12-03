@@ -20,8 +20,8 @@ class FiltroStatistiche(forms.Form):
 		self.helper.form_id = 'FiltroStatistiche'
 		self.helper.layout = Layout(
 			Fieldset('<h6>Data</h6>',
-				AppendedText('start', '<i class="icon-calendar"></i>', css_class="dateinput"),
-				AppendedText('stop', '<i class="icon-calendar"></i>',  css_class="dateinput"),
+				AppendedText('start', '<i class="icon-calendar"></i>', css_class="dateinput span4"),
+				AppendedText('stop', '<i class="icon-calendar"></i>',  css_class="dateinput span4"),
 				),
 			Fieldset('<h6>Mansioni</h6>',
 				Field('mansioni', css_class="mansioni"),
