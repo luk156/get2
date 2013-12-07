@@ -15,7 +15,7 @@
 	{% for r in t.cache_requisito_set.all %}
 		{% if r.requisito.clickabile  %}
 
-				<h6 class="h6-mansione-{{r.requisito.mansione.id}}">{{r.requisito.mansione}} </h6> 
+				<b class="h6-mansione-{{r.requisito.mansione.id}}">{{r.requisito.mansione}} </b> 
 				<div class="persone">
 					{% for d in r.disponibilita.all %}
 					 				{{d.persona}}</br>

@@ -24,20 +24,10 @@
     <tr>
         {% for giorno, turno in calendario %}
             <td>
-            <table>
-            <tr>
-            <td>
-            {% for t in turno %}
-                <tr>
-                <td>                   
+            {% for t in turno %}  
                     {% include "stampa_turno.html" %}
-                </td>
-                </tr>
             {% endfor %}
 
-            </td>
-            </tr>
-            </table>
             </td>
         {% endfor %}
     </tr>
