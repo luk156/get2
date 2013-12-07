@@ -1,35 +1,43 @@
-
 <ul class="nav nav-tabs" id="myTab">
-
-                <li class="active" ><a href="#tabs-1" data-toggle="tab" >Turni effettuati</a></li>
-
+	{% for statistica in elenco_statistiche %}
+		<li {%if forloop.first %} class="active" {% endif%}><a href="#tabs-{{ forloop.counter }}" data-toggle="tab" >{{statistica}}</a></li>
+	{% endfor %}
 </ul>
 
 <div class="tab-content">
+	{% for statistica,dati in dati %}
 
-    <div class="tab-pane active" id="tabs-1">
+	<div class="tab-pane {%if forloop.first %} active{% endif%}" id="tabs-{{ forloop.counter }}">
 
-	<div id="container-1" style="min-width: 200px; height: 400px; margin: 0 auto"></div>
+	<div id="container-{{ forloop.counter }}" style="min-width: 200px; height: 400px; margin: 0 auto"></div>
 
+	{% if statistica = "Turni totali" %}
 		<script type="text/javascript">
 		
 
 		$(function () {
-		        $('#container-1').highcharts({
+		        $('#container-{{ forloop.counter }}').highcharts({
 		            chart: {
 		                type: 'column',
-		                margin: [ 50, 50, 100, 80],
-                 		width: $('#tabs-1').width()
+		                margin: [ 50, 50, 100, 80]
 		            },
 		            title: {
 		                text: ''
 		            },
 		            xAxis: {
 		                categories: [
-		                    {% for p in persone|slice:":10" %}
-								"{{p|safe|escape}}",
+		                    {% for d in dati|slice:":10"%}
+								"{{d}}",
 							{% endfor%}
-		                ]
+		                ],
+		                labels: {
+		                    rotation: -45,
+		                    align: 'right',
+		                    style: {
+		                        fontSize: '13px',
+		                        fontFamily: 'Verdana, sans-serif'
+		                    }
+		                }
 		            },
 		            yAxis: {
 		                min: 0,
@@ -45,57 +53,123 @@
                 		}
 		            },
 		            legend: {
-		                align: 'right',
-		                x: -70,
-		                verticalAlign: 'top',
-		                y: 20,
-		                floating: true,
-		                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColorSolid) || 'white',
-		                borderColor: '#CCC',
-		                borderWidth: 1,
-		                shadow: false,
-		                useHTML: true,
+		                enabled: false
 		            },
-		            tooltip: {
-		                formatter: function() {
-		                    return '<b>'+ this.x +'</b><br/>'+
-		                        this.series.name +': '+ this.y +'<br/>'+
-		                        'Totale: '+ this.point.stackTotal;
-		            	},
-		            	useHTML: true,
-		            },
-		            plotOptions: {
-		                column: {
-		                    stacking: 'normal',
-		                    dataLabels: {
-		                        enabled: true,
-		                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+		            series: [{
+		                name: 'Population',
+		                data: [
+		                    {% for d in dati|slice:":10"%}
+								{{d.tot_turni}},
+							{% endfor%}
+		                ],
+		                dataLabels: {
+		                    enabled: true,
+		                    rotation: -90,
+		                    color: '#FFFFFF',
+		                    align: 'right',
+		                    x: 4,
+		                    y: 10,
+		                    style: {
+		                        fontSize: '13px',
+		                        fontFamily: 'Verdana, sans-serif'
 		                    }
 		                }
-		            },
-		            series: [
-
-		            	{% for x,y in serie_tot_turni%}
-		                	{
-		                		name: "{{x.icon|safe}}",
-			                	data:  {{y|slice:":10"}},
-			                	color: '{{x.colore}}' },
-		                    
-						{% endfor%}
-		                
-		                
-								
-		            ]
-
+		            }]
 		        });
 		    });
 		
 
 
 		</script>
+		<table class="table table-striped" >
+		<thead>
+		<tr>
+		<th>Posizione</th><th>Persona</th><th>Turni effettuati</th>
+		</tr></thead>
+		{% for d in dati %}
+		<tr>
+		<td>{{forloop.counter}}</td><td>{{d}}</td><td>{{d.tot_turni}}</td>
+		</tr>
+		{% endfor%}
+		</table>
+	{% endif %}
+
+	{% if statistica = "Punteggi totali" %}
+
+		<script type="text/javascript">			
+			$(function () {
+		        $('#container-{{ forloop.counter }}').highcharts({
+		            chart: {
+		                type: 'column',
+		                margin: [ 50, 50, 100, 80],
+		                width: $('#tabs-1').width()
+		            },
+		            title: {
+		                text: ''
+		            },
+		            xAxis: {
+		                categories: [
+		                    {% for d in dati|slice:":10"%}
+								"{{d}}",
+							{% endfor %}
+		                ],
+		                labels: {
+		                    rotation: -45,
+		                    align: 'right',
+		                    style: {
+		                        fontSize: '13px',
+		                        fontFamily: 'Verdana, sans-serif'
+		                    }
+		                }
+		            },
+		            yAxis: {
+		                min: 0,
+		                title: {
+		                    text: 'Punti'
+		                }
+		            },
+		            legend: {
+		                enabled: false
+		            },
+		            series: [{
+		                name: 'Population',
+		                data: [
+		                    {% for d in dati|slice:":10"%}
+								{{d.tot_punti}},
+							{% endfor%}
+		                ],
+		                dataLabels: {
+		                    enabled: true,
+		                    rotation: -90,
+		                    color: '#FFFFFF',
+		                    align: 'right',
+		                    x: 4,
+		                    y: 10,
+		                    style: {
+		                        fontSize: '13px',
+		                        fontFamily: 'Verdana, sans-serif'
+		                    }
+		                }
+		            }]
+		        });
+		    });
+
+
+		
+		</script>
+		<table class="table table-striped" >
+		<thead>
+		<tr>
+		<th>Posizione</th><th>Persona</th><th>Punteggio</th>
+		</tr></thead>
+		{% for d in dati %}
+		<tr>
+		<td>{{forloop.counter}}</td><td>{{d}}</td><td>{{d.tot_punti}}</td>
+		</tr>
+		{% endfor%}
+		</table>
+	{% endif %}
 
 	</div>
-
-	</div>
-	
-
+	{% endfor %}
+</div>

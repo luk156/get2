@@ -129,8 +129,6 @@ class Mansione(models.Model):
 	def __unicode__(self):
 		return '%s' % (self.nome)
 	# Milite tipo A, milite tipo B, centralinista ecc...
-	def icon(self):
-		return "<i class='%s' style='color:%s'> </i>%s" % (self.icona, self.colore, self.nome)
 	def root(self):
 		if self.padre:
 			return False
