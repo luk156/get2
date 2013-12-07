@@ -21,6 +21,7 @@ urlpatterns += patterns('get2.calendario',
 	(r'^calendario/$', 'views.home'),
 	(r'^touch/(?P<v>\w+)$', 'views.touch'),
 	(r'^calendario/(?P<cal_id>\w+)/$', 'views.calendario'),
+	(r'^stampa_calendario/(?P<cal_id>\w+)/$', 'views.stampa_calendario'),
 	(r'^calendario/(?P<cal_id>\w+)/(?P<azione>\w+)$', 'views.calendarioazione'),
 	# utenti
 	(r'^utenti/$', 'views.elenco_utente'),

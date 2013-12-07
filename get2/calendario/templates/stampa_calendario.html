@@ -1,0 +1,41 @@
+{% load template_filters %}
+
+<!DOCTYPE html>
+<html lang="it">
+    <head>
+        <meta charset="utf-8">
+        <title>{% block title %}GeT | {{titolo}}{% endblock %}</title>
+        <meta name="copyright" content="GNU Affero General Public License" />
+        <meta name="source-code" content="https://github.com/luk156/get2" />
+        <link href="/static/css/print_calendar.css" rel="stylesheet">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
+    </head>
+    <body>
+    <table class="table table-condensed">
+    <thead>
+    <tr>
+        {% for giorno, turno in calendario %}
+            <th>
+        		<h5><center>{{giorno|date:"D d M"}}</center></h5>
+        	</th>
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        {% for giorno, turno in calendario %}
+            <td>
+            {% for t in turno %}
+                    
+                    {% include "stampa_turno.html" %}
+        {% endfor %}
+
+            </td>
+        {% endfor %}
+    </tr>
+    </tbody>
+    </table>
+
+    </body>
+</html>

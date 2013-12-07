@@ -244,6 +244,42 @@ def calendario(request,cal_id):
 	risposta.set_cookie('sezione', value='calendario')
 	return risposta
 
+
+def stampa_calendario(request,cal_id):
+	c=Calendario(id=cal_id)
+
+	if 'start' in request.session:
+		start=request.session['start']
+	else:
+		start=datetime.datetime.today()
+	start=start.replace(hour=1,second=0,microsecond=0)
+
+	giorni = []
+	turni = []
+	i=0
+	s=start
+
+	while i<7:
+		giorni.append(start)
+		stop = start + datetime.timedelta(days=1)
+		turni.append(Turno.objects.filter(inizio__range=(start, stop),calendario=c).order_by('inizio', 'tipo__priorita'))
+		start = start + datetime.timedelta(days=1)
+		i=i+1
+	stop = start
+	start = s
+
+
+	calendario = []
+	calendario.append(giorni)
+	calendario.append(turni)
+
+	calendario=zip(*calendario)
+	tipo_turno=TipoTurno.objects.all()
+
+	corpo=render(request,'stampa_calendario.html',{'calendario':calendario,'cal_id':cal_id,'start':start,'request':request,'tipo_turno':tipo_turno})
+	risposta = HttpResponse(corpo)
+	return risposta
+
 def calendarioazione(request,cal_id,azione):
 	if azione == 'oggi':
 		start = datetime.datetime.today()

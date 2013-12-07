@@ -20,6 +20,7 @@
 
         <div class="btn-group pull-right">
             <a class="btn {% if request.session.form_data %}active{% endif %}" href="#" onclick="filtro($(this))"><i class="icon-filter"> </i> Filtra</a>
+            <a class="btn " href="/stampa_calendario/{{cal_id}}"><i class="icon-print"> </i> Stampa calendario</a>
             <a class="btn " href="/turno/{{cal_id}}/nuovo"><i class="icon-plus"> </i> Nuovo Turno</a>
         </div>
         <h4 class="header">
