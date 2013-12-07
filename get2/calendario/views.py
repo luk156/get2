@@ -393,7 +393,7 @@ def notifica_disponibilita(request,persona,turno,tipo_disponibilita,mansione):
 			notifica.destinatario_id=i.utente.id
 			notifica.save()
 	else:
-		notifica.destinatario_id=settings_calendario.ID_ADMIN_NOTIFICHE # se non c'e regola va al admin
+		notifica.destinatario_id=settings.GET_ID_ADMIN_NOTIFICHE # se non c'e regola va al admin
 		notifica.save()
 	return True
 

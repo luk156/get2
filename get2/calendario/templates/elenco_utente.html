@@ -99,7 +99,7 @@ function utente_staff(selettore){
 	var s = document.getElementById('select-{{utente.id}}');
 	if('{{utente.get_profile.id}}'!=''){
 		for (var i=0 ; i < s.length; i++){
-			if (s.options[i].text=='{{utente.get_profile}}')
+			if (s.options[i].text=="{{utente.get_profile|safe|escape}}")
 				s.selectedIndex = i;}
 		}
 	;
