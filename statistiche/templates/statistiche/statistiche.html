@@ -27,7 +27,7 @@
 		            xAxis: {
 		                categories: [
 		                    {% for d in dati|slice:":10"%}
-								"{{d}}",
+								"{{d|safe|escape}}",
 							{% endfor%}
 		                ],
 		                labels: {
@@ -88,7 +88,7 @@
 		</tr></thead>
 		{% for d in dati %}
 		<tr>
-		<td>{{forloop.counter}}</td><td>{{d}}</td><td>{{d.tot_turni}}</td>
+		<td>{{forloop.counter}}</td><td>{{d|safe|escape}}</td><td>{{d.tot_turni}}</td>
 		</tr>
 		{% endfor%}
 		</table>
@@ -110,7 +110,7 @@
 		            xAxis: {
 		                categories: [
 		                    {% for d in dati|slice:":10"%}
-								"{{d}}",
+								"{{d|safe|escape}}",
 							{% endfor %}
 		                ],
 		                labels: {
@@ -164,7 +164,7 @@
 		</tr></thead>
 		{% for d in dati %}
 		<tr>
-		<td>{{forloop.counter}}</td><td>{{d}}</td><td>{{d.tot_punti}}</td>
+		<td>{{forloop.counter}}</td><td>{{d|safe|escape}}</td><td>{{d.tot_punti}}</td>
 		</tr>
 		{% endfor%}
 		</table>
