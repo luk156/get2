@@ -95,7 +95,7 @@ def utente_staff(request,user_id):
 @dajaxice_register
 def notifiche(request,option,url):
     dajax = Dajax()
-    pdb.set_trace()
+    #pdb.set_trace()
     i=0
     dajax.assign('#sele','value','')
     for not_id in url.rsplit('_'):
