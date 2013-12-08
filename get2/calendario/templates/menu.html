@@ -8,9 +8,9 @@
 	<li class="utenti staff"><a href="/utenti/"><i class="i-menu utenti"></i></br>Utenti</a></li>
 	<li class="impostazioni staff"><a href="/impostazioni/"><i class="i-menu impostazioni"></i></br>Impostazioni</a></li>
 	<li class="notifiche staff"><a href="/notifiche/">
-		{%if request.user.pers_user.notifiche_non_lette > 0 %}
+		{%if request.user.get_profile.notifiche_non_lette > 0 %}
 			<span class="badge badge-important" id="notifiche-badge">
-			{{request.user.pers_user.notifiche_non_lette}}
+			{{request.user.get_profile.notifiche_non_lette}}
 			</span>
 		{% endif %}
 		<i class="i-menu notifiche"></i></br>Notifiche</a>
