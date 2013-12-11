@@ -15,11 +15,14 @@
 	{% for r in t.cache_requisito_set.all %}
 		{% if r.requisito.clickabile  %}
 
-				<b class="h6-mansione-{{r.requisito.mansione.id}}">{{r.requisito.mansione}} </b> 
+				<b class="mansione">{{r.requisito.mansione}} </b> 
 				<div class="persone">
 					{% for d in r.disponibilita.all %}
 					 				{{d.persona}}</br>
 					{% endfor %}	
+					{% for x in t|posti_liberi:r %}
+					_ _ _ _ _ _ _ <br>
+					{% endfor %}
 				</div>
 		{% endif %}
 

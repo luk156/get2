@@ -170,8 +170,11 @@ class Turno(models.Model):
 			return True
 		else:
 			return True
-	def gia_disponibili(self,requisito):
-		return self.cache_requisito_set.get(requisito=requisito).persone_disponibili.count()
+	def posti_liberi(self,requisito):
+		posti = requisito.requisito.minimo - requisito.disponibilita.filter(tipo="Disponibile").exclude(mansione__isnull=True).count()
+		if posti >0:
+			return range(posti)
+		return range(0)
 	def calcola_coperto(self):
 		if self.tipo:
 			for r in Requisito.objects.filter(tipo_turno=self.tipo_id):
