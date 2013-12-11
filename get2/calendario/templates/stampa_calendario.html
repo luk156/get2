@@ -14,8 +14,8 @@
     <thead>
     <tr>
         {% for giorno, turno in calendario %}
-            <th>
-        		<h5><center>{{giorno|date:"D d M"}}</center></h5>
+            <th class="data">
+        		<center>{{giorno|date:"D d M"}}</center>
         	</th>
         {% endfor %}
     </tr>

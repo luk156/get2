@@ -7,7 +7,7 @@ table.table td {
 
 .turno {
     border: 1px solid #000;
-    margin-bottom: 5px;
+    margin-bottom: 3px;
     padding: 2px;
 
 }
@@ -24,26 +24,19 @@ div{
 
 body {
 line-height: 1.1;
+margin: 0px;
 }
 
 body {
-font: 11pt Arial;
+font: 10pt Arial;
 line-height: 1.2;
 }
 
-h1 {
-font-size: 14pt;
-}
-
-h5 {
-font-size: 12pt;
-margin-top: 20px;
-}
-
-aside h2 {
-font-size: 15pt;
-}
-
 .mansione {
+	font-size: 10px;
+}
+
+.data {
 	font-size: 11px;
+	font-style: italic;
 }

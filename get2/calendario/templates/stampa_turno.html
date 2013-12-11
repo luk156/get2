@@ -4,12 +4,9 @@
 
 <div class="turno" >
 	
-	<div class="titolo-turno titolo-turno-{{t.coperto}}">
+	<div class="titolo-turno">
 		{{t.inizio|time:"H:i"}} - {{t.fine|time:"H:i"}}
-		{% if t.identificativo %}
-		 </br>{{t.identificativo}}
-
-		{% endif %}
+		{% if t.identificativo %} </br>{{t.identificativo}}	{% endif %}
 	</div>
 
 	{% for r in t.cache_requisito_set.all %}
