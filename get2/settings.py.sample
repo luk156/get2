@@ -37,7 +37,7 @@ TIME_ZONE = 'Europe/Rome'
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'it-it'
 
-SITE_ID = 1
+#SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
@@ -120,14 +120,16 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.sites',
+    #'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'south',
     'dajaxice',
     'dajax',
     'get2.calendario',
+    'persone',
     'crispy_forms',
+    #'gcm',
     #'debug_toolbar',
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
@@ -164,14 +166,34 @@ LOGGING = {
     }
 }
 
-AUTH_PROFILE_MODULE = 'calendario.Persona'
+LOGIN_REDIRECT_URL="/"
+
+AUTH_PROFILE_MODULE = 'persone.Persona'
 
 INTERNAL_IPS = ('127.0.0.1',)
 
-#MAIL_USE_TLS = True #Or False - For gmail: True
+#EMAIL_USE_TLS = True #Or False - For gmail: True
 #EMAIL_HOST = 'your_host.com' #For gmail: 'smtp.gmail.com'
 #EMAIL_HOST_USER = 'your@email.com'
 #EMAIL_HOST_PASSWORD = 'your_password'
 #EMAIL_PORT = your_host_port #For gmail: 587
 
 CRISPY_TEMPLATE_PACK = 'bootstrap' 
+
+GCM_APIKEY = "<api_key>"
+
+GET_TITOLO="Test"
+
+#Giorni disponibili per modificare una disponibilita da parte di una persona
+GET_DISP_MIN=1
+GET_DISP_MAX=60
+
+GET_CANC_MIN=2
+GET_CANC_MAX=0
+
+GET_ID_ADMIN_NOTIFICHE=1
+
+GET_ANALYTICS="UA-42859137-1"
+GET_DOMINIO="gis3w.it"
+
+GET_MAIL_NOTIFICA = "no@no.it"

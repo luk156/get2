@@ -7,6 +7,7 @@ from dajaxice.utils import deserialize_form
 import pdb
 from django.template.loader import render_to_string
 from django.template import Context, Template
+
 @dajaxice_register
 def mansione_form(request, form):
     dajax = Dajax()
@@ -27,26 +28,6 @@ def mansione_form(request, form):
     return dajax.json()
 
 
-@dajaxice_register
-def elimina_persona(request,persona_id):
-	dajax = Dajax()
-	if request.user.is_superuser:
-		per=Persona.objects.get(id=persona_id)
-		per.delete()
-		dajax.remove('#persona-'+str(persona_id))
-	dajax.script("$('#loading').addClass('hidden');")
-	return dajax.json()
-
-@dajaxice_register
-def elimina_gruppo(request,gruppo_id):
-	#pdb.set_trace()
-	dajax = Dajax()
-	if request.user.is_staff:
-		gr=Gruppo.objects.get(id=gruppo_id)
-		gr.delete()
-		dajax.remove('#gruppo-'+str(gruppo_id))
-	dajax.script("$('#loading').addClass('hidden');")
-	return dajax.json()
 
 @dajaxice_register
 def elimina_utente(request,utente_id):
@@ -135,7 +116,7 @@ def notifiche(request,option,url):
             dajax.remove('#not-inv-'+not_id)
             #dajax.alert(request.user.get_profile().nonletti())
     try:
-        non=request.user.get_profile().notifiche_non_lette()
+        non=request.user.pers_user.notifiche_non_lette()
         if non >0:
            dajax.assign('#notifiche-badge','innerHTML',non)
         else:
@@ -194,6 +175,7 @@ def disp(request, turno_id, mansione_id, persona_id, disp):
 		if request.user.is_superuser or request.user==d.creata_da:
 			d.delete()
 			dajax.assign('#disponibilita-'+str(p.id), 'innerHTML', '')
+	t=Turno.objects.get(id=turno_id)
 	html_anteprima = render_to_string( 'turno.html', { 't': t, 'request':request } )
 	dajax.assign('div #anteprima', 'innerHTML', html_anteprima+'<div style="clear:both;"></div>')
 	dajax.script('$(".bottom-right").notify({ message: { text: "Aggiornata disponibilita per '+str(p)+'" }}).show();')
@@ -213,15 +195,6 @@ def disp_nota(request,disp_id,nota):
 	dajax.script('$(".bottom-right").notify({ message: { text: "Nota modificata" }}).show();')
 	return dajax.json()
 
-@dajaxice_register
-def persona_stato(request,stato,persona):
-	dajax=Dajax()
-	per=Persona.objects.get(id=persona)
-	per.stato=stato
-	per.save()
-	dajax.script('$(".bottom-right").notify({ message: { text: "Modifiche apportate con successo" }}).show();')
-	dajax.script("$('#loading').addClass('hidden');")
-	return dajax.json()
 
 @dajaxice_register
 def occorrenze(request,occ_id,turno_id):
@@ -243,4 +216,13 @@ def mansioni_disponibili(request,turno_id):
             if not requisito.mansione in t.mansioni_indisponibili(request.user.get_profile().id):
                 html+='<a href="#" onclick="disponibilita_'+str(t.id)+'('+str(requisito.mansione.id)+');" class="btn btn-primary btn-block btn-large"><i class="'+str(requisito.mansione.icona)+'"></i> '+str(requisito.mansione)+'</a></br>'
     dajax.assign("#mansioni-turno"+str(t.id), "innerHTML", html)
+    return dajax.json() 
+
+@dajaxice_register
+def elimina_turno(request,turno_id):
+    dajax=Dajax()
+    t=Turno.objects.get(id=turno_id)
+    html_elimina = render_to_string( 'elimina_turno.html', { 't': t, 'request':request } )
+    dajax.assign('div #elimina-turno-'+str(t.id), 'innerHTML', html_elimina)
+    dajax.script("$('#elimina-turno-"+str(t.id)+"').modal('show');")
     return dajax.json() 

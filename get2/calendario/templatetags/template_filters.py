@@ -20,6 +20,11 @@ def gia_disponibili(instance, arg):
 	return instance.gia_disponibili(arg)
 
 @register.filter
+def posti_liberi(instance, arg):
+	#pdb.set_trace()
+	return instance.posti_liberi(arg)
+
+@register.filter
 def gia_disponibile(instance, arg):
 	if instance.persona_disponibilita.filter(turno=arg,tipo="Disponibile"):
 		return instance.persona_disponibilita.filter(turno=arg,tipo="Disponibile")[0].id

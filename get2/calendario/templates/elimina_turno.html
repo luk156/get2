@@ -1,0 +1,26 @@
+	<div class="modal-body">
+		<div class="alert alert-error">
+			<h5><i class="icon-warning-sign icon-2x"></i> Vuoi eliminare il turno del {{t.inizio|date:"d M"}}, ore {{t.inizio|time:"H:i"}} - {{t.fine|time:"H:i"}}?</h5>
+			{% if t.occorrenza %}
+				<span onclick="Dajaxice.get2.calendario.occorrenze(Dajax.process,{'occ_id':{{t.occorrenza.id}},'turno_id':{{t.id}}});">Il turno fa parte di una occorrenza <i class="icon-chevron-down"></i></span>
+				<ul>
+				<div id="occorrenze-{{t.id}}" class="hide"></div>
+				</ul>
+			{% endif %}</div>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Annulla</button>
+		<div class="btn-group">
+		  <a href="/turno/elimina/{{t.id}}"  class="btn btn-primary">Elimina Turno</a>
+			{% if t.occorrenza %}<button class="btn  btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span>{% endif %}
+		  </button>
+		  {% if t.occorrenza %}
+		  <ul class="dropdown-menu">
+			<li><a href="/turno/elimina_occorrenza/{{t.occorrenza.id}}">Elimina turno e tutte le future occorrenze</a></li>
+			{% if request.user.is_superuser %}
+			<li><a href="/turno/elimina_occorrenza_tot/{{t.occorrenza.id}}">Elimina turno e TUTTE le occorrenze</a></li>
+			{% endif %}
+		  </ul>
+		  {% endif %}
+		</div>
+	</div>

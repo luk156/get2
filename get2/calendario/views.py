@@ -7,16 +7,16 @@ import calendar,datetime,locale
 from django.db.models import Q, Count, Sum
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import AdminPasswordChangeForm
+from django.contrib.auth.forms import AdminPasswordChangeForm, PasswordChangeForm
 import pdb
 from django.template import RequestContext
 from django.forms.formsets import formset_factory
-import get2.calendario.settings_calendario as settings_calendario
+from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.decorators import login_required
 import csv, codecs
-
+from django.core.exceptions import PermissionDenied
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.views import redirect_to_login
 try:
@@ -122,148 +122,9 @@ def home(request):
 
 def touch(request,v):
 	risposta=HttpResponseRedirect('/')
-	risposta.set_cookie('touch', value=v)
+	risposta.set_cookie('touch', max_age=60*60*24*365, value=v)
 	return risposta
 
-####   persona   ####
-@user_passes_test(lambda u:u.is_staff)
-def export_persona(request):
-    # Create the HttpResponse object with the appropriate CSV header
-    return export_csv(request, Persona.objects.all(), [('nome','nome'),
-    	('cognome','cognome'),
-    	('E-mail','user.email'),
-    	('indirizzo','indirizzo'),
-    	('nascita','nascita'),
-    	('tel1','tel1'),
-    	('tel2','tel2'),
-    	('stato','stato'),
-    	('competenze','competenze.all'),
-    	('retraining','retraining'),
-    	('retraining_blsd','retraining_blsd'),
-    	('note','note'),
-    	])
-
-@user_passes_test(lambda u:u.is_staff)
-def elenco_persona(request):
-	#if request.user.is_staff:
-	persone = Persona.objects.all().order_by('cognome')
-	gruppi = Gruppo.objects.all()
-	mansioni = Mansione.objects.all()
-	risposta = HttpResponse(render(request,'elenco_persona.html',{'persone':persone,'stati':STATI,'request':request,'gruppi':gruppi,'mansioni':mansioni}))
-	return risposta
-	#else:
-	#	return render(request,'staff-no.html')
-
-@user_passes_test(lambda u:u.is_staff)
-def nuovo_persona(request):
-	#if request.user.is_staff:
-	azione = 'nuovo'
-	if request.method == 'POST':
-		form = PersonaForm(request.POST)
-		form.helper.form_action = '/persone/nuovo/'
-		if form.is_valid():
-			form.save()
-			return HttpResponseRedirect('/persone')
-	else:
-		form = PersonaForm()
-		form.helper.form_action = '/persone/nuovo/'
-	return render(request,'form_persona.html',{'request':request,'form': form,'azione': azione,})
-	#else:
-	#	return render(request,'staff-no.html')
-
-@user_passes_test(lambda u:u.is_staff)
-def modifica_persona(request,persona_id):
-	azione = 'modifica'
-	per = Persona.objects.get(id=persona_id)
-	if request.method == 'POST':  # If the form has been submitted...
-		form = PersonaForm(request.POST, instance=per)  # necessario per modificare la riga preesistente
-		form.helper.form_action = '/persone/modifica/'+str(per.id)+'/'
-		if form.is_valid():
-			form.save()
-			return HttpResponseRedirect('/persone') # Redirect after POST
-	else:
-		form = PersonaForm(instance=per)
-		form.helper.form_action = '/persone/modifica/'+str(per.id)+'/'
-	return render(request,'form_persona.html',{'request': request, 'form': form,'azione': azione, 'per': per,'mansione_form':MansioneForm()})
-
-@user_passes_test(lambda u: u.is_superuser)
-def elimina_persona(request,persona_id):
-	p=Persona.objects.get(id=persona_id)
-	p.delete()
-	return HttpResponseRedirect('/persone/')
-
-@user_passes_test(lambda u:u.is_staff)
-def nuovo_gruppo(request):
-	#if request.user.is_staff:
-	azione = 'nuovo'
-	if request.method == 'POST':
-		form = GruppoForm(request.POST)
-		form.helper.form_action = '/persone/gruppo/nuovo/'
-		if form.is_valid():
-			form.save()
-			return HttpResponseRedirect('/persone')
-	else:
-		form = GruppoForm()
-		form.helper.form_action = '/persone/gruppo/nuovo/'
-	return render(request,'form_gruppo.html',{'request':request,'form': form,'azione': azione,})
-	#else:
-	#	return render(request,'staff-no.html')
-
-@user_passes_test(lambda u:u.is_staff)
-def modifica_gruppo(request,gruppo_id):
-	azione = 'modifica'
-	g = Gruppo.objects.get(id=gruppo_id)
-	if request.method == 'POST':  # If the form has been submitted...
-		form = GruppoForm(request.POST, instance=g)  # necessario per modificare la riga preesistente
-		form.helper.form_action = '/persone/gruppo/modifica/'+str(g.id)+'/'
-		if form.is_valid():
-			form.save()
-			return HttpResponseRedirect('/persone') # Redirect after POST
-	else:
-		form = GruppoForm(instance=g)
-		form.helper.form_action = '/persone/gruppo/modifica/'+str(g.id)+'/'
-	return render(request,'form_gruppo.html',{'request': request, 'form': form,'azione': azione, 'g': g,})
-
-@user_passes_test(lambda u:u.is_staff)
-def elimina_gruppo(request,gruppo_id):
-	p=Gruppo.objects.get(id=gruppo_id)
-	p.delete()
-	return HttpResponseRedirect('/persone/')
-
-@user_passes_test(lambda u:u.is_staff)
-def gruppoaggiungi(request, gruppo_id, per_id):
-	g=Gruppo.objects.get(id=gruppo_id)
-	p=Persona.objects.get(id=per_id)
-	g.componenti.add(v)
-	g.save
-	return HttpResponseRedirect('/persone/')
-
-@user_passes_test(lambda u:u.is_staff)
-def aggiungilista(request,azione,arg,persone):
-	for per_id in persone.rsplit('_'):
-		if azione=='aggiungi_g':
-			g=Gruppo.objects.get(id=arg)
-			v=Persona.objects.get(id=per_id)
-			g.componenti.add(v)
-			g.save
-		elif azione=='aggiungi_m':
-			m = Mansione.objects.get(id=arg)
-			v=Persona.objects.get(id=per_id)
-			v.competenze.add(m)
-			v.save
-		elif azione=='rimuovi_g':
-			g=Gruppo.objects.get(id=arg)
-			v=Persona.objects.get(id=per_id)
-			g.componenti.remove(v)
-			g.save
-		elif azione=='rimuovi_m':
-			m = Mansione.objects.get(id=arg)
-			v=Persona.objects.get(id=per_id)
-			v.competenze.remove(m)
-			v.save
-	return HttpResponseRedirect('/persone/')
-
-####   fine persona   ####
 
 #####   calendario   ####
 
@@ -383,6 +244,42 @@ def calendario(request,cal_id):
 	risposta.set_cookie('sezione', value='calendario')
 	return risposta
 
+
+def stampa_calendario(request,cal_id):
+	c=Calendario(id=cal_id)
+
+	if 'start' in request.session:
+		start=request.session['start']
+	else:
+		start=datetime.datetime.today()
+	start=start.replace(hour=1,second=0,microsecond=0)
+
+	giorni = []
+	turni = []
+	i=0
+	s=start
+
+	while i<7:
+		giorni.append(start)
+		stop = start + datetime.timedelta(days=1)
+		turni.append(Turno.objects.filter(inizio__range=(start, stop),calendario=c).order_by('inizio', 'tipo__priorita'))
+		start = start + datetime.timedelta(days=1)
+		i=i+1
+	stop = start
+	start = s
+
+
+	calendario = []
+	calendario.append(giorni)
+	calendario.append(turni)
+
+	calendario=zip(*calendario)
+	tipo_turno=TipoTurno.objects.all()
+
+	corpo=render(request,'stampa_calendario.html',{'calendario':calendario,'cal_id':cal_id,'start':start,'request':request,'tipo_turno':tipo_turno})
+	risposta = HttpResponse(corpo)
+	return risposta
+
 def calendarioazione(request,cal_id,azione):
 	if azione == 'oggi':
 		start = datetime.datetime.today()
@@ -419,18 +316,18 @@ def verifica_intervallo(turno,persona):
 	if diff.days<0:
 		verifica=False
 		errore='Turno passato'
-	elif persona.persona_disponibilita.filter(turno=turno, tipo="Disponibile") and diff.days<settings_calendario.CANC_MIN:
+	elif persona.persona_disponibilita.filter(turno=turno, tipo="Disponibile") and diff.days<settings.GET_CANC_MIN:
 		verifica=False
-		errore='Troppo vicino (intervallo minore di '+str(settings_calendario.CANC_MIN)+' giorni)'
-	elif persona.persona_disponibilita.filter(turno=turno, tipo="Disponibile") and diff.days<settings_calendario.CANC_MAX:
+		errore='Troppo vicino (intervallo minore di '+str(settings.GET_CANC_MIN)+' giorni)'
+	elif persona.persona_disponibilita.filter(turno=turno, tipo="Disponibile") and diff.days<settings.GET_CANC_MAX:
 		verifica=False
-		errore='Troppo lontano (intervallo maggiore di '+str(settings_calendario.CANC_MAX)+' giorni)'
-	elif diff.days<settings_calendario.DISP_MIN:
+		errore='Troppo lontano (intervallo maggiore di '+str(settings.GET_CANC_MAX)+' giorni)'
+	elif diff.days<settings.GET_DISP_MIN:
 		verifica=False
-		errore='Troppo vicino (intervallo minore di '+str(settings_calendario.DISP_MIN)+' giorni)'
-	elif diff.days>settings_calendario.DISP_MAX:
+		errore='Troppo vicino (intervallo minore di '+str(settings.GET_DISP_MIN)+' giorni)'
+	elif diff.days>settings.GET_DISP_MAX:
 		verifica=False
-		errore='Troppo lontano (intervallo maggiore di '+str(settings_calendario.DISP_MAX)+' giorni)'
+		errore='Troppo lontano (intervallo maggiore di '+str(settings.GET_DISP_MAX)+' giorni)'
 	else:
 		verifica=True
 		errore=''
@@ -438,18 +335,14 @@ def verifica_intervallo(turno,persona):
 
 
 def disponibilita_verifica_tempo(request, turno):
-#	pdb.set_trace()
 	if request.user.is_staff:
 		verifica=True
 		errore=''
 	else:
 		(verifica,errore)=verifica_intervallo(turno,request.user.get_profile())
-	#cprint errore
-	#print diff.days
 	return (verifica,errore)
 
 
-# attenzione ai permessi
 def rimuovi_disponibilita(request, disp_id):
 	d=Disponibilita.objects.get(id=disp_id)
 	if request.user.is_staff or request.user.get_profile()==d.persona:
@@ -532,7 +425,7 @@ def notifica_disponibilita(request,persona,turno,tipo_disponibilita,mansione):
 			notifica.destinatario_id=i.utente.id
 			notifica.save()
 	else:
-		notifica.destinatario_id=settings_calendario.ID_ADMIN_NOTIFICHE # se non c'e regola va al admin
+		notifica.destinatario_id=settings.GET_ID_ADMIN_NOTIFICHE # se non c'e regola va al admin
 		notifica.save()
 	return True
 
@@ -541,6 +434,8 @@ def elenco_notifica(request):
 	u=request.user
 	notifiche=Notifica.objects.filter(destinatario=u).order_by('data').reverse()
 	return render(request,'notifiche.html',{'notifiche':notifiche,'request':request})
+
+#un utente dello staf potrebbe cancellare delle notifiche di altri!!!
 
 @user_passes_test(lambda u: u.is_staff)
 def elimina_notifica(request,notifica_id):
@@ -555,7 +450,7 @@ def elimina_notifica(request,notifica_id):
 def elenco_utente(request):
 	#if request.user.is_staff:
 	utenti = User.objects.all()
-	persone = Persona.objects.all()
+	persone = Persona.objects.all().order_by('cognome','nome')
 	risposta = HttpResponse(render(request,'elenco_utente.html',{'utenti':utenti,'persone':persone,'request':request,}))
 	return risposta
 	#else:
@@ -605,6 +500,20 @@ def modifica_password_utente(request,utente_id):
 	else:
 		form = AdminPasswordChangeForm(user=user)
 	return render(request,'form_password_utente.html',{'request':request, 'form': form, 'user': user,})
+
+def modifica_password_personale(request,utente_id):
+	user = User.objects.get(id=utente_id)
+	if request.user.is_staff or request.user==user:
+		if request.method == 'POST': # If the form has been submitted...
+			form = PasswordChangeForm(user=user, data=request.POST)
+			if form.is_valid():
+				form.save()
+				return HttpResponseRedirect('/') # Redirect after POST
+		else:
+			form = PasswordChangeForm(user=user)
+		return render(request,'form_password_personale.html',{'request':request, 'form': form, 'user': user,})
+	else:
+		raise PermissionDenied
 
 ####   fine utenti   ####
 
@@ -808,7 +717,7 @@ def nuovo_turno(request, cal_id):
 			return HttpResponseRedirect('/calendario/'+str(cal_id)) # Redirect after POST
 	else:
 		c=Calendario.objects.get(id=cal_id)
-		form = TurnoFormRipeti(initial={'calendario': c})
+		form = TurnoFormRipeti(initial={'calendario': c, 'coperto': False })
 		form.helper.form_action = '/turno/'+str(cal_id)+'/nuovo/'
 	return render(request,'form_turno.html',{'form': form,'azione': azione,'request':request})
 
@@ -851,7 +760,7 @@ def modifica_turno(request, turno_id):
 				form.helper.layout[4][1].append("modifica_tutti")
 	return render(request,'form_turno.html',{'form': form,'azione': azione, 'turno': turno,'request':request})
 
-@user_passes_test(lambda u:u.is_staff)
+@user_passes_test(lambda u:u.is_superuser)
 def elimina_turno(request, turno_id):
 	t = Turno.objects.get(id=turno_id)
 	cal_id=t.calendario.id
@@ -920,11 +829,3 @@ def elimina_requisito(request,requisito_id):
 
 #### fine requisito ####
 
-#### inizio pagina persona ####
-@login_required
-def visualizza_persona(request,persona_id):
-	persona = Persona.objects.get(id=persona_id)
-	if request.user.is_staff or request.user.get_profile()==persona:
-	  return render(request,'dettaglio_persona.html',{'request': request, 'persona': persona})
-
-#### fine pagina persona ####

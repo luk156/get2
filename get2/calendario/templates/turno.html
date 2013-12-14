@@ -1,10 +1,6 @@
 
 {% load template_filters %}
-<script>
-	$(document).ready(function(){
-		$(".tp").tooltip();
-	});
-</script>
+{% with t.turno_disponibilita.all  as alldisp %}
 
 <div class="turno span7 {{forloop.counter}}" id="turno-{{t.id}}" >
 	
@@ -26,7 +22,7 @@
 				</a>
 				<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
 					<li><a href="/turno/modifica/{{t.id}}">Modifica</a></li>
-					<li><a href="#elimina-turno-{{t.id}}" data-toggle="modal">Elimina</a></li>
+					<li><a href="#" onclick="Dajaxice.get2.calendario.elimina_turno(Dajax.process,{'turno_id':{{t.id}}});">Elimina</a></li>
 				</ul>
 			</div>
 			<div class="dropdown gruppo-turno">
@@ -41,67 +37,69 @@
 				</ul>
 			</div>
 		{% endif %}
-	</div>	
-	{% for requisito in t.tipo.req_tipo_turno.all %}
-		{% if requisito.clickabile  %}
+	</div>
+
+	{% for r in t.cache_requisito_set.all %}
+		{% if r.requisito.clickabile  %}
 			{%if request.user.is_staff %}	
 				<div class="mansione-calendario">
-					<h6 class="h6-mansione-{{requisito.mansione.id}}">{{requisito.mansione}} 
+					<h6 class="h6-mansione-{{r.requisito.mansione.id}}">{{r.requisito.mansione}} 
 					
 						{% if request.user.is_staff %}
-							<a href="/cerca_persona/{{t.id}}/{{requisito.mansione.id}}">
+							<a href="/cerca_persona/{{t.id}}/{{r.requisito.mansione.id}}">
 						{% endif %}
-					{% if requisito.sufficiente %}
+					{% if r.requisito.sufficiente %}
 						<span class="badge badge-info pull-right">
-					{% elif not requisito.necessario %}
+					{% elif not r.requisito.necessario %}
 						<span class="badge  pull-right">
-					{% elif t|verifica_requisito:requisito  %}
+					{% elif r.verificato  %}
 						<span class="badge badge-success pull-right">
 					{% else %}
 						<span class="badge badge-important pull-right">
 					{% endif %}
-						{% if requisito.minimo != 0 %}
-							&ge;{{requisito.minimo}}
+						{% if r.requisito.minimo != 0 %}
+							&ge;{{r.requisito.minimo}}
 						{% endif %}
-						{% if requisito.massimo != 0 %}
-							&le;{{requisito.massimo}}
+						{% if r.requisito.massimo != 0 %}
+							&le;{{r.requisito.massimo}}
 						{% endif %}
 					</span></a></h6> 
 				</div>
 			{% endif %}
 				<div class="persone">
 					<ul>
-					{% for disp in t.turno_disponibilita.all %}
-						{% if disp.mansione = requisito.mansione and disp.tipo = 'Disponibile' %}
-							<li class="persona-turno"><i class="{{disp.mansione.icona}}" style="color:{{disp.mansione.colore}}"></i> 
+					
+					{% for d in r.disponibilita.all %}
+							<li class="persona-turno"><i class="{{d.mansione.icona}}" style="color:{{d.mansione.colore}}"></i> 
 								{% if request.user.is_authenticated or touch == "yes" %}
-					 				{{disp.persona}} {% if disp.note %}<i class="tp icon-comment" data-toggle="tooltip" title="{{disp.note}}"></i>{% endif %}
+					 				{{d.persona}} {% if d.note %}<i class="tp icon-comment" data-toggle="tooltip" title="{{d.note}}"></i>{% endif %}
 								{% else %}
 					 				----
 								{% endif %}
 							</li>
-						{% endif %}
+
 					{% endfor %}
+					
 					</ul>
 				</div>
 		{% endif %}
-		{% if  not requisito.clickabile  and request.user.is_staff %}
+		{% if  not r.requisito.clickabile  and request.user.is_staff %}
 				<div class="mansione-calendario">
-					<h6 class="h6-mansione-{{requisito.mansione.id}}">
+					<h6 class="h6-mansione-{{r.requisito.mansione.id}}">
 					
-					{% if requisito.extra %}<i class="icon-asterisk"></i> {% endif %}
+					{% if r.requisito.extra %}<i class="icon-asterisk"></i> {% endif %}
 
 					{{requisito.mansione}}
-					{% if t|verifica_requisito:requisito  %}
+					{% if r.verificato  %}
 						<span class="badge badge-success pull-right">
 					{% else %}
 						<span class="badge badge-important pull-right">
 					{% endif %}
-						{% if requisito.minimo != 0 %}
-							&ge;{{requisito.minimo}}
+						{% if r.requisito.minimo != 0 %}
+							&ge;{{r.requisito.minimo}}
 						{% endif %}
-						{% if requisito.massimo != 0 %}
-							&le;{{requisito.massimo}}
+						{% if r.requisito.massimo != 0 %}
+							&le;{{r.requisito.massimo}}
 						{% endif %}
 					</span>
 					</h6>
@@ -115,7 +113,7 @@
 	</div>
 	<div class="persone">
 		<ul>
-	{% for disp in t.turno_disponibilita.all %}
+	{% for disp in alldisp %}
 		{% if disp.mansione not in t.mansioni and disp.tipo = 'Disponibile' %}
 		<script>$('#altre-mansioni-{{t.id}}').removeClass('hide');</script>
 			<li class="persona-turno">
@@ -137,32 +135,7 @@
 
 {% if request.user.is_staff %}
 <div id="elimina-turno-{{t.id}}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-body">
-		<div class="alert alert-error">
-			<h5><i class="icon-warning-sign icon-2x"></i> Vuoi eliminare il turno del {{t.inizio|date:"d M"}}, ore {{t.inizio|time:"H:i"}} - {{t.fine|time:"H:i"}}?</h5>
-			{% if t.occorrenza %}
-				<span onclick="Dajaxice.get2.calendario.occorrenze(Dajax.process,{'occ_id':{{t.occorrenza.id}},'turno_id':{{t.id}}});">Il turno fa parte di una occorrenza <i class="icon-chevron-down"></i></span>
-				<ul>
-				<div id="occorrenze-{{t.id}}" class="hide"></div>
-				</ul>
-			{% endif %}</div>
-	</div>
-	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Annulla</button>
-		<div class="btn-group">
-		  <a href="/turno/elimina/{{t.id}}"  class="btn btn-primary">Elimina Turno</a>
-			{% if t.occorrenza %}<button class="btn  btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span>{% endif %}
-		  </button>
-		  {% if t.occorrenza %}
-		  <ul class="dropdown-menu">
-			<li><a href="/turno/elimina_occorrenza/{{t.occorrenza.id}}">Elimina turno e tutte le successive occorrenze</a></li>
-			{% if request.user.is_superuser %}
-			<li><a href="/turno/elimina_occorrenza_tot/{{t.occorrenza.id}}">Elimina turno e TUTTE le occorrenze</a></li>
-			{% endif %}
-		  </ul>
-		  {% endif %}
-		</div>
-	</div>
+	
 </div>
 {% endif %}
 
@@ -215,3 +188,4 @@
 	</div>
 </div>
 {% endif %}
+{% endwith %}

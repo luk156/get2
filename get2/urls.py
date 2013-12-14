@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     url(dajaxice_config.dajaxice_url, include('dajaxice.urls')),
     # statistiche
     url(r'^statistiche/', include('statistiche.urls')),
+    url(r'^persone/', include('persone.urls')),
 )
 
 urlpatterns += patterns('get2.calendario',
@@ -20,22 +21,13 @@ urlpatterns += patterns('get2.calendario',
 	(r'^calendario/$', 'views.home'),
 	(r'^touch/(?P<v>\w+)$', 'views.touch'),
 	(r'^calendario/(?P<cal_id>\w+)/$', 'views.calendario'),
+	(r'^stampa_calendario/(?P<cal_id>\w+)/$', 'views.stampa_calendario'),
 	(r'^calendario/(?P<cal_id>\w+)/(?P<azione>\w+)$', 'views.calendarioazione'),
-	# persone
-	(r'^persone/$', 'views.elenco_persona'),
-	(r'^persone/export/$', 'views.export_persona'),
-	(r'^persone/nuovo/$', 'views.nuovo_persona'),
-	(r'^persone/modifica/(?P<persona_id>\w+)/$', 'views.modifica_persona'),
-	(r'^persone/visualizza/(?P<persona_id>\w+)/$', 'views.visualizza_persona'),
-	(r'^persone/elimina/(?P<persona_id>\w+)/$', 'views.elimina_persona'),
-	(r'^persone/aggiungilista/(?P<azione>\w+)/(?P<arg>\w+)/(?P<persone>\w+)/$', 'views.aggiungilista'),
-	(r'^persone/gruppo/nuovo/$', 'views.nuovo_gruppo'),
-	(r'^persone/gruppo/modifica/(?P<gruppo_id>\w+)/$', 'views.modifica_gruppo'),
-	(r'^persone/gruppo/elimina/(?P<gruppo_id>\w+)/$', 'views.elimina_gruppo'),	
 	# utenti
 	(r'^utenti/$', 'views.elenco_utente'),
 	(r'^utenti/nuovo/$', 'views.nuovo_utente'),
 	(r'^utenti/modifica/(?P<utente_id>\w+)/password/$', 'views.modifica_password_utente'),
+	(r'^utenti/modifica/(?P<utente_id>\w+)/password_personale/$', 'views.modifica_password_personale'),
 	(r'^utenti/modifica/(?P<utente_id>\w+)/$', 'views.modifica_utente'),
 	(r'^utenti/elimina/(?P<utente_id>\w+)/$', 'views.elimina_utente'),
 	# mansioni
@@ -75,8 +67,6 @@ urlpatterns += patterns('get2.calendario',
 urlpatterns += patterns('django.contrib.auth.views',
     #utente
     #(r'^utente/nuovo/$', 'turni.views.nuovoutente'),
-    (r'^utenti/modifica_password/$', 'password_change'),
-    (r'^utenti/modifica_password/ok/$', 'password_change_done'),
     (r'^utenti/reset/$', 'password_reset'),
     (r'^utenti/reset/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', 'password_reset_confirm'),
     (r'^utenti/reset/completa/$', 'password_reset_complete'),
@@ -84,6 +74,10 @@ urlpatterns += patterns('django.contrib.auth.views',
     )
 
 urlpatterns += patterns('',
-    (r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name':'login.html'} ),
+    (r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name':'registration/login.html'} ),
     (r'^accounts/logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}),
     )
+
+#urlpatterns = patterns('',
+#    url(r'', include('gcm.urls')),
+#)

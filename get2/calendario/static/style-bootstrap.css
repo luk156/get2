@@ -103,6 +103,8 @@ background-color: #ddd;
     border: 1px solid rgb(221, 221, 221);
     border-radius: 10px 10px 10px 10px;
     padding: 5px 5px;
+    margin-left: 3px;
+    margin-right: 3px;
 }
 
 
@@ -491,3 +493,7 @@ ul#mansioni-lista li {
 	border-top:1px solid #dedede;
 	padding-top: 2px;
 }
+
+input {
+   max-width: 100%;
+} 

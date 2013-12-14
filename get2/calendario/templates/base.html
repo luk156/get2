@@ -82,10 +82,11 @@
 						<span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
-							<li><a href="/accounts/logout">Esci</a></li>
+							<li><a href="/accounts/logout"><i class="icon-signout"></i> Esci</a></li>
 							{%if request.user.get_profile %}
-								<li><a href="/persone/visualizza/{{request.user.get_profile.id}}">Il mio profilo</a></li>
+								<li><a href="/persone/visualizza/{{request.user.get_profile.id}}"><i class="icon-user"></i> Il mio profilo</a></li>
 							{% endif%}
+							<li><a href="/utenti/modifica/{{request.user.id}}/password_personale/"><i class="icon-key"></i> Modifica password</a></li>
 						</ul>
 					</div>
 				{%else%}
@@ -93,7 +94,7 @@
 					<input type="hidden" name="next" value="{{request.path}}" />
 					<input id="id_username" type="text" name="username" class="input" placeholder="Utente">
 					<input type="password" name="password" id="id_password" class="input" placeholder="Password">
-					<input type="submit" value=" Accedi " class="btn btn-primary"></form>
+					<button type="submit" class="btn btn-primary"> Accedi <i class="icon-signin icon-white"></i></button></form>
 				{% endif %}
 		</div>
 	</div>
@@ -126,9 +127,9 @@
 		</div>
 	</div>
 	<div id="footer">
-				<i class="icon-cogs"></i> Sviluppato da Matteo Lucchesi | 
-				<a href="http://matteo.luccalug.it"><i class="icon-globe"></i> matteo.luccalug.it</a>
-				| <i class="icon-envelope-alt"></i> matteo@luccalug.it 
+				<a href="http://documentazione.gestionaleturni.it" target="_blank"><i class="icon-book"></i> Documentazione</a> | 
+				<a href="http://www.gestionaleturni.it" target="_blank"><i class="icon-globe"></i> www.gestionaleturni.it</a> |
+				<a href="mailto:matteo@luccalug.it" target="_blank"><i class="icon-envelope-alt"></i> matteo@luccalug.it </a>
 	</div>
 
 

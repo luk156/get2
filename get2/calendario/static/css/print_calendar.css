@@ -1,0 +1,42 @@
+table.table {width: 100%;}
+
+table.table td {
+    vertical-align: top;
+        width: 14.25%;
+}
+
+.turno {
+    border: 1px solid #000;
+    margin-bottom: 3px;
+    padding: 2px;
+
+}
+
+.titolo-turno {
+    text-align: center;
+    margin: 1px ! important;
+    border-bottom: 1px solid #000;
+}
+
+div{
+        page-break-inside: avoid;
+}
+
+body {
+line-height: 1.1;
+margin: 0px;
+}
+
+body {
+font: 10pt Arial;
+line-height: 1.2;
+}
+
+.mansione {
+	font-size: 10px;
+}
+
+.data {
+	font-size: 11px;
+	font-style: italic;
+}

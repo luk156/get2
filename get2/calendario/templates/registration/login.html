@@ -1,41 +1,43 @@
 {% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
 
 {% block header %}
-<div id="header-button1" class="inattivo"><a href="/calendario/"><img src="/media/calendario.png"></a>Calendario</div>
-<div id="freccia"></div>
-<div id="header-testo"><span class="titolo1">Esegui il login</span><br>effettua l' accesso per poter apportare modifiche</div>
+
+		<h4 class="header">Login</h4>
+
 {% endblock %}
 
 
 {% block main %}
+<div style="margin:10px;">
 
-{% if form.errors %}
-<p>Il tuo username e password non coincidono. Per favore riprova</p>
+{% if form.non_field_errors %}
+            <div class="alert alert-error"><p>{{ form.non_field_errors }}</p><a class="btn" href="/utenti/reset/"> Recupera la Password <i class="icon-key"></i></a></div>
 {% endif %}
 
 <form method="post" action="{% url 'django.contrib.auth.views.login' %}">{% csrf_token %}
-<table>
-<div id="login">
-<input type="hidden" name="next" value="/calendario/" />
-<table>
-<tr>
-    <td>{{ form.username.label_tag }}</td>
-    <td>{{ form.username }}</td>
-</tr>
-<tr>
-    <td>{{ form.password.label_tag }}</td>
-    <td>{{ form.password }}</td>
-</tr>
-<tr><td></td><td><input type="submit" value="Accedi" />
-</td></tr>
-<tr><td colspan="2"><hr></td></tr>
-<!--
-<tr><td colspan="2"><a href="/utente/reset/">Password dimenticata?</a></td></tr>
--->
-</table>
-</div>
+  {%for field in form %}
+    <div id="div_{{field.name}}" class="control-group {%if field.errors %}error{%endif%}">
+      <label for="{{field.name}}" class="control-label requiredField">
+        {{field.label}}<span class="asteriskField">*</span>
+      </label>
+      <div class="controls">
+        {{field}}
+        {%if field.errors %}
+          <span class="help-inline">{{field.errors}}</span>
+        {%endif%}
+      </div>
+    </div>
 
+  {% endfor %}
+	<input type="hidden" name="next" value="{{ next }}">
+	<div class="form-actions">
+	
+	<button type="submit" class="btn btn-primary"> Accedi <i class="icon-signin icon-white"></i></button>
+	</div>
 </form>
-</div>
 
+  
+</div>
 {% endblock %}

@@ -8,111 +8,11 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Field, MultiField, HTML
 from crispy_forms.bootstrap import *
 from django.utils.text import capfirst
+from persone.models import *
 
-class MultiSelectFormField(forms.MultipleChoiceField):
-    widget = forms.CheckboxSelectMultiple
- 
-    def __init__(self, *args, **kwargs):
-        self.max_choices = kwargs.pop('max_choices', 0)
-        super(MultiSelectFormField, self).__init__(*args, **kwargs)
- 
-    def clean(self, value):
-        if not value and self.required:
-            raise forms.ValidationError(self.error_messages['required'])
-        # if value and self.max_choices and len(value) > self.max_choices:
-        #     raise forms.ValidationError('You must select a maximum of %s choice%s.'
-        #             % (apnumber(self.max_choices), pluralize(self.max_choices)))
-        return value
+STATI=(('disponibile','Disponibile'),('ferie','In ferie'),('malattia','In malattia'),('indisponibile','Indisponibile'))
 
- 
-class MultiSelectField(models.Field):
-    __metaclass__ = models.SubfieldBase
- 
-    def get_internal_type(self):
-        return "CharField"
- 
-    def get_choices_default(self):
-        return self.get_choices(include_blank=False)
- 
-    def _get_FIELD_display(self, field):
-        value = getattr(self, field.attname)
-        choicedict = dict(field.choices)
- 
-    def formfield(self, **kwargs):
-        # don't call super, as that overrides default widget if it has choices
-        defaults = {'required': not self.blank, 'label': capfirst(self.verbose_name),
-                    'help_text': self.help_text, 'choices': self.choices}
-        if self.has_default():
-            defaults['initial'] = self.get_default()
-        defaults.update(kwargs)
-        return MultiSelectFormField(**defaults)
-
-    def get_prep_value(self, value):
-        return value
-
-    def get_db_prep_value(self, value, connection=None, prepared=False):
-        if isinstance(value, basestring):
-            return value
-        elif isinstance(value, list):
-            return ",".join(value)
- 
-    def to_python(self, value):
-        if value is not None:
-            return value if isinstance(value, list) else value.split(',')
-        return ''
-
-    def contribute_to_class(self, cls, name):
-        super(MultiSelectField, self).contribute_to_class(cls, name)
-        if self.choices:
-            func = lambda self, fieldname = name, choicedict = dict(self.choices): ",".join([choicedict.get(value, value) for value in getattr(self, fieldname)])
-            setattr(cls, 'get_%s_display' % self.name, func)
- 
-    def validate(self, value, model_instance):
-        arr_choices = self.get_choices_selected(self.get_choices_default())
-        for opt_select in value:
-            if (int(opt_select) not in arr_choices):  # the int() here is for comparing with integer choices
-                raise exceptions.ValidationError(self.error_messages['invalid_choice'] % value)  
-        return
- 
-    def get_choices_selected(self, arr_choices=''):
-        if not arr_choices:
-            return False
-        list = []
-        for choice_selected in arr_choices:
-            list.append(choice_selected[0])
-        return list
- 
-    def value_to_string(self, obj):
-        value = self._get_val_from_obj(obj)
-        return self.get_db_prep_value(value)
-
-class SelfForeignKey(models.ForeignKey):
-    def pre_save(self, instance, add):
-        manager = instance.__class__.objects
-        ancestor_id = getattr(instance, self.attname)
-        while ancestor_id is not None:
-            if ancestor_id == instance.id:
-                return None
-            ancestor = manager.get(id=ancestor_id)
-            ancestor_id = getattr(ancestor, self.attname)
-        return getattr(instance, self.attname)
-        
-from south.modelsinspector import add_introspection_rules  
-add_introspection_rules([], ["^get2\.calendario\.models\.MultiSelectField"]) 
-add_introspection_rules([], ["^get2\.calendario\.models\.SelfForeignKey"]) 
-
-ICONE = (
-	('icon-user','icon-user'),
-	('icon-ambulance','icon-ambulance'),
-	('icon-truck','icon-truck'),
-	('icon-user-md','icon-user-md'),
-	('icon-phone','icon-phone'),
-	('icon-stethoscope','icon-stethoscope'),
-	('icon-eye-open','icon-eye-open'),
-	('icon-bolt','icon-bolt'),
-	('icon-male','icon-male'),
-	('icon-female','icon-female'),
-	)
+GIORNI=((1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), (6, '6'), (7, '7'))
 
 class Calendario(models.Model):
 	nome = models.CharField('Nome',max_length=20)
@@ -136,151 +36,7 @@ class CalendarioForm(forms.ModelForm):
 		)
 		super(CalendarioForm, self).__init__(*args, **kwargs)
 
-class Mansione(models.Model):
-	nome =models.CharField('Nome',max_length=20)
-	descrizione = models.TextField('Descrizione estesa')
-	icona = models.TextField('Icona', choices=ICONE, default='icon-user' )
-	colore = models.TextField('Colore', default='#aaa' )
-	padre=SelfForeignKey('self', null=True, blank=True, related_name='children')
-	def __unicode__(self):
-		return '%s' % (self.nome)
-	# Milite tipo A, milite tipo B, centralinista ecc...
-	def root(self):
-		if self.padre:
-			return False
-		return True
 
-def capacita(mansione_id):
-	mansione=Mansione.objects.get(id=mansione_id)
-	c=[mansione,]
-	if mansione.padre:
-		c+=capacita(mansione.padre.id)
-	return c
-
-
-class MansioneForm(forms.ModelForm):
-	class Meta:
-		model = Mansione
-	def __init__(self, *args, **kwargs):
-		self.helper = FormHelper()
-		self.helper.layout = Layout(
-			Field('nome'),
-			Field('descrizione'),
-			Field('padre'),
-			Field(
-				'colore',
-				template = 'form_templates/color.html'
-			),
-			Field(
-        		'icona',
-				template = 'form_templates/radioselect_inline.html',
-			),
-			FormActions(
-				Submit('save', 'Invia', css_class="btn-primary")
-			)
-		)
-		super(MansioneForm, self).__init__(*args, **kwargs)
-		self.fields['padre'].queryset = Mansione.objects.exclude(id__exact=self.instance.id)
-
-STATI=(('disponibile','Disponibile'),('ferie','In ferie'),('malattia','In malattia'),('indisponibile','Indisponibile'))
-
-GIORNI=((1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), (6, '6'), (7, '7'))
-
-class Persona(models.Model):
-	user = models.ForeignKey(User, unique=True, blank=True, null=True, related_name='pers_user')
-	nome = models.CharField('Nome',max_length=200)
-	cognome = models.CharField('Cognome',max_length=200)
-	indirizzo = models.TextField( blank=True, null=True, )
-	nascita = models.DateField('Data di nascita', blank=True, null=True,)
-	tel1 = models.CharField('Telefono Principale',max_length=20)
-	tel2 = models.CharField('telefono Secondario',max_length=20, blank=True, null=True)
-	#caratteristiche della persona
-	stato = models.CharField('Stato',max_length=40, choices=STATI, default='disponibile' )
-	competenze = models.ManyToManyField(Mansione, blank=True, null=True)
-	retraining = models.DateField('Ultimo retraining livello A', blank=True, null=True)
-	retraining_blsd = models.DateField('Ultimo retraining Operatore BLSD', blank=True, null=True)
-	note = models.TextField( blank=True, null=True, )
-	notificaMail = models.BooleanField('Attiva', default=False )
-	giorniNotificaMail = models.PositiveSmallIntegerField('Giorni di anticipo', choices=GIORNI, default=2, blank=True, null=True )
-	def notifiche_non_lette(self):
-		n=0
-		for m in Notifica.objects.filter(destinatario=self.user):
-			if(m.letto == False):
-				n+=1
-		return n
-	def __unicode__(self):
-		return '%s %s' % (self.cognome,self.nome)
-
-class PersonaForm(forms.ModelForm):
-	class Meta:
-		model = Persona
-	def __init__(self, *args, **kwargs):
-		self.helper = FormHelper()
-		self.helper.layout = Layout(
-			HTML('<div class="row">'),
-			Div(
-				Fieldset(
-					'Informazioni Anagrafiche',
-					'nome',
-					'cognome',
-					'indirizzo',
-					),
-				AppendedText('nascita', '<i class="icon-calendar"></i>'),
-				AppendedText('tel1', '<i class="icon-phone"></i>'),
-				AppendedText('tel2', '<i class="icon-phone"></i>'),
-				css_class="span3",
-			),
-			Div(
-				Fieldset(
-					'Altre informazioni',
-					'user',
-					'stato',
-					),
-				InlineCheckboxes('competenze', css_class="badge-mansione"),
-				AppendedText('retraining', '<i class="icon-calendar"></i>'),
-				AppendedText('retraining_blsd', '<i class="icon-calendar"></i>'),
-				css_class="span3"
-			),
-			Fieldset(
-				'Notifiche via E-mail',
-				'notificaMail',
-				AppendedText('giorniNotificaMail', '<i class="icon-envelope"></i>'),
-				),
-			HTML('</div>'),
-			FormActions(
-				Submit('save', 'Invia', css_class="btn-primary"),
-			)
-		)
-		super(PersonaForm, self).__init__(*args, **kwargs)
-
-
-class Gruppo(models.Model):
-	nome = models.CharField('Nome',max_length=30)
-	componenti = models.ManyToManyField(Persona, blank=True, null=True, related_name='componenti_gruppo')
-	note = models.TextField( blank=True, null=True, )
-	def numero_componenti(self):
-		n=0
-		for c in self.componenti.all():
-			n+=1
-		return n
-	def __unicode__(self):
-		return '%s' % (self.nome)
-
-class GruppoForm(forms.ModelForm):
-	#nascita = forms.DateField(label='Data di nascita', required=False, widget=widgets.AdminDateWidget)
-	class Meta:
-		model = Gruppo
-		exclude = ('componenti')
-	def __init__(self, *args, **kwargs):
-		self.helper = FormHelper()
-		self.helper.layout = Layout(
-			Field('nome'),
-			Field('note'),
-			FormActions(
-				Submit('save', 'Invia', css_class="btn-primary")
-			)
-		)
-		super(GruppoForm, self).__init__(*args, **kwargs)
 
 class TipoTurno(models.Model):
 	identificativo = models.CharField(max_length=30, blank=False)
@@ -318,8 +74,19 @@ class Requisito(models.Model):
 	extra=models.BooleanField('Extra', default=False, help_text="Il requisito viene verificato su tutte le capacita delle persone disponibili, indipendentemtne dal loro ruolo nel turno")
 	def clickabile(self):
 		return  not (self.extra or self.nascosto)
+	def save(self, *args, **kwargs):
+		super(Requisito, self).save(*args, **kwargs)
+		for t in Turno.objects.filter(tipo=self.tipo_turno):
+			t.coperto = t.calcola_coperto_cache()
+			t.save()
+	def delete(self, *args, **kwargs):
+		super(Requisito, self).delete(*args, **kwargs)
+		for t in Turno.objects.filter(tipo=self.tipo_turno):
+			t.coperto = t.calcola_coperto_cache()
+			t.save()
 
 class RequisitoForm(forms.ModelForm):
+
 	class Meta:
 		model = Requisito
 		exclude = ('tipo_turno')
@@ -379,9 +146,16 @@ class Turno(models.Model):
 	occorrenza = models.ForeignKey(Occorrenza, blank=True, null=True)
 	valore = models.IntegerField('Punteggio',default=1)
 	calendario = models.ForeignKey(Calendario, null=True, on_delete=models.SET_NULL, default=1)
+	coperto = models.BooleanField(default=False)
+	requisiti = models.ManyToManyField(Requisito, blank=True, null=True, related_name='requisiti_turno', through='Cache_requisito')
 	def verifica_requisito(self,requisito,mansione_id=0,persona_competenze=0):	
 		if requisito.necessario:
 			contatore=0
+			if mansione_id!=0 and persona_competenze!=0:
+				if (not requisito.extra and requisito.mansione in capacita(mansione_id)):
+					contatore+=1
+				if (requisito.extra and requisito.mansione in persona_competenze):
+					contatore+=1
 			for d in self.turno_disponibilita.filter(tipo="Disponibile").exclude(mansione__isnull=True).all():
 				if not requisito.extra:
 					if (requisito.mansione in capacita(d.mansione.id)):
@@ -389,28 +163,32 @@ class Turno(models.Model):
 				else:
 				 	if (requisito.mansione in d.persona.competenze.all() ):
 						contatore+=1
-			if mansione_id!=0 and persona_competenze!=0:
-				#p = Persona.objects.get(id=persona_id)
-				#pdb.set_trace()
-				if (not requisito.extra and requisito.mansione in capacita(mansione_id)):
-					contatore+=1
-				if (requisito.extra and requisito.mansione in persona_competenze):
-					contatore+=1
-			if contatore>requisito.massimo and requisito.massimo!=0:
-				return False
+				if contatore>requisito.massimo and requisito.massimo!=0:
+					return False
 			if contatore<requisito.minimo and requisito.minimo!=0:
 				return False
 			return True
 		else:
 			return True
-	def gia_disponibili(self,requisito):
-		return self.turno_disponibilita.filter(tipo="Disponibile",mansione=requisito.mansione).count()
-	def coperto(self):
+	def posti_liberi(self,requisito):
+		posti = requisito.requisito.minimo - requisito.disponibilita.filter(tipo="Disponibile").exclude(mansione__isnull=True).count()
+		if posti >0:
+			return range(posti)
+		return range(0)
+	def calcola_coperto(self):
 		if self.tipo:
 			for r in Requisito.objects.filter(tipo_turno=self.tipo_id):
 				if not self.verifica_requisito(r):
 					return False
 				elif r.sufficiente:
+					return True
+		return True
+	def calcola_coperto_cache(self):
+		if self.tipo:
+			for c in Cache_requisito.objects.filter(turno=self):
+				if not c.verificato:
+					return False
+				elif c.requisito.sufficiente:
 					return True
 		return True
 	def contemporanei(self):
@@ -433,10 +211,29 @@ class Turno(models.Model):
 		self.inizio = self.inizio.replace(second=0)
 		self.fine = self.fine.replace(second=0)
 		super(Turno, self).save(*args, **kwargs)
+		requisiti = self.tipo.req_tipo_turno.all()
+		for c in Cache_requisito.objects.filter(turno=self):
+			if c.requisito not in requisiti:
+				c.delete()
+		for r in requisiti:
+			try:
+				cr=Cache_requisito.objects.get(turno=self,requisito=r)
+			except:
+				cr=Cache_requisito(turno=self,requisito=r,verificato=False)
+				cr.save()
+			cr.verificato=self.verifica_requisito(r)
+			cr.disponibilita=self.turno_disponibilita.filter(tipo="Disponibile",mansione=r.mansione)
+			cr.save()
+		self.coperto = self.calcola_coperto_cache()
+		super(Turno, self).save(*args, **kwargs)
+
+
+
 
 class TurnoForm(forms.ModelForm):
 	modifica_futuri=forms.BooleanField(label="modifica occorrenze future",required=False, help_text="<i class='icon-warning-sign'></i> sara' modificato solo l'orario e non la data!")
 	modifica_tutti=forms.BooleanField(label="modifica tutte le occorrenze",required=False, help_text="<i class='icon-warning-sign'></i> sara' modificato solo l'orario e non la data!")
+	#durata=forms.SelectField(label="Durata del turno", required=True, choices=DURATA)
 	def __init__(self, *args, **kwargs):
 		self.helper = FormHelper()
 		self.helper.layout = Layout(
@@ -447,6 +244,7 @@ class TurnoForm(forms.ModelForm):
 			AppendedText(
 				'fine', '<i class="icon-calendar"></i>'
 			),
+			#Field('durata'),
 			Field('tipo'),
 			Field('valore'),
 			Field('calendario'),
@@ -458,7 +256,7 @@ class TurnoForm(forms.ModelForm):
 		self.fields['tipo'].required = True
 	class Meta:
 		model = Turno
-		exclude = ('occorrenza')
+		exclude = ('occorrenza','requisiti')
 	def clean(self):
 		data = self.cleaned_data
 		if data.get('inizio')>data.get('fine'):
@@ -531,6 +329,20 @@ class Disponibilita(models.Model):
 	note =  models.TextField( blank=True, null=True, default="")
 	class Meta:
 		ordering = ['mansione']
+	def save(self, *args, **kwargs):
+		super(Disponibilita, self).save(*args, **kwargs)
+		self.turno.save()
+	def delete(self, *args, **kwargs):
+		super(Disponibilita, self).delete(*args, **kwargs)
+		self.turno.save()
+
+class Cache_requisito(models.Model):
+    turno = models.ForeignKey(Turno)
+    requisito = models.ForeignKey(Requisito)
+    verificato = models.BooleanField(default=False)
+    disponibilita = models.ManyToManyField(Disponibilita, blank=True, null=True, related_name='disponibilita_requisito')
+    class Meta:
+    	ordering = ['requisito']
 
 class Notifica(models.Model):
 	destinatario = models.ForeignKey(User, related_name='destinatario_user')
@@ -576,4 +388,3 @@ class Impostazioni_notificaForm(forms.ModelForm):
 			)
 		)
 		super(Impostazioni_notificaForm, self).__init__(*args, **kwargs)
-
