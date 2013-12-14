@@ -335,18 +335,14 @@ def verifica_intervallo(turno,persona):
 
 
 def disponibilita_verifica_tempo(request, turno):
-#	pdb.set_trace()
 	if request.user.is_staff:
 		verifica=True
 		errore=''
 	else:
 		(verifica,errore)=verifica_intervallo(turno,request.user.get_profile())
-	#cprint errore
-	#print diff.days
 	return (verifica,errore)
 
 
-# attenzione ai permessi
 def rimuovi_disponibilita(request, disp_id):
 	d=Disponibilita.objects.get(id=disp_id)
 	if request.user.is_staff or request.user.get_profile()==d.persona:
@@ -764,7 +760,7 @@ def modifica_turno(request, turno_id):
 				form.helper.layout[4][1].append("modifica_tutti")
 	return render(request,'form_turno.html',{'form': form,'azione': azione, 'turno': turno,'request':request})
 
-@user_passes_test(lambda u:u.is_staff)
+@user_passes_test(lambda u:u.is_superuser)
 def elimina_turno(request, turno_id):
 	t = Turno.objects.get(id=turno_id)
 	cal_id=t.calendario.id

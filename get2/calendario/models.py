@@ -77,12 +77,12 @@ class Requisito(models.Model):
 	def save(self, *args, **kwargs):
 		super(Requisito, self).save(*args, **kwargs)
 		for t in Turno.objects.filter(tipo=self.tipo_turno):
-			t.coperto = t.calcola_coperto()
+			t.coperto = t.calcola_coperto_cache()
 			t.save()
 	def delete(self, *args, **kwargs):
 		super(Requisito, self).delete(*args, **kwargs)
 		for t in Turno.objects.filter(tipo=self.tipo_turno):
-			t.coperto = t.calcola_coperto()
+			t.coperto = t.calcola_coperto_cache()
 			t.save()
 
 class RequisitoForm(forms.ModelForm):
@@ -183,6 +183,14 @@ class Turno(models.Model):
 				elif r.sufficiente:
 					return True
 		return True
+	def calcola_coperto_cache(self):
+		if self.tipo:
+			for c in Cache_requisito.objects.filter(turno=self):
+				if not c.verificato:
+					return False
+				elif c.requisito.sufficiente:
+					return True
+		return True
 	def contemporanei(self):
 		i=self.inizio+datetime.timedelta(seconds=60)
 		f=self.fine-datetime.timedelta(seconds=60)
@@ -216,14 +224,16 @@ class Turno(models.Model):
 			cr.verificato=self.verifica_requisito(r)
 			cr.disponibilita=self.turno_disponibilita.filter(tipo="Disponibile",mansione=r.mansione)
 			cr.save()
-		self.coperto = self.calcola_coperto()
+		self.coperto = self.calcola_coperto_cache()
 		super(Turno, self).save(*args, **kwargs)
+
 
 
 
 class TurnoForm(forms.ModelForm):
 	modifica_futuri=forms.BooleanField(label="modifica occorrenze future",required=False, help_text="<i class='icon-warning-sign'></i> sara' modificato solo l'orario e non la data!")
 	modifica_tutti=forms.BooleanField(label="modifica tutte le occorrenze",required=False, help_text="<i class='icon-warning-sign'></i> sara' modificato solo l'orario e non la data!")
+	#durata=forms.SelectField(label="Durata del turno", required=True, choices=DURATA)
 	def __init__(self, *args, **kwargs):
 		self.helper = FormHelper()
 		self.helper.layout = Layout(
@@ -234,6 +244,7 @@ class TurnoForm(forms.ModelForm):
 			AppendedText(
 				'fine', '<i class="icon-calendar"></i>'
 			),
+			#Field('durata'),
 			Field('tipo'),
 			Field('valore'),
 			Field('calendario'),

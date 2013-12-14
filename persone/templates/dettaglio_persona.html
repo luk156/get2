@@ -61,8 +61,6 @@
 						<th>Utente associato</th>
 						<th>Stato</th>
 						<th>Competenze</th>
-						<th>Ultimo retraining livello A</th>
-						<th>Ultimo retraining Operatore BLSD</th>
 					</tr>
 					</thead>
 					<tr>
@@ -71,8 +69,6 @@
 						<td data-title="Competenze">{% for mansione in persona.competenze.all %} 
 						<span class="badge-mansione">{{mansione.descrizione}}</span>
 						{% endfor %}</td>
-						<td data-title="Retraining A">{{persona.retraining}}</td>
-						<td data-title="Retraining BLSD">{{persona.retraining_blsd}}</td>
 					</tr>
 				</table>
 			</div>
