@@ -11,7 +11,7 @@ PROJECT_DIRNAME = PROJECT_ROOT.split(os.sep)[-1]
 print PROJECT_DIRNAME
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    # ('Matteo Lucchesi', 'matteo@luccalug.it'),
 )
 
 MANAGERS = ADMINS
@@ -180,8 +180,6 @@ INTERNAL_IPS = ('127.0.0.1',)
 
 CRISPY_TEMPLATE_PACK = 'bootstrap' 
 
-GCM_APIKEY = "<api_key>"
-
 GET_TITOLO="Test"
 
 #Giorni disponibili per modificare una disponibilita da parte di una persona
@@ -194,6 +192,6 @@ GET_CANC_MAX=0
 GET_ID_ADMIN_NOTIFICHE=1
 
 GET_ANALYTICS="UA-42859137-1"
-GET_DOMINIO="gis3w.it"
+GET_DOMINIO="gestionaleturni.it"
 
 GET_MAIL_NOTIFICA = "no@no.it"

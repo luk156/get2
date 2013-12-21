@@ -89,7 +89,7 @@ class RequisitoForm(forms.ModelForm):
 
 	class Meta:
 		model = Requisito
-		exclude = ('tipo_turno')
+		exclude = ('tipo_turno',)
 	def __init__(self, *args, **kwargs):
 		self.helper = FormHelper()
 		self.helper.layout = Layout(

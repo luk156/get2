@@ -247,7 +247,7 @@ class GruppoForm(forms.ModelForm):
 	#nascita = forms.DateField(label='Data di nascita', required=False, widget=widgets.AdminDateWidget)
 	class Meta:
 		model = Gruppo
-		exclude = ('componenti')
+		exclude = ('componenti',)
 	def __init__(self, *args, **kwargs):
 		self.helper = FormHelper()
 		self.helper.layout = Layout(
