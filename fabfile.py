@@ -21,7 +21,12 @@ def deploy(name):
 			password = create_database(name)
 			with cd("get2"):
 				configure(name,password)
-			fabtools.require.service.restarted('apache2')
+			with fabtools.python.virtualenv('../stable-env'):
+				run("python get2/manage.py collectstatic")
+				run("python get2/manage.py syncdb")
+				run("python get2/manage.py migrate")
+		fabtools.require.service.restarted('apache2')
+
 
 def configure(name, password):
 	run ("cp get2/settings.py.sample get2/settings.py")
