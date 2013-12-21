@@ -11,18 +11,18 @@ PROJECT_DIRNAME = PROJECT_ROOT.split(os.sep)[-1]
 print PROJECT_DIRNAME
 
 ADMINS = (
-    # ('Matteo Lucchesi', 'matteo@luccalug.it'),
+    ('Matteo Lucchesi', 'matteo@luccalug.it'),
 )
 
 MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': os.path.join(PROJECT_DIRNAME, "get_db.sqlite"), # Or path to database file if using sqlite3.
-        'USER': '', # Not used with sqlite3.
-        'PASSWORD': '', # Not used with sqlite3.
-        'HOST': '', # Set to empty string for localhost. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.mysql', 
+        'NAME': '_database_'
+        'USER': '_user_', # Not used with sqlite3.
+        'PASSWORD': '_password_', # Not used with sqlite3.
+        'HOST': 'localhost', # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '', # Set to empty string for default. Not used with sqlite3.
     }
 }
@@ -36,8 +36,6 @@ TIME_ZONE = 'Europe/Rome'
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'it-it'
-
-#SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
@@ -82,7 +80,7 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+#   'django.contrib.staticfiles.finders.DefaultStorageFinder',
     'dajaxice.finders.DajaxiceFinder',
 )
 
@@ -96,7 +94,8 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.eggs.Loader',
 )
 
-TEMPLATE_CONTEXT_PROCESSORS = ('get2.calendario.context_processors.calendari',
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'get2.calendario.context_processors.calendari',
     'get2.calendario.context_processors.titolo')
 
 MIDDLEWARE_CLASSES = (
@@ -105,7 +104,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    #'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -180,7 +179,7 @@ INTERNAL_IPS = ('127.0.0.1',)
 
 CRISPY_TEMPLATE_PACK = 'bootstrap' 
 
-GET_TITOLO="Test"
+GET_TITOLO="_titolo_"
 
 #Giorni disponibili per modificare una disponibilita da parte di una persona
 GET_DISP_MIN=1
@@ -191,7 +190,7 @@ GET_CANC_MAX=0
 
 GET_ID_ADMIN_NOTIFICHE=1
 
-GET_ANALYTICS="UA-42859137-1"
+GET_ANALYTICS="UA-1111111-1"
 GET_DOMINIO="gestionaleturni.it"
 
 GET_MAIL_NOTIFICA = "no@no.it"
