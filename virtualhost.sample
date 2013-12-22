@@ -1,0 +1,17 @@
+<VirtualHost *:80>
+      ServerName _name_.gestionaleturni.it
+      ServerAdmin matteo@luccalug.it
+
+      # Log Files
+      ErrorLog /var/log/apache2/error-lostquery.log
+      CustomLog /var/log/apache2/access-lostquery.log combined
+
+      # Prevent django from serving static files
+      DocumentRoot /home/django/_name_/get2/
+      Alias /static/ /home/django/_name_/get2/get2/static/
+
+      # Setup mod_wsgi
+      WSGIScriptAlias / /home/django/_name_/get2/get2.wsgi
+
+
+</VirtualHost>
