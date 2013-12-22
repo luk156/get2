@@ -24,14 +24,14 @@ def deploy(name):
 			with cd("get2"):
 				configure(name,password)
 				with fabtools.python.virtualenv(virtualenv_dir):
-					run("python get2/manage.py syncdb")
-					run("python get2/manage.py migrate")
-					run("python get2/manage.py collectstatic")
+					run("python manage.py syncdb")
+					run("python manage.py migrate")
+					run("python manage.py collectstatic")
 				run ("cp get2/get2.wsgi.sample get2/get2.wsgi")
 				sed("get2/get2.wsgi", "_envdir_", virtualenv_dir)
-				sed("get2/virtualhost.sample", "_name_", name)
-				sudo ("cp get2/virtualhost.sample /etc/apache2/sites-available/%s" % name)
-				require.apache.enable_site(name)
+				sed("virtualhost.sample", "_name_", name)
+				sudo ("cp virtualhost.sample /etc/apache2/sites-available/%s" % name)
+				fabtools.require.apache.enable_site(name)
 		fabtools.require.service.restarted('apache2')
 
 

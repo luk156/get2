@@ -11,7 +11,7 @@
       Alias /static/ /home/django/_name_/get2/get2/static/
 
       # Setup mod_wsgi
-      WSGIScriptAlias / /home/django/_name_/get2/get2.wsgi
+      WSGIScriptAlias / /home/django/_name_/get2/get2/get2.wsgi
 
 
 </VirtualHost>
