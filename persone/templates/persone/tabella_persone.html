@@ -52,7 +52,7 @@
 	value=selettore.options[selettore.selectedIndex].value;
 	dati=value.split("-");
 	$('#loading').removeClass('hidden');
-	Dajaxice.get2.calendario.persona_stato(Dajax.process,{'stato':dati[0],'persona':dati[1]});
+	Dajaxice.persone.persona_stato(Dajax.process,{'stato':dati[0],'persona':dati[1]});
 	};
 	var select_enable;
 	var select_gruppi;
@@ -126,7 +126,7 @@
 	</div>
 	<div class="modal-footer">
 	<button class="btn" data-dismiss="modal" aria-hidden="true">Annulla</button>
-	<button class="btn btn-primary" data-dismiss="modal" onclick="$('#loading').removeClass('hidden'); Dajaxice.get2.calendario.elimina_persona(Dajax.process,{'persona_id':{{persona.id}}});">Elimina</button>
+	<button class="btn btn-primary" data-dismiss="modal" onclick="$('#loading').removeClass('hidden'); Dajaxice.persone.calendario.elimina_persona(Dajax.process,{'persona_id':{{persona.id}}});">Elimina</button>
 	</div>
 </div>
 

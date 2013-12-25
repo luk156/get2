@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import *
+from django.conf.urls import *
 from django.views.generic import TemplateView
 from dajaxice.core import dajaxice_autodiscover, dajaxice_config
 
@@ -13,6 +13,7 @@ urlpatterns = patterns('',
     # statistiche
     url(r'^statistiche/', include('statistiche.urls')),
     url(r'^persone/', include('persone.urls')),
+    url(r'^gestione/', include('gestione.urls')),
 )
 
 urlpatterns += patterns('get2.calendario',
