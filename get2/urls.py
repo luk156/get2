@@ -13,7 +13,7 @@ urlpatterns = patterns('',
     # statistiche
     url(r'^statistiche/', include('statistiche.urls')),
     url(r'^persone/', include('persone.urls')),
-    url(r'^gestione/', include('gestione.urls')),
+    #url(r'^gestione/', include('gestione.urls')),
 )
 
 urlpatterns += patterns('get2.calendario',
