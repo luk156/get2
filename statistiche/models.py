@@ -19,16 +19,24 @@ class FiltroStatistiche(forms.Form):
 		self.helper = FormHelper()
 		self.helper.form_id = 'FiltroStatistiche'
 		self.helper.layout = Layout(
-			Fieldset('<h6>Data</h6>',
+			HTML('<div class="row">'),
+			Div(
+				Fieldset('<h6>Data</h6>',
 				AppendedText('start', '<i class="icon-calendar"></i>', css_class="dateinput span4"),
 				AppendedText('stop', '<i class="icon-calendar"></i>',  css_class="dateinput span4"),
 				),
-			Fieldset('<h6>Mansioni</h6>',
-				Field('mansioni', css_class="mansioni"),
+				css_class="span3",
+			),
+			Div(
+				Fieldset('<h6>Mansioni</h6>',
+					InlineCheckboxes('mansioni', css_class="mansioni"),
 				),
-			Fieldset('<h6>Gruppi</h6>',
-				Field('gruppi', css_class="gruppi"),
+				Fieldset('<h6>Gruppi</h6>',
+					InlineCheckboxes('gruppi', css_class="gruppi"),
 				),
+				css_class="span3",
+			),
+			HTML('</div>'),
 			FormActions(
 			    Button('save', 'Filtra', onclick="aggiorna_statistiche();", css_class="btn-primary"),
 			    Button('cancel', 'Annulla', onclick="reset();"),

@@ -32,7 +32,7 @@ def statistiche_intervallo(request, inizio = datetime.date(datetime.datetime.tod
 	tot_punti = []
 	if senza_gruppo:
 		persone = Persona.objects.filter(Q(Q(componenti_gruppo__isnull=True) | Q(componenti_gruppo__in=gruppi))).distinct().values('id','nome','cognome')
-		print persone
+		#print persone
 	else:
 		persone = Persona.objects.filter(componenti_gruppo__in=gruppi).values('id','nome','cognome')
 
