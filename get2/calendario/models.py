@@ -76,12 +76,12 @@ class Requisito(models.Model):
 		return  not (self.extra or self.nascosto)
 	def save(self, *args, **kwargs):
 		super(Requisito, self).save(*args, **kwargs)
-		for t in Turno.objects.filter(tipo=self.tipo_turno):
+		for t in Turno.objects.filter(tipo=self.tipo_turno, inizio__gte=datetime.datetime.now().date()):
 			t.coperto = t.calcola_coperto_cache()
 			t.save()
 	def delete(self, *args, **kwargs):
 		super(Requisito, self).delete(*args, **kwargs)
-		for t in Turno.objects.filter(tipo=self.tipo_turno):
+		for t in Turno.objects.filter(tipo=self.tipo_turno, inizio__gte=datetime.datetime.now().date()):
 			t.coperto = t.calcola_coperto_cache()
 			t.save()
 
