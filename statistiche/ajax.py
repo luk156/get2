@@ -24,7 +24,7 @@ def aggiorna_statistiche(request,da,al,mansioni,gruppi):
         else:
                 elenco_gruppi=Gruppo.objects.all()
 
-        data_da=datetime.date(2000,1,1)
+        data_da=datetime.date(datetime.datetime.today().year,1,1)
         data_al=datetime.datetime.now().date()
         if (da=="0"):
                 elenco_masnioni=Mansione.objects.all()
