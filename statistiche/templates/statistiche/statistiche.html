@@ -20,7 +20,14 @@
 			</thead>
 			<tbody>
 				{%for d in tot_turni %}
-	 				<tr><td>{{forloop.counter}}</td><td>{{d.nome|safe|escape}}</td><td>{{d.cognome|safe|escape}}</td><td>{{d.tot_turni}}</td></tr>
+	 				<tr><td>{{forloop.counter}}</td><td>{{d.nome|safe|escape}}</td><td>{{d.cognome|safe|escape}}</td>
+	 				<td>{{d.tot_turni}} <i class="icon-search" onclick="$('#dettagli-{{forloop.counter}}').slideToggle();"></i> </br>
+	 					<div id="dettagli-{{forloop.counter}}" class="hide">
+	 					{%for x in d.mansioni %}
+	 					<i class="{{x.icona}}" style="color:{{x.colore}}"></i> {{x}} :{{x.parziale}} </br>
+	 					{%endfor%}
+	 					</div>
+	 				</td></tr>
 				{%endfor%}
 			</tbody>
 		</table>
@@ -40,7 +47,12 @@
 			</thead>
 			<tbody>
 				{%for d in tot_punti %}
-	 				<tr><td>{{forloop.counter}}</td><td>{{d.nome|safe|escape}}</td><td>{{d.cognome|safe|escape}}</td><td>{{d.tot_punti}}</td></tr>
+	 				<tr>
+	 					<td>{{forloop.counter}}</td><td>{{d.nome|safe|escape}}</td><td>{{d.cognome|safe|escape}}</td>
+	 					<td>{{d.tot_punti}}
+	 					</td>
+	 				</tr>
+	 				<tr>
 				{%endfor%}
 			</tbody>
 		</table>

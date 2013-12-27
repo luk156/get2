@@ -42,6 +42,7 @@ def statistiche_intervallo(request, inizio = datetime.date(datetime.datetime.tod
 		p['tot_punti'] = 0
 		for d in disp:
 			p['tot_punti'] += d.turno.valore
+		p['mansioni'] = mansioni.filter(mansione_disponibilita__in=disp).annotate(parziale=Count('id'))
 		tot_turni.append(p)
 		tot_punti.append(p)
 	#import pdb; pdb.set_trace()
