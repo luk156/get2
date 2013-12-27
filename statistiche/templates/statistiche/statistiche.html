@@ -1,175 +1,207 @@
+{% block head %}
+	<script src="/static/js/jquery.tablesorter.min.js"></script>
+	<script src="/static/js/jquery.tablesorter.widgets.min.js"></script>
+	<script src="/static/js/jquery.tablesorter.widgets-filter-formatter.min.js"></script>
+	<link href="/static/css/theme.bootstrap.css" rel="stylesheet">
+	
+{% endblock%}
+
+
 <ul class="nav nav-tabs" id="myTab">
-	{% for statistica in elenco_statistiche %}
-		<li {%if forloop.first %} class="active" {% endif%}><a href="#tabs-{{ forloop.counter }}" data-toggle="tab" >{{statistica}}</a></li>
-	{% endfor %}
+	<li class="active"><a href="#tabs-tot_turni" data-toggle="tab" >Turni</a></li>
+	<li ><a href="#tabs-tot_punti" data-toggle="tab" >Punteggio</a></li>
 </ul>
 
 <div class="tab-content">
-	{% for statistica,dati in dati %}
 
-	<div class="tab-pane {%if forloop.first %} active{% endif%}" id="tabs-{{ forloop.counter }}">
+	<div class="tab-pane active" id="tabs-tot_turni">
 
-	<div id="container-{{ forloop.counter }}" style="min-width: 200px; height: 400px; margin: 0 auto"></div>
+		<div id="container-0" style="min-width: 200px; height: 400px; margin: 0 auto"></div>
+	
+		<table id="tabella_turni" class="table table-striped no-more-tables tablesorter">
 
-	{% if statistica = "Turni totali" %}
-		<script type="text/javascript">
-		
-
-		$(function () {
-		        $('#container-{{ forloop.counter }}').highcharts({
-		            chart: {
-		                type: 'column',
-		                margin: [ 50, 50, 100, 80]
-		            },
-		            title: {
-		                text: ''
-		            },
-		            xAxis: {
-		                categories: [
-		                    {% for d in dati|slice:":10"%}
-								"{{d|safe|escape}}",
-							{% endfor%}
-		                ],
-		                labels: {
-		                    rotation: -45,
-		                    align: 'right',
-		                    style: {
-		                        fontSize: '13px',
-		                        fontFamily: 'Verdana, sans-serif'
-		                    }
-		                }
-		            },
-		            yAxis: {
-		                min: 0,
-		                title: {
-		                    text: 'Turni'
-		                },
-		                stackLabels: {
-                    		enabled: true,
-                    		style: {
-                        		fontWeight: 'bold',
-                        		color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-                    			}
-                		}
-		            },
-		            legend: {
-		                enabled: false
-		            },
-		            series: [{
-		                name: 'Population',
-		                data: [
-		                    {% for d in dati|slice:":10"%}
-								{{d.tot_turni}},
-							{% endfor%}
-		                ],
-		                dataLabels: {
-		                    enabled: true,
-		                    rotation: -90,
-		                    color: '#FFFFFF',
-		                    align: 'right',
-		                    x: 4,
-		                    y: 10,
-		                    style: {
-		                        fontSize: '13px',
-		                        fontFamily: 'Verdana, sans-serif'
-		                    }
-		                }
-		            }]
-		        });
-		    });
-		
-
-
-		</script>
-		<table class="table table-striped" >
-		<thead>
-		<tr>
-		<th>Posizione</th><th>Persona</th><th>Turni effettuati</th>
-		</tr></thead>
-		{% for d in dati %}
-		<tr>
-		<td>{{forloop.counter}}</td><td>{{d|safe|escape}}</td><td>{{d.tot_turni}}</td>
-		</tr>
-		{% endfor%}
+			<thead>	
+				<tr>
+					<th>Posizione</th><th>Nome</th><th>Cognome</th><th>Turni effettuati</th>
+				</tr>
+			</thead>
+			<tbody>
+				{%for d in tot_turni %}
+	 				<tr><td>{{forloop.counter}}</td><td>{{d.nome|safe|escape}}</td><td>{{d.cognome|safe|escape}}</td><td>{{d.tot_turni}}</td></tr>
+				{%endfor%}
+			</tbody>
 		</table>
-	{% endif %}
-
-	{% if statistica = "Punteggi totali" %}
-
-		<script type="text/javascript">			
-			$(function () {
-		        $('#container-{{ forloop.counter }}').highcharts({
-		            chart: {
-		                type: 'column',
-		                margin: [ 50, 50, 100, 80],
-		                width: $('#tabs-1').width()
-		            },
-		            title: {
-		                text: ''
-		            },
-		            xAxis: {
-		                categories: [
-		                    {% for d in dati|slice:":10"%}
-								"{{d|safe|escape}}",
-							{% endfor %}
-		                ],
-		                labels: {
-		                    rotation: -45,
-		                    align: 'right',
-		                    style: {
-		                        fontSize: '13px',
-		                        fontFamily: 'Verdana, sans-serif'
-		                    }
-		                }
-		            },
-		            yAxis: {
-		                min: 0,
-		                title: {
-		                    text: 'Punti'
-		                }
-		            },
-		            legend: {
-		                enabled: false
-		            },
-		            series: [{
-		                name: 'Population',
-		                data: [
-		                    {% for d in dati|slice:":10"%}
-								{{d.tot_punti}},
-							{% endfor%}
-		                ],
-		                dataLabels: {
-		                    enabled: true,
-		                    rotation: -90,
-		                    color: '#FFFFFF',
-		                    align: 'right',
-		                    x: 4,
-		                    y: 10,
-		                    style: {
-		                        fontSize: '13px',
-		                        fontFamily: 'Verdana, sans-serif'
-		                    }
-		                }
-		            }]
-		        });
-		    });
-
-
-		
-		</script>
-		<table class="table table-striped" >
-		<thead>
-		<tr>
-		<th>Posizione</th><th>Persona</th><th>Punteggio</th>
-		</tr></thead>
-		{% for d in dati %}
-		<tr>
-		<td>{{forloop.counter}}</td><td>{{d|safe|escape}}</td><td>{{d.tot_punti}}</td>
-		</tr>
-		{% endfor%}
-		</table>
-	{% endif %}
 
 	</div>
-	{% endfor %}
+
+	<div class="tab-pane" id="tabs-tot_punti">
+
+		<div id="container-1" style="min-width: 200px; height: 400px; margin: 0 auto"></div>
+
+		<table id="tabella_punti" class="table table-striped no-more-tables tablesorter">
+
+			<thead>	
+				<tr>
+					<th>Posizione</th><th>Nome</th><th>Cognome</th><th>Punteggio</th>
+				</tr>
+			</thead>
+			<tbody>
+				{%for d in tot_punti %}
+	 				<tr><td>{{forloop.counter}}</td><td>{{d.nome|safe|escape}}</td><td>{{d.cognome|safe|escape}}</td><td>{{d.tot_punti}}</td></tr>
+				{%endfor%}
+			</tbody>
+		</table>
+
+	</div>
+
 </div>
+<script src="/static/sorttable.js"></script>
+
+<script type="text/javascript">
+$(window).load(function(){
+	$("table#tabella_turni").tablesorter({
+		sortList: [[3,1]],
+		theme : "bootstrap",widthFixed: true,headerTemplate : '{content} {icon}',widgets : [ "uitheme", "filter", "zebra" ],
+		widgetOptions : {zebra : ["even", "odd"], filter_reset : ".reset",}
+		});
+});
+
+
+$(function () {
+        $('#container-0').highcharts({
+            chart: {
+                type: 'column',
+                margin: [ 50, 50, 100, 80]
+            },
+            title: {
+                text: ''
+            },
+            xAxis: {
+                categories: [
+                    {% for d in tot_turni|slice:":10"%}
+						"{{d.nome|safe|escape}} {{d.cognome|safe|escape}}",
+					{% endfor%}
+                ],
+                labels: {
+                    rotation: -45,
+                    align: 'right',
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'Verdana, sans-serif'
+                    }
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Turni'
+                },
+                stackLabels: {
+            		enabled: true,
+            		style: {
+                		fontWeight: 'bold',
+                		color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+            			}
+        		}
+            },
+            legend: {
+                enabled: false
+            },
+            series: [{
+                name: 'Population',
+                data: [
+                    {% for d in tot_turni|slice:":10"%}
+						{{d.tot_turni}},
+					{% endfor%}
+                ],
+                dataLabels: {
+                    enabled: true,
+                    rotation: -90,
+                    color: '#FFFFFF',
+                    align: 'right',
+                    x: 4,
+                    y: 10,
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'Verdana, sans-serif'
+                    }
+                }
+            }]
+        });
+    });
+
+
+
+$(window).load(function(){
+	$("table#tabella_punti").tablesorter({
+		sortList: [[3,1]],
+		theme : "bootstrap",widthFixed: true,headerTemplate : '{content} {icon}',widgets : [ "uitheme", "filter", "zebra" ],
+		widgetOptions : {zebra : ["even", "odd"], filter_reset : ".reset",}
+		});
+});
+
+$(function () {
+        $('#container-1').highcharts({
+            chart: {
+                type: 'column',
+                margin: [ 50, 50, 100, 80],
+                width: $('#tabs-tot_turni').width()
+            },
+            title: {
+                text: ''
+            },
+            xAxis: {
+                categories: [
+                    {% for d in tot_punti|slice:":10"%}
+						"{{d.nome|safe|escape}} {{d.cognome|safe|escape}}",
+					{% endfor%}
+                ],
+                labels: {
+                    rotation: -45,
+                    align: 'right',
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'Verdana, sans-serif'
+                    }
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Turni'
+                },
+                stackLabels: {
+            		enabled: true,
+            		style: {
+                		fontWeight: 'bold',
+                		color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+            			}
+        		}
+            },
+            legend: {
+                enabled: false
+            },
+            series: [{
+                name: 'Population',
+                data: [
+                    {% for d in tot_punti|slice:":10"%}
+						{{d.tot_punti}},
+					{% endfor%}
+                ],
+                dataLabels: {
+                    enabled: true,
+                    rotation: -90,
+                    color: '#FFFFFF',
+                    align: 'right',
+                    x: 4,
+                    y: 10,
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'Verdana, sans-serif'
+                    }
+                }
+            }]
+        });
+    });
+
+</script>

@@ -1,6 +1,7 @@
 # Create your views here.
 from django.http import HttpResponse, HttpResponseRedirect, QueryDict
 from persone.models import *
+from get2.calendario.models import *
 from django.shortcuts import render_to_response, redirect, render
 import calendar,datetime,locale
 from django.db.models import Q, Count, Sum
@@ -21,29 +22,30 @@ elenco_statistiche=("Turni totali",
 @login_required
 def statistiche(request):
 	#se l' intervallo non e specificato prendo tutto
-	dati=statistiche_intervallo(request)
-	return render(request,'statistiche.html',{'dati': dati,'elenco_statistiche':elenco_statistiche,'FiltroStatistiche':FiltroStatistiche() ,'request':request})
+	tot_turni, tot_punti =statistiche_intervallo(request)
+	return render(request,'statistiche.html',{'tot_turni': tot_turni,'tot_punti': tot_punti,'FiltroStatistiche':FiltroStatistiche() ,'request':request})
 
-from dateutil.relativedelta import relativedelta
+import operator
 
 def statistiche_intervallo(request, inizio = datetime.date(datetime.datetime.today().year,1,1), fine = datetime.datetime.now().date(), mansioni = Mansione.objects.all(), gruppi = Gruppo.objects.all(), senza_gruppo = True):
-	#la funzione calcola le statistiche tra due date, rihiede 2 oggetti datetime.date
-	dati=[]
-	dati.append(elenco_statistiche)
-	stat=[]
+	tot_turni = []
+	tot_punti = []
 	if senza_gruppo:
-		persone=Persona.objects.filter(Q(Q(componenti_gruppo__isnull=True) | Q(componenti_gruppo__in=gruppi))).distinct()
-		print persone.query
-		stat.append(persone.filter(persona_disponibilita__tipo="Disponibile", persona_disponibilita__mansione__in=mansioni, persona_disponibilita__turno__inizio__gte=inizio, persona_disponibilita__turno__fine__lte=fine ).annotate(tot_turni=Count('persona_disponibilita', distinct=True)).order_by("-tot_turni"))
-		stat.append(persone.filter(persona_disponibilita__tipo="Disponibile", persona_disponibilita__mansione__in=mansioni, persona_disponibilita__turno__inizio__gte=inizio, persona_disponibilita__turno__fine__lte=fine ).annotate(tot_punti=Sum('persona_disponibilita__turno__valore')).order_by("-tot_punti"))
+		persone = Persona.objects.filter(Q(Q(componenti_gruppo__isnull=True) | Q(componenti_gruppo__in=gruppi))).distinct().values('id','nome','cognome')
+		print persone
 	else:
-		stat.append(Persona.objects.filter(componenti_gruppo__in=gruppi,persona_disponibilita__tipo="Disponibile", persona_disponibilita__mansione__in=mansioni, persona_disponibilita__turno__inizio__gte=inizio, persona_disponibilita__turno__fine__lte=fine ).annotate(tot_turni=Count('persona_disponibilita', distinct=True)).order_by("-tot_turni"))
-		stat.append(Persona.objects.filter(componenti_gruppo__in=gruppi,persona_disponibilita__tipo="Disponibile", persona_disponibilita__mansione__in=mansioni, persona_disponibilita__turno__inizio__gte=inizio, persona_disponibilita__turno__fine__lte=fine ).annotate(tot_punti=Sum('persona_disponibilita__turno__valore', distinct=True)).order_by("-tot_punti"))
-	#pdb.set_trace()
-	dati.append(stat)
-	dati=zip(*dati)
-	#risp=Persona.objects.filter(persona_disponibilita__tipo="Disponibile").annotate(tot_turni=Count('persona_disponibilita'))
-	return dati
+		persone = Persona.objects.filter(componenti_gruppo__in=gruppi).values('id','nome','cognome')
 
-
+	for p in persone:
+		disp = Disponibilita.objects.filter(persona_id = p["id"], tipo = "Disponibile", turno__inizio__gte=inizio, turno__fine__lte=fine, mansione__in=mansioni)
+		p['tot_turni'] = disp.count()
+		p['tot_punti'] = 0
+		for d in disp:
+			p['tot_punti'] += d.turno.valore
+		tot_turni.append(p)
+		tot_punti.append(p)
+	#import pdb; pdb.set_trace()
+	tot_turni.sort(key=operator.itemgetter('tot_turni'), reverse=True)
+	tot_punti.sort(key=operator.itemgetter('tot_punti'), reverse=True)
+	return tot_turni, tot_punti
 #### fine statistiche ####
