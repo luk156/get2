@@ -760,11 +760,12 @@ def modifica_turno(request, turno_id):
 				form.helper.layout[4][1].append("modifica_tutti")
 	return render(request,'form_turno.html',{'form': form,'azione': azione, 'turno': turno,'request':request})
 
-@user_passes_test(lambda u:u.is_superuser)
+@user_passes_test(lambda u:u.is_staff)
 def elimina_turno(request, turno_id):
 	t = Turno.objects.get(id=turno_id)
+	if request.user.is_super or t.inizio > datetime.datetime.now():
+		t.delete()
 	cal_id=t.calendario.id
-	t.delete()
 	return HttpResponseRedirect('/calendario/'+str(cal_id))
 
 @user_passes_test(lambda u:u.is_staff)

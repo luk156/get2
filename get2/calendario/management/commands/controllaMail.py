@@ -9,7 +9,7 @@ class Command(BaseCommand):
 	dataInizio = datetime.date.today()
 	dataInizio = dataInizio + datetime.timedelta(days=1)
 	dataFine = dataInizio + datetime.timedelta(days=7)
-	disponibilita = Disponibilita.objects.filter(turno__inizio__range=(dataInizio, dataFine))
+	disponibilita = Disponibilita.objects.filter(turno__inizio__range=(dataInizio, dataFine), tipo="Disponibile")
 	listaMessaggi = ()
 	for dis in disponibilita:
 		differenzaGiorni = (dis.turno.inizio.date() - datetime.date.today()).days
