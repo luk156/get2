@@ -41,6 +41,15 @@ function aggiorna_statistiche(){
 
 };
 
+function dettagli_statistiche(id){
+	mansioni = "";
+	$('.mansioni:checkbox').each(function() {if (this.checked) {
+        mansioni = mansioni + '_' + this.value;
+    }});
+    mansioni = mansioni.substr(1);
+	Dajaxice.statistiche.dettaglio_turni(Dajax.process,{'da':$("#id_start").val(),'al':$("#id_stop").val(),'mansioni':mansioni,'id':id});
+}
+
 $(window).load(function(){
 
 	$(".datetimeinput").datetimepicker({format: 'dd/mm/yyyy hh:ii:ss',autoclose: true,minuteStep: 15,language: 'it'});
