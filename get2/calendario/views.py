@@ -763,7 +763,7 @@ def modifica_turno(request, turno_id):
 @user_passes_test(lambda u:u.is_staff)
 def elimina_turno(request, turno_id):
 	t = Turno.objects.get(id=turno_id)
-	if request.user.is_super or t.inizio > datetime.datetime.now():
+	if request.user.is_superuser or t.inizio > datetime.datetime.now():
 		t.delete()
 	cal_id=t.calendario.id
 	return HttpResponseRedirect('/calendario/'+str(cal_id))
