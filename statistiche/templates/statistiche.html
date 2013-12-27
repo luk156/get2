@@ -35,7 +35,8 @@ function aggiorna_statistiche(){
         gruppi = gruppi + '_' + this.value;
     }});
     gruppi = gruppi.substr(1);
-    if (gruppi==""){alert("seleziona almeno un gruppo!"); return;} 
+    if (gruppi==""){alert("seleziona almeno un gruppo!"); return;}
+    $('#loading').removeClass('hidden');
 	Dajaxice.statistiche.aggiorna_statistiche(Dajax.process,{'da':$("#id_start").val(),'al':$("#id_stop").val(),'mansioni':mansioni,'gruppi':gruppi});
 
 };
@@ -51,33 +52,13 @@ function reset(){
 	$("#id_stop").val('');
 	$('.mansioni').prop('checked',true);
 	$('.gruppi').prop('checked',true);
+	$('#loading').removeClass('hidden');
 	Dajaxice.statistiche.aggiorna_statistiche(Dajax.process,{'da':'0','al':'0','mansioni':'all','gruppi':'all'});
 };
 </script>
 
 <div class="row-fluid">
 	<div class="span1">
-{% comment %} 		<div class="box">
-			<div class="box-header">
-				<a href="#" class="pull-right btn" onclick="reset()" ><i class="icon-refresh"></i></a>
-				<h5><i class="icon-cog"></i> Intervallo</h5>
-			</div>
-			<div class="box-content">
-				<fieldset>
-				<label for="from">Inizio</label>
-				<div class="input-append">
-					<input type="text" id="from" name="from" class="span4 dateinput"/>
-					<span class="add-on"><i class="icon-calendar"></i></span>
-				</div>
-				<label for="to">Fine</label>
-				<div class="input-append">
-					<input type="text" id="to" name="to"  class="span4 dateinput"/>
-					<span class="add-on"><i class="icon-calendar"></i></span>
-				</div>
-				<input type="button" value="Applica" class="btn" onclick="aggiorna_statistiche()"/>
-				</fieldset>
-			</div>
-		</div> {% endcomment %}
 		<div class="box">
 			<div class="box-header">
 				<h5><i class="icon-filter"></i> Filtra:</h5>
