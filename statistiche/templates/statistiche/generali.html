@@ -1,0 +1,92 @@
+<h4 class="header">Turni</h4>
+<div class="row">
+<div id="container-2" style="min-width: 200px; height: 400px; margin: 0 auto" class="span3"></div>
+<div id="container-3" style="min-width: 200px; height: 400px; margin: 0 auto" class="span3"></div>
+</div>
+<script>
+
+
+
+$(function () {
+
+    $('#container-2').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            width: $('#tabs-tot_turni').width()/2-50
+        },
+        title: {
+            text: 'Stato dei Turni'
+        },
+        tooltip: {
+    	    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    color: '#000000',
+                    connectorColor: '#000000',
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Browser share',
+            data: [
+            	{% for t in stato_turno %}
+					{name:"{%if t.coperto%}Coperto{%else%}Non coperto{%endif%}",
+					y:{{t.dcount}},
+					color:"{%if t.coperto%}rgb(75, 157, 56){%else%}rgb(229, 88, 88){%endif%}"
+					},
+				{% endfor %}
+            ]
+        }]
+    });
+});
+
+
+$(function () {
+
+    $('#container-3').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            width: $('#tabs-tot_turni').width()/2-50
+        },
+        title: {
+            text: 'Tipologie di Turno'
+        },
+        tooltip: {
+    	    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    color: '#000000',
+                    connectorColor: '#000000',
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Browser share',
+            data: [
+            	{% for t in tipi_turno %}
+					["{{t.tipo__identificativo}}",{{t.dcount}}],
+				{% endfor %}
+            ]
+        }]
+    });
+});
+
+</script>

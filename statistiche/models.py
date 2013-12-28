@@ -4,7 +4,7 @@ from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Field, MultiField, HTML, Button
 from crispy_forms.bootstrap import *
-
+import calendar,datetime,locale
 from persone.models import Mansione, Gruppo
 
 class FiltroStatistiche(forms.Form):
@@ -13,8 +13,8 @@ class FiltroStatistiche(forms.Form):
 	lista_gruppi += Gruppo.objects.all().values_list('id','nome')
 	mansioni = forms.MultipleChoiceField( label = "",	choices = lista_mansioni, initial = [x[0] for x in lista_mansioni], required = False,  widget = forms.CheckboxSelectMultiple,)
 	gruppi = forms.MultipleChoiceField( label = "",	choices = lista_gruppi,initial = [x[0] for x in lista_gruppi],  required = False,  widget = forms.CheckboxSelectMultiple,)
-	start =  forms.DateField(label = "dal:", required = False,)
-	stop = forms.DateField(label = "al:", required = False,)
+	start =  forms.DateField(label = "dal:", required = False, initial=datetime.date(datetime.datetime.today().year,1,1))
+	stop = forms.DateField(label = "al:", required = False, initial=datetime.datetime.now().date())
 	def __init__(self, *args, **kwargs):
 		self.helper = FormHelper()
 		self.helper.form_id = 'FiltroStatistiche'

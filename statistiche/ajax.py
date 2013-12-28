@@ -54,3 +54,20 @@ def dettaglio_turni(request,da,al,mansioni,id):
         dajax.assign('div #dettagli-'+str(id), 'innerHTML', html_dettagli)
         #import pdb; pdb.set_trace()
         return dajax.json()
+
+@dajaxice_register
+def statistiche_generali(request,da,al,):
+        dajax=Dajax()
+        data_da=datetime.date(datetime.datetime.today().year,1,1)
+        data_al=datetime.datetime.now().date()
+        if (da=="0"):
+                elenco_mansioni=Mansione.objects.all()
+        elif (da!="" and al!=""):
+                data_da=datetime.datetime.strptime(da, "%d/%m/%Y").date()
+                data_al=datetime.datetime.strptime(al, "%d/%m/%Y").date()
+        stato_turno=Turno.objects.values('coperto').annotate(dcount=Count('coperto'))
+        tipi_turno=Turno.objects.values('tipo','tipo__identificativo').annotate(dcount=Count('tipo'))
+        html_generali = render_to_string( 'statistiche/generali.html', { 'tipi_turno': tipi_turno, 'stato_turno': stato_turno} )
+        dajax.assign('div #tabs-generali', 'innerHTML', html_generali)
+        #import pdb; pdb.set_trace()
+        return dajax.json()
