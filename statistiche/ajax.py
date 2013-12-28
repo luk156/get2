@@ -65,8 +65,8 @@ def statistiche_generali(request,da,al,):
         elif (da!="" and al!=""):
                 data_da=datetime.datetime.strptime(da, "%d/%m/%Y").date()
                 data_al=datetime.datetime.strptime(al, "%d/%m/%Y").date()
-        stato_turno=Turno.objects.values('coperto', inizio__gte=data_da, fine__lte=data_al,).annotate(dcount=Count('coperto'))
-        tipi_turno=Turno.objects.values('tipo','tipo__identificativo', inizio__gte=data_da, fine__lte=data_al,).annotate(dcount=Count('tipo'))
+        stato_turno=Turno.objects.filter(inizio__gte=data_da, fine__lte=data_al,).values('coperto').annotate(dcount=Count('coperto'))
+        tipi_turno=Turno.objects.filter(inizio__gte=data_da, fine__lte=data_al,).values('tipo','tipo__identificativo').annotate(dcount=Count('tipo'))
         html_generali = render_to_string( 'statistiche/generali.html', { 'tipi_turno': tipi_turno, 'stato_turno': stato_turno} )
         dajax.assign('div #tabs-generali', 'innerHTML', html_generali)
         #import pdb; pdb.set_trace()
