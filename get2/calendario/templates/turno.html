@@ -85,7 +85,7 @@
 		{% endif %}
 		{% if  not r.requisito.clickabile  and request.user.is_staff %}
 				<div class="mansione-calendario">
-					<h6 class="h6-mansione-{{r.requisito.mansione.id}}">
+					<h6 class="h6-mansione-{{r.requisito.mansione.id}}">{{r.requisito.mansione}}
 					
 					{% if r.requisito.extra %}<i class="icon-asterisk"></i> {% endif %}
 
