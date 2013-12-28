@@ -181,8 +181,6 @@ class Persona(models.Model):
 	note = models.TextField( blank=True, null=True, )
 	notificaMail = models.BooleanField('Attiva', default=False )
 	giorniNotificaMail = models.PositiveSmallIntegerField('Giorni di anticipo', choices=GIORNI, default=2, blank=True, null=True )
-	tot_turni = models.PositiveSmallIntegerField(default=0, blank=True, null=True, widget=forms.HiddenInput())
-	tot_punti = models.PositiveSmallIntegerField(default=0, blank=True, null=True, widget=forms.HiddenInput())
 	def notifiche_non_lette(self):
 		n=0
 		for m in self.user.destinatario_user.all():
