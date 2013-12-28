@@ -54,11 +54,7 @@ function dettagli_statistiche(id){
 function generali(){
 	Dajaxice.statistiche.statistiche_generali(Dajax.process,{'da':$("#id_start").val(),'al':$("#id_stop").val()});
 }
-$(window).load(function(){
 
-	$(".datetimeinput").datetimepicker({format: 'dd/mm/yyyy hh:ii:ss',autoclose: true,minuteStep: 15,language: 'it'});
-	$(".dateinput").datetimepicker({format: 'dd/mm/yyyy',autoclose: true,minView:2,language: 'it'});
-});
 
 function reset(){
 	$("#id_start").val('');
