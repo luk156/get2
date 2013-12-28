@@ -13,24 +13,23 @@ class FiltroStatistiche(forms.Form):
 	lista_gruppi += Gruppo.objects.all().values_list('id','nome')
 	mansioni = forms.MultipleChoiceField( label = "",	choices = lista_mansioni, initial = [x[0] for x in lista_mansioni], required = False,  widget = forms.CheckboxSelectMultiple,)
 	gruppi = forms.MultipleChoiceField( label = "",	choices = lista_gruppi,initial = [x[0] for x in lista_gruppi],  required = False,  widget = forms.CheckboxSelectMultiple,)
-	start =  forms.DateField(label = "dal:", required = False, initial=datetime.date(datetime.datetime.today().year,1,1))
-	stop = forms.DateField(label = "al:", required = False, initial=datetime.datetime.now().date())
+	start =  forms.DateField(label = "dal:", required = False, initial=datetime.date(datetime.datetime.today().year,1,1).strftime("%d/%m/%Y"))
+	stop = forms.DateField(label = "al:", required = False, initial=datetime.datetime.now().date().strftime("%d/%m/%Y"))
 	def __init__(self, *args, **kwargs):
 		self.helper = FormHelper()
 		self.helper.form_id = 'FiltroStatistiche'
 		self.helper.layout = Layout(
+			
+			Field('start', type="hidden"),
+			Field('stop', type="hidden"),
 			HTML('<div class="row">'),
-			Div(
-				Fieldset('<h6>Data</h6>',
-				AppendedText('start', '<i class="icon-calendar"></i>', css_class="dateinput span4"),
-				AppendedText('stop', '<i class="icon-calendar"></i>',  css_class="dateinput span4"),
-				),
-				css_class="span3",
-			),
 			Div(
 				Fieldset('<h6>Mansioni</h6>',
 					InlineCheckboxes('mansioni', css_class="mansioni"),
 				),
+				css_class="span4",
+			),	
+			Div(
 				Fieldset('<h6>Gruppi</h6>',
 					InlineCheckboxes('gruppi', css_class="gruppi"),
 				),

@@ -5,13 +5,14 @@
 {% block head %}
 	<script src="/static/js/highcharts/highcharts.js"></script>
 	<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="excanvas.min.js"></script><![endif]-->
-	<link href="/static/css/datetimepicker.css" rel="stylesheet">
-	<script src="/static/js/bootstrap-datetimepicker.min.js"></script>
 	<script src="/static/js/locales/bootstrap-datetimepicker.it.js"></script>
 	<script src="/static/js/jquery.tablesorter.min.js"></script>
 	<script src="/static/js/jquery.tablesorter.widgets.min.js"></script>
 	<script src="/static/js/jquery.tablesorter.widgets-filter-formatter.min.js"></script>
 	<link href="/static/css/theme.bootstrap.css" rel="stylesheet">
+	<script src="/static/jquery-ui.min.js"></script>
+	<script src="/static/jQRangeSlider/jQDateRangeSlider-withRuler-min.js"></script>
+	<link href="/static/jQRangeSlider/css/iThing-min.css" rel="stylesheet">
 {% endblock%}
 
 
@@ -71,9 +72,11 @@ function reset(){
 
 <div class="row-fluid">
 	<div class="span7">
+		<div id="slider" style="margin:0px 60px;"></div>
+		</br>
 		<div class="box">
-			<div class="box-header">
-				<a href="#" class="btn" onclick="$('#filtro_statistiche').slideToggle();"><i class="icon-filter"></i> Filtra</a>
+			<div class="box-header" onclick="$('#filtro_statistiche').slideToggle();" style="cursor:pointer;">
+				<h4><i class="icon-filter"></i> Filtra</h4>
 			</div>
 			<div class="box-content hide" id="filtro_statistiche">
 				{% crispy FiltroStatistiche %}
@@ -86,4 +89,53 @@ function reset(){
 		{% include "statistiche/statistiche.html" %}
 	</div>
 </div>
+
+<script type="text/javascript">
+
+$(window).load(function(){
+	var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
+	anno = new Date().getFullYear();
+	$("#slider").dateRangeSlider({
+		 	bounds: {min: new Date(anno-3, 0, 1), max: new Date()},
+			 defaultValues:{
+				min: new Date(anno, 0, 1),
+				max: new Date()
+			},
+			scales: [
+				{
+				next: function(value){
+				var next = new Date(value);
+				return new Date(next.setFullYear(value.getFullYear() + 1));
+				},
+				label: function(value){
+				return value.getFullYear();
+				},
+			},
+			{
+				next: function(value){
+				var next = new Date(value);
+				return new Date(next.setMonth(value.getMonth() + 1));
+				},
+				label: function(value){
+				return value.getMonth();
+				},
+			}
+
+			]
+		});
+	$("#slider").bind("valuesChanged", function(e, data){
+		i=data.values.min;
+		f=data.values.max;
+		$("#id_start")[0].value = i.getDate()+"/"+(i.getMonth()+1)+"/"+i.getFullYear();
+		$("#id_stop")[0].value = f.getDate()+"/"+(f.getMonth()+1)+"/"+f.getFullYear();
+		aggiorna_statistiche();
+	});
+
+	
+});
+
+</script>
+
+
 {% endblock %}
+
