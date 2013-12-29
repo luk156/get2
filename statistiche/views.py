@@ -37,11 +37,11 @@ def statistiche_intervallo(request, inizio = datetime.date(datetime.datetime.tod
 		persone = Persona.objects.filter(componenti_gruppo__in=gruppi).values('id','nome','cognome')
 
 	for p in persone:
-		disp = Disponibilita.objects.filter(persona_id = p["id"], tipo = "Disponibile", turno__inizio__gte=inizio, turno__fine__lte=fine, mansione__in=mansioni)
+		disp = Disponibilita.objects.values('turno__valore').filter(persona_id = p["id"], tipo = "Disponibile", turno__inizio__gte=inizio, turno__fine__lte=fine, mansione__in=mansioni)
 		p['tot_turni'] = disp.count()
 		p['tot_punti'] = 0
 		for d in disp:
-			p['tot_punti'] += d.turno.valore
+			p['tot_punti'] += d['turno__valore']
 		tot_turni.append(p)
 		tot_punti.append(p)
 	#import pdb; pdb.set_trace()
