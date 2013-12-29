@@ -281,7 +281,7 @@ def stampa_calendario(request,cal_id):
 	return risposta
 
 def calendarioazione(request,cal_id,azione):
-	if azione == 'oggi':
+	if azione == 'oggi' or 'start' not in request.session:
 		start = datetime.datetime.today()
 	else:
 		start = request.session['start']
