@@ -9,8 +9,8 @@ from persone.models import Mansione, Gruppo
 
 class FiltroStatistiche(forms.Form):
 	lista_gruppi = [('all','senza gruppo')]
-	lista_mansioni = Mansione.objects.all().values_list('id','nome')
-	lista_gruppi += Gruppo.objects.all().values_list('id','nome')
+	lista_mansioni = Mansione.objects.exclude(escludi_stat=True).values_list('id','nome')
+	lista_gruppi += Gruppo.objects.exclude(escludi_stat=True).values_list('id','nome')
 	mansioni = forms.MultipleChoiceField( label = "",	choices = lista_mansioni, initial = [x[0] for x in lista_mansioni], required = False,  widget = forms.CheckboxSelectMultiple,)
 	gruppi = forms.MultipleChoiceField( label = "",	choices = lista_gruppi,initial = [x[0] for x in lista_gruppi],  required = False,  widget = forms.CheckboxSelectMultiple,)
 	start =  forms.DateField(label = "dal:", required = False, initial=datetime.date(datetime.datetime.today().year,1,1).strftime("%d/%m/%Y"))
