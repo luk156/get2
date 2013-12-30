@@ -66,7 +66,12 @@
 							</tr></thead>
 							{% for gruppo in gruppi %}
 								<tr id="gruppo-{{gruppo.id}}">
-									<td data-title="Nome">{{gruppo}} ({{gruppo.numero_componenti}})</td>
+									<td data-title="Nome">{{gruppo}} ({{gruppo.numero_componenti}})
+
+									{%if not gruppo.escludi_stat %}
+  										<i class="icon-bar-chart "></i>	
+									{%endif%}
+									</td>
 									<td data-title="Note">{{gruppo.note}}
 									</td>
 									<td data-title="Operazioni">

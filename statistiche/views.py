@@ -31,13 +31,13 @@ def statistiche_intervallo(request, inizio = datetime.date(datetime.datetime.tod
 	tot_turni = []
 	tot_punti = []
 	if senza_gruppo:
-		persone = Persona.objects.filter(Q(Q(componenti_gruppo__isnull=True) | Q(componenti_gruppo__in=gruppi))).distinct().values('id','nome','cognome')
+		persone = Persona.objects.exclude(componenti_gruppo__escludi_stat=True).filter(Q(Q(componenti_gruppo__isnull=True) | Q(componenti_gruppo__in=gruppi))).distinct().values('id','nome','cognome')
 		#print persone
 	else:
-		persone = Persona.objects.filter(componenti_gruppo__in=gruppi).values('id','nome','cognome')
+		persone = Persona.objects.exclude(componenti_gruppo__escludi_stat=True).filter(componenti_gruppo__in=gruppi).values('id','nome','cognome')
 
 	for p in persone:
-		disp = Disponibilita.objects.values('turno__valore').filter(persona_id = p["id"], tipo = "Disponibile", turno__inizio__gte=inizio, turno__fine__lte=fine, mansione__in=mansioni)
+		disp = Disponibilita.objects.values('turno__valore').filter(persona_id = p["id"], tipo = "Disponibile", turno__inizio__gte=inizio, turno__fine__lte=fine, mansione__in=mansioni.exclude(escludi_stat=True))
 		p['tot_turni'] = disp.count()
 		p['tot_punti'] = 0
 		for d in disp:

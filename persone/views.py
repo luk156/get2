@@ -186,7 +186,7 @@ def gruppoaggiungi(request, gruppo_id, per_id):
 	g=Gruppo.objects.get(id=gruppo_id)
 	p=Persona.objects.get(id=per_id)
 	g.componenti.add(v)
-	g.save
+	g.save()
 	return HttpResponseRedirect('/persone/')
 
 @user_passes_test(lambda u:u.is_staff)
@@ -196,22 +196,22 @@ def aggiungilista(request,azione,arg,persone):
 			g=Gruppo.objects.get(id=arg)
 			v=Persona.objects.get(id=per_id)
 			g.componenti.add(v)
-			g.save
+			g.save()
 		elif azione=='aggiungi_m':
 			m = Mansione.objects.get(id=arg)
 			v=Persona.objects.get(id=per_id)
 			v.competenze.add(m)
-			v.save
+			v.save()
 		elif azione=='rimuovi_g':
 			g=Gruppo.objects.get(id=arg)
 			v=Persona.objects.get(id=per_id)
 			g.componenti.remove(v)
-			g.save
+			g.save()
 		elif azione=='rimuovi_m':
 			m = Mansione.objects.get(id=arg)
 			v=Persona.objects.get(id=per_id)
 			v.competenze.remove(m)
-			v.save
+			v.save()
 	return HttpResponseRedirect('/persone/')
 
 ####   fine persona   ####

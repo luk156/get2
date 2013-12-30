@@ -122,10 +122,11 @@ ICONE = (
 
 class Mansione(models.Model):
 	nome =models.CharField('Nome',max_length=20)
-	descrizione = models.TextField('Descrizione estesa')
+	descrizione = models.TextField('Descrizione estesa', null=True, blank=True)
 	icona = models.TextField('Icona', choices=ICONE, default='icon-user' )
 	colore = models.TextField('Colore', default='#aaa' )
 	padre=SelfForeignKey('self', null=True, blank=True, related_name='children')
+	escludi_stat = models.BooleanField('Escludi dalle statistiche', default=False,  help_text="Le disponibilita per questa mansione saranno escluse dalle statistiche")
 	def __unicode__(self):
 		return '%s' % (self.nome)
 	# Milite tipo A, milite tipo B, centralinista ecc...
@@ -159,6 +160,7 @@ class MansioneForm(forms.ModelForm):
 				'icona',
 				template = 'form_templates/radioselect_inline.html',
 			),
+			Field('escludi_stat'),
 			FormActions(
 				Submit('save', 'Invia', css_class="btn-primary")
 			)
@@ -235,6 +237,7 @@ class Gruppo(models.Model):
 	nome = models.CharField('Nome',max_length=30)
 	componenti = models.ManyToManyField(Persona, blank=True, null=True, related_name='componenti_gruppo')
 	note = models.TextField( blank=True, null=True, )
+	escludi_stat = models.BooleanField('Escludi dalle statistiche', default=False,  help_text="le persone appartenenti a questo gruppo saranno escluse dalle statistiche")
 	def numero_componenti(self):
 		n=0
 		for c in self.componenti.all():
@@ -253,6 +256,7 @@ class GruppoForm(forms.ModelForm):
 		self.helper.layout = Layout(
 			Field('nome'),
 			Field('note'),
+			Field('escludi_stat'),
 			FormActions(
 				Submit('save', 'Invia', css_class="btn-primary")
 			)

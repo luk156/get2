@@ -3,8 +3,11 @@
 <ul id="mansioni-lista">
 {% for m in mansioni %}
 	<li>
-	<a class="matteo" href="#" data-toggle="tooltip" data-placement="right" data-content="{{m.descrizione}}" title="{{m}}">
+	<a class="mansione" href="#" data-toggle="tooltip" data-placement="right" data-content="{{m.descrizione}}" title="{{m}}">
 		<i class="{{m.icona}} icon-2x icona" style="color:{{m.colore}}"></i> {{ m }}
+		{%if not m.escludi_stat %}
+  			<i class="icon-bar-chart "></i>	
+		{%endif%}
 	</a>
 	
 		<div class="btn-group pull-right">
@@ -20,5 +23,5 @@
 {% endfor %}
 </ul>
 <script type="text/javascript">
-	$('.matteo').popover({trigger:'hover',html:true,})
+	$('.mansione').popover({trigger:'hover',html:true,})
 </script>

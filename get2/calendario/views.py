@@ -119,7 +119,7 @@ def home(request):
 		return redirect('/impostazioni/calendario/nuovo/')
 
 ####   touch   ####
-
+@user_passes_test(lambda u:u.is_staff)
 def touch(request,v):
 	risposta=HttpResponseRedirect('/')
 	risposta.set_cookie('touch', max_age=60*60*24*365, value=v)

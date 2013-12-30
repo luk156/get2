@@ -41,15 +41,15 @@ def aggiorna_statistiche(request,da,al,mansioni,gruppi):
 @dajaxice_register
 def dettaglio_turni(request,da,al,mansioni,id):
         dajax=Dajax()
-        elenco_mansioni=Mansione.objects.filter(id__in=mansioni.rsplit('_'))
+        elenco_mansioni=Mansione.objects.filter(id__in=mansioni.rsplit('_')).exclude(escludi_stat=True)
         data_da=datetime.date(datetime.datetime.today().year,1,1)
         data_al=datetime.datetime.now().date()
         if (da=="0"):
-                elenco_mansioni=Mansione.objects.all()
+                elenco_mansioni=Mansione.objects.exclude(escludi_stat=True)
         elif (da!="" and al!=""):
                 data_da=datetime.datetime.strptime(da, "%d/%m/%Y").date()
                 data_al=datetime.datetime.strptime(al, "%d/%m/%Y").date()
-        mansioni=elenco_mansioni.filter(mansione_disponibilita__persona=id,mansione_disponibilita__tipo="Disponibile",mansione_disponibilita__turno__inizio__gte=data_da, mansione_disponibilita__turno__fine__lte=data_al,).annotate(parziale=Count('id'))
+        mansioni=elenco_mansioni.exclude(escludi_stat=True).filter(mansione_disponibilita__persona=id,mansione_disponibilita__tipo="Disponibile",mansione_disponibilita__turno__inizio__gte=data_da, mansione_disponibilita__turno__fine__lte=data_al,).annotate(parziale=Count('id'))
         html_dettagli = render_to_string( 'statistiche/dettagli_mansioni.html', { 'mansioni': mansioni} )
         dajax.assign('div #dettagli-'+str(id), 'innerHTML', html_dettagli)
         #import pdb; pdb.set_trace()
