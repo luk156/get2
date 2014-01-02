@@ -235,7 +235,7 @@ def visualizza_persona(request,persona_id):
 	tot_punti = 0
 	for d in disponibilita:
 			tot_punti += d.turno.valore
-	while start < oggi :
+	while start < oggi:
 		stop = start + relativedelta( months = +1 )
 		n=disponibilita.filter(turno__inizio__gte=start, turno__fine__lte=stop).count()
 		turni.append([start,n])
