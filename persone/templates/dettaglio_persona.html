@@ -127,7 +127,7 @@ $(function () {
             series: [{
                 name: 'Population',
                 data: [
-                    {% for x,y in turni|slice:":10"%}
+                    {% for x,y in turni %}
 						[Date.UTC({{x|date:"Y,m,d"}}), {{y}} ],
 					{% endfor%}
                 ],
