@@ -30,6 +30,7 @@ import operator
 def statistiche_intervallo(request, inizio = datetime.date(datetime.datetime.today().year,1,1), fine = datetime.datetime.now().date(), mansioni = Mansione.objects.all(), gruppi = Gruppo.objects.all(), senza_gruppo = True):
 	tot_turni = []
 	tot_punti = []
+	#Turno.objects.earliest(field_name='inizio')
 	if senza_gruppo:
 		persone = Persona.objects.exclude(componenti_gruppo__escludi_stat=True).filter(Q(Q(componenti_gruppo__isnull=True) | Q(componenti_gruppo__in=gruppi))).distinct().values('id','nome','cognome')
 		#print persone

@@ -1,6 +1,7 @@
 # Create your views here.
 
 from django.http import HttpResponse, HttpResponseRedirect, QueryDict
+from get2.calendario.models import Disponibilita
 from persone.models import *
 from django.shortcuts import render_to_response, redirect, render
 from django.contrib.auth.decorators import user_passes_test
@@ -13,6 +14,8 @@ try:
     from cStringIO import StringIO
 except ImportError:
     from StringIO import StringIO
+
+from dateutil.relativedelta import relativedelta
 
 def export_csv(request, queryset, export_data, filter_by=None, file_name='exported_data.csv',
         object_id=None, not_available='n.a.', require_permission=None):
@@ -220,7 +223,17 @@ def aggiungilista(request,azione,arg,persone):
 @login_required
 def visualizza_persona(request,persona_id):
 	persona = Persona.objects.get(id=persona_id)
+	disponibilita = Disponibilita.objects.filter(persona=persona).order_by('turno__inizio')
+	start=disponibilita[:1].get().turno.inizio
+	turni=[]
+	while start < datetime.datetime.today():
+		stop = start + relativedelta( months = +1 )
+		n=disponibilita.filter(tipo="Disponibile", turno__inizio__gte=start, turno__fine__lte=stop).count()
+		turni.append([start,n])
+		start = stop
+	#import pdb; pdb.set_trace()
+	print turni
 	if request.user.is_staff or request.user.get_profile()==persona:
-	  return render(request,'dettaglio_persona.html',{'request': request, 'persona': persona})
+	  return render(request,'dettaglio_persona.html',{'request': request, 'turni': turni, 'persona': persona})
 
 #### fine pagina persona ####
