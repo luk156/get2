@@ -1,7 +1,7 @@
 # Create your views here.
 
 from django.http import HttpResponse, HttpResponseRedirect, QueryDict
-from get2.calendario.models import Disponibilita
+from get2.calendario.models import Disponibilita,Mansione
 from persone.models import *
 from django.shortcuts import render_to_response, redirect, render
 from django.contrib.auth.decorators import user_passes_test
@@ -220,12 +220,20 @@ def aggiungilista(request,azione,arg,persone):
 ####   fine persona   ####
 
 #### inizio pagina persona ####
+
+from django.db.models import Q, Count, Sum
+
 @login_required
 def visualizza_persona(request,persona_id):
 	persona = Persona.objects.get(id=persona_id)
 	disponibilita = Disponibilita.objects.filter(persona=persona).order_by('turno__inizio')
 	start=disponibilita[:1].get().turno.inizio
 	turni=[]
+	mansioni=Mansione.objects.exclude(escludi_stat=True).filter(mansione_disponibilita__persona=persona,mansione_disponibilita__tipo="Disponibile").annotate(parziale=Count('id'))
+	tot_turni = disponibilita.count()
+	tot_punti = 0
+	for d in disponibilita:
+			tot_punti += d.turno.valore
 	while start < datetime.datetime.today():
 		stop = start + relativedelta( months = +1 )
 		n=disponibilita.filter(tipo="Disponibile", turno__inizio__gte=start, turno__fine__lte=stop).count()
@@ -234,6 +242,6 @@ def visualizza_persona(request,persona_id):
 	#import pdb; pdb.set_trace()
 	print turni
 	if request.user.is_staff or request.user.get_profile()==persona:
-	  return render(request,'dettaglio_persona.html',{'request': request, 'turni': turni, 'persona': persona})
+	  return render(request,'dettaglio_persona.html',{'request': request, 'turni': turni, 'mansioni': mansioni ,'persona': persona, 'tot_punti': tot_punti, 'tot_turni': tot_turni})
 
 #### fine pagina persona ####
