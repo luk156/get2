@@ -226,17 +226,18 @@ from django.db.models import Q, Count, Sum
 @login_required
 def visualizza_persona(request,persona_id):
 	persona = Persona.objects.get(id=persona_id)
-	disponibilita = Disponibilita.objects.filter(persona=persona).order_by('turno__inizio')
+	oggi = datetime.datetime.today()
+	disponibilita = Disponibilita.objects.filter(persona=persona, tipo="Disponibile", turno__fine__lte=oggi).order_by('turno__inizio')
 	start=disponibilita[:1].get().turno.inizio
 	turni=[]
-	mansioni=Mansione.objects.exclude(escludi_stat=True).filter(mansione_disponibilita__persona=persona,mansione_disponibilita__tipo="Disponibile").annotate(parziale=Count('id'))
+	mansioni=Mansione.objects.exclude(escludi_stat=True).filter(mansione_disponibilita__persona=persona,mansione_disponibilita__tipo="Disponibile", mansione_disponibilita__turno__fine__lte=oggi).annotate(parziale=Count('id'))
 	tot_turni = disponibilita.count()
 	tot_punti = 0
 	for d in disponibilita:
 			tot_punti += d.turno.valore
-	while start < datetime.datetime.today():
+	while start < oggi :
 		stop = start + relativedelta( months = +1 )
-		n=disponibilita.filter(tipo="Disponibile", turno__inizio__gte=start, turno__fine__lte=stop).count()
+		n=disponibilita.filter(turno__inizio__gte=start, turno__fine__lte=stop).count()
 		turni.append([start,n])
 		start = stop
 	#import pdb; pdb.set_trace()
