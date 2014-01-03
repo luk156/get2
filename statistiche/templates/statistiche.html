@@ -5,14 +5,14 @@
 {% block head %}
 	<script src="/static/js/highcharts/highcharts.js"></script>
 	<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="excanvas.min.js"></script><![endif]-->
-	<script src="/static/js/locales/bootstrap-datetimepicker.it.js"></script>
 	<script src="/static/js/jquery.tablesorter.min.js"></script>
 	<script src="/static/js/jquery.tablesorter.widgets.min.js"></script>
 	<script src="/static/js/jquery.tablesorter.widgets-filter-formatter.min.js"></script>
 	<link href="/static/css/theme.bootstrap.css" rel="stylesheet">
 	<script src="/static/jquery-ui.min.js"></script>
-	<script src="/static/jQRangeSlider/jQDateRangeSlider-withRuler-min.js"></script>
-	<link href="/static/jQRangeSlider/css/iThing-min.css" rel="stylesheet">
+	<script type="text/javascript" src="/static/js/bootstrap-daterangepicker/moment.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap-daterangepicker/daterangepicker.js"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="/static/js/bootstrap-daterangepicker/daterangepicker-bs2.css" />
 {% endblock%}
 
 
@@ -67,71 +67,77 @@ function reset(){
 </script>
 
 <div class="row-fluid">
-	<div class="span7">
-		<div id="slider" style="margin:0px 60px;"></div>
-		</br>
+	<div class="span5" id="filtri">
 		<div class="box">
-			<div class="box-header" onclick="$('#filtro_statistiche').slideToggle();" style="cursor:pointer;">
-				<h4><i class="icon-filter"></i> Filtra</h4>
-			</div>
 			<div class="box-content hide" id="filtro_statistiche">
 				{% crispy FiltroStatistiche %}
 			</div>
 		</div>
 	</div>
+	<div class="span2">
+		<div id="reportrange" class="pull-right" style="background: #fff; margin-right:10px; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
+            <i class="icon-calendar icon-large"></i>
+                <span></span> <b class="caret"></b>
+        </div>
+        <span class="pull-right" onclick="$('#filtro_statistiche').slideToggle();" style="background: #fff; margin-right:10px; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc"><i class="icon-filter"></i> Filtra</span>
+	</div>
 </div>
 <div class="row-fluid">
-	<div class="span7" id="stat">
+	<div class="span7 tabbable" id="stat" style="padding:10px;">
 		{% include "statistiche/statistiche.html" %}
 	</div>
 </div>
 
 <script type="text/javascript">
-
-$(window).load(function(){
-	var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
-	anno = new Date().getFullYear();
-	$("#slider").dateRangeSlider({
-		 	bounds: {min: new Date(anno-3, 0, 1), max: new Date()},
-			 defaultValues:{
-				min: new Date(anno, 0, 1),
-				max: new Date()
-			},
-			scales: [
-				{
-				next: function(value){
-				var next = new Date(value);
-				return new Date(next.setFullYear(value.getFullYear() + 1));
-				},
-				label: function(value){
-				return value.getFullYear();
-				},
-			},
-			{
-				next: function(value){
-				var next = new Date(value);
-				return new Date(next.setMonth(value.getMonth() + 1));
-				},
-				label: function(value){
-				return value.getMonth();
-				},
-			}
-
-			]
-		});
-	$("#slider").bind("valuesChanged", function(e, data){
-		i=data.values.min;
-		f=data.values.max;
-		$("#id_start")[0].value = i.getDate()+"/"+(i.getMonth()+1)+"/"+i.getFullYear();
-		$("#id_stop")[0].value = f.getDate()+"/"+(f.getMonth()+1)+"/"+f.getFullYear();
+	$(document).ready(function() {
+		$('#reportrange').daterangepicker(
+		{
+		startDate: moment().subtract('years', 1),
+		endDate: moment(),
+		minDate: moment().subtract('years', 5),
+		maxDate: moment(),
+		//dateLimit: { days: 60 },
+		showDropdowns: true,
+		showWeekNumbers: false,
+		timePicker: false,
+		timePickerIncrement: 1,
+		timePicker12Hour: true,
+		ranges: {
+		   'Ultimi 7 giorni': [moment().subtract('days', 6), moment()],
+		   'Ultimi 30 giorni': [moment().subtract('days', 29), moment()],
+		   'Questo Mese': [moment().startOf('month'), moment().endOf('month')],
+		   'Ultimi 6 mesi': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
+		},
+		opens: 'left',
+		buttonClasses: ['btn btn-default'],
+		applyClass: 'btn-small btn-primary',
+		cancelClass: 'btn-small',
+		format: 'DD/MM/YYYY',
+		separator: ' to ',
+		locale: {
+		    applyLabel: 'Invia',
+		    fromLabel: 'Dal',
+		    toLabel: 'Al',
+		    customRangeLabel: 'Scegli Intervallo',
+		    daysOfWeek: ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven','Sab'],
+		    monthNames: ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'],
+		    firstDay: 1
+		}
+		},
+		function(start, end) {
+		console.log("Callback has been called!");
+		$('#reportrange span').html(start.format('D MMMM, YYYY') + ' - ' + end.format('D MMMM, YYYY'));
+		$("#id_start")[0].value = start.format('D/M/YYYY');
+		$("#id_stop")[0].value = end.format('D/M/YYYY');
 		aggiorna_statistiche();
+		}
+		);
+		//Set the initial state of the picker label
+		$('#reportrange span').html(moment().subtract('years', 1).format('D MMMM, YYYY') + ' - ' + moment().format('D MMMM, YYYY'));
+		$("#id_start")[0].value = moment().subtract('years', 1).format('D/M/YYYY');
+		$("#id_stop")[0].value = moment().format('D/M/YYYY');
 	});
-
-	
-});
-
 </script>
 
 
 {% endblock %}
-

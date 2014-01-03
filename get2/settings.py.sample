@@ -2,8 +2,10 @@
 import os
 import sys
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1','_titolo_.gestionaleturni.it']
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 # Name of the directory for the project.
@@ -128,6 +130,7 @@ INSTALLED_APPS = (
     'get2.calendario',
     'persone',
     'crispy_forms',
+    'statistiche',
     #'gcm',
     #'debug_toolbar',
     # Uncomment the next line to enable the admin:

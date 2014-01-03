@@ -6,14 +6,14 @@ from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Field, M
 from crispy_forms.bootstrap import *
 import calendar,datetime,locale
 from persone.models import Mansione, Gruppo
-
+from dateutil.relativedelta import relativedelta
 class FiltroStatistiche(forms.Form):
 	lista_gruppi = [('all','senza gruppo')]
 	lista_mansioni = Mansione.objects.exclude(escludi_stat=True).values_list('id','nome')
 	lista_gruppi += Gruppo.objects.exclude(escludi_stat=True).values_list('id','nome')
 	mansioni = forms.MultipleChoiceField( label = "",	choices = lista_mansioni, initial = [x[0] for x in lista_mansioni], required = False,  widget = forms.CheckboxSelectMultiple,)
 	gruppi = forms.MultipleChoiceField( label = "",	choices = lista_gruppi,initial = [x[0] for x in lista_gruppi],  required = False,  widget = forms.CheckboxSelectMultiple,)
-	start =  forms.DateField(label = "dal:", required = False, initial=datetime.date(datetime.datetime.today().year,1,1).strftime("%d/%m/%Y"))
+	start =  forms.DateField(label = "dal:", required = False, initial=(datetime.datetime.now() + relativedelta( years = -1 )).strftime("%d/%m/%Y"))
 	stop = forms.DateField(label = "al:", required = False, initial=datetime.datetime.now().date().strftime("%d/%m/%Y"))
 	def __init__(self, *args, **kwargs):
 		self.helper = FormHelper()
@@ -24,22 +24,22 @@ class FiltroStatistiche(forms.Form):
 			Field('stop', type="hidden"),
 			HTML('<div class="row">'),
 			Div(
-				Fieldset('<h6>Mansioni</h6>',
+				Fieldset('<h7>Mansioni</h7>',
 					InlineCheckboxes('mansioni', css_class="mansioni"),
 				),
 				css_class="span4",
 			),	
 			Div(
-				Fieldset('<h6>Gruppi</h6>',
+				Fieldset('<h7>Gruppi</h7>',
 					InlineCheckboxes('gruppi', css_class="gruppi"),
 				),
 				css_class="span3",
 			),
-			HTML('</div>'),
-			FormActions(
-			    Button('save', 'Filtra', onclick="aggiorna_statistiche();", css_class="btn-primary"),
-			    Button('cancel', 'Annulla', onclick="reset();"),
-			),
+			HTML('</div></br>'),
+			
+			Button('save', 'Filtra', onclick="aggiorna_statistiche();", css_class="btn-primary btn-small"),
+			Button('cancel', 'Annulla', onclick="reset();", css_class="btn-small"),
+			
 			)
 		self.helper.form_method = 'post'
 		#self.helper.form_action = 'submit_survey'

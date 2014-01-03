@@ -26,8 +26,9 @@ def statistiche(request):
 	return render(request,'statistiche.html',{'tot_turni': tot_turni,'tot_punti': tot_punti,'FiltroStatistiche':FiltroStatistiche() ,'request':request})
 
 import operator
+from dateutil.relativedelta import relativedelta
 
-def statistiche_intervallo(request, inizio = datetime.date(datetime.datetime.today().year,1,1), fine = datetime.datetime.now().date(), mansioni = Mansione.objects.all(), gruppi = Gruppo.objects.all(), senza_gruppo = True):
+def statistiche_intervallo(request, inizio = datetime.datetime.now() + relativedelta( years = -1 ), fine = datetime.datetime.now().date(), mansioni = Mansione.objects.all(), gruppi = Gruppo.objects.all(), senza_gruppo = True):
 	tot_turni = []
 	tot_punti = []
 	#Turno.objects.earliest(field_name='inizio')
