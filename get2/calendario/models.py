@@ -65,8 +65,8 @@ class TipoTurnoForm(forms.ModelForm):
 
 class Requisito(models.Model):
 	mansione=models.ForeignKey(Mansione, related_name="req_mansione")
-	minimo=models.IntegerField('Maggiore o uguale', default=0)
-	massimo=models.IntegerField('Minore o uguale', default=0)
+	minimo=models.IntegerField('Minimo', default=0,)
+	massimo=models.IntegerField('Massimo', default=0, help_text="Se 0 non c'e' limite")
 	tipo_turno=models.ForeignKey(TipoTurno, related_name="req_tipo_turno",)
 	necessario=models.BooleanField('Necessario', default=True, help_text="Se selezionato il requisito deve essere soddisfatto")
 	sufficiente=models.BooleanField('Sufficiente', default=False, help_text="Se il requisito e' soddisfatto il turno risulta coperto in ogni caso")

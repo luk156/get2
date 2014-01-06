@@ -22,7 +22,7 @@
 			<tbody>
 				{%for d in tot_turni %}
 	 				<tr><td>{{forloop.counter}}</td><td>{{d.nome|safe|escape}}</td><td>{{d.cognome|safe|escape}}</td>
-	 				<td>{{d.tot_turni}} <i class="icon-search" onclick="dettagli_statistiche({{d.id}}); $('#dettagli-{{d.id}}').slideToggle(); "></i> </br>
+	 				<td>{{d.tot_turni}} <i class="icon-search" style="cursor: pointer;" onclick="dettagli_statistiche({{d.id}}); $('#dettagli-{{d.id}}').slideToggle(); "></i> </br>
 	 					<div id="dettagli-{{d.id}}" class="hide">
 	 					</div>
 	 				</td></tr>
