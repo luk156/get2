@@ -130,7 +130,7 @@ INSTALLED_APPS = (
     'get2.calendario',
     'persone',
     'crispy_forms',
-    'statistiche',
+    #'statistiche',
     #'gcm',
     #'debug_toolbar',
     # Uncomment the next line to enable the admin:

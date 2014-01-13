@@ -228,7 +228,10 @@ def visualizza_persona(request,persona_id):
 	persona = Persona.objects.get(id=persona_id)
 	oggi = datetime.datetime.today()
 	disponibilita = Disponibilita.objects.filter(persona=persona, tipo="Disponibile", turno__fine__lte=oggi).order_by('turno__inizio')
-	start=disponibilita[:1].get().turno.inizio
+	try :
+		start=disponibilita[:1].get().turno.inizio
+	except:
+		start=datetime.datetime.today()
 	turni=[]
 	mansioni=Mansione.objects.exclude(escludi_stat=True).filter(mansione_disponibilita__persona=persona,mansione_disponibilita__tipo="Disponibile", mansione_disponibilita__turno__fine__lte=oggi).annotate(parziale=Count('id'))
 	tot_turni = disponibilita.count()

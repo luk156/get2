@@ -61,7 +61,7 @@ function nota_disponibilita(disp_id){
 				<table class="table table-striped no-more-tables" id="cerca_persona">
 				<thead>
 					<tr>
-					<th>Nome</th><th>Mansioni</th><th>Telefono principale</th><th>telefono secondario</th></th><th>Disponibilita'</th>
+					<th>Nome</th><th>Mansioni</th><th>Telefono</th></th><th>Disponibilita'</th>
 					</tr>
 				</thead>
 				{%for persona in persone%}
@@ -120,8 +120,7 @@ function nota_disponibilita(disp_id){
 					<tr {%if persona.stato != 'disponibile'%} class="error" {%endif%} id="persona-{{persona.id}}">
 					<td data-title="Nome" class="nome">{{persona}}</td>
 					<td data-title="Mansioni" class="mansioni">{% for m in persona.competenze.all %}<span class="badge-mansione">{{m}}</span>  {% endfor %}</td>
-					<td data-title="telefono1">{{persona.tel1}}</td>
-					<td data-title="telefono2">{{persona.tel2}}</td>
+					<td data-title="telefono">{{persona.telefono|safe}}</td>
 					<td data-title="Disponibilita" class="disponibilita">
 						<SELECT NAME="stato" class="span7" ONCHANGE="disp(this);" id="sel-{{persona.id}}">
 							<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/-">----

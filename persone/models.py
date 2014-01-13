@@ -121,7 +121,7 @@ ICONE = (
 	)
 
 class Mansione(models.Model):
-	nome =models.CharField('Nome',max_length=20)
+	nome =models.CharField('Nome',max_length=30)
 	descrizione = models.TextField('Descrizione estesa', null=True, blank=True)
 	icona = models.TextField('Icona', choices=ICONE, default='icon-user' )
 	colore = models.TextField('Colore', default='#aaa' )
@@ -175,8 +175,9 @@ class Persona(models.Model):
 	cognome = models.CharField('Cognome',max_length=200)
 	indirizzo = models.TextField('Indirizzo', blank=True, null=True, )
 	nascita = models.DateField('Data di nascita', blank=True, null=True,)
-	tel1 = models.CharField('Telefono Principale',max_length=20)
-	tel2 = models.CharField('telefono Secondario',max_length=20, blank=True, null=True)
+	tel1 = models.CharField('Telefono Principale',max_length=30)
+	tel2 = models.CharField('Telefono Secondario',max_length=30, blank=True, null=True)
+	tel3 = models.CharField('Altro telefono',max_length=30, blank=True, null=True)
 	#caratteristiche della persona
 	stato = models.CharField('Stato',max_length=40, choices=STATI, default='disponibile' )
 	competenze = models.ManyToManyField(Mansione, blank=True, null=True)
@@ -189,6 +190,8 @@ class Persona(models.Model):
 			if(m.letto == False):
 				n+=1
 		return n
+	def telefono(self):
+		return self.tel1+"</br>"+self.tel2+"</br>"+self.tel3
 	def __unicode__(self):
 		return '%s %s' % (self.cognome,self.nome)
 
@@ -209,6 +212,7 @@ class PersonaForm(forms.ModelForm):
 				AppendedText('nascita', '<i class="icon-calendar"></i>'),
 				AppendedText('tel1', '<i class="icon-phone"></i>'),
 				AppendedText('tel2', '<i class="icon-phone"></i>'),
+				AppendedText('tel3', '<i class="icon-phone"></i>'),
 				css_class="span3",
 			),
 			Div(
