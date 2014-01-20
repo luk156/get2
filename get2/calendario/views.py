@@ -179,8 +179,11 @@ def prefestivo(giorno):
 	return False
 
 def calendario(request,cal_id):
-	c=Calendario(id=cal_id)
-
+	try:
+		c=Calendario.objects.get(id=cal_id)
+		pass
+	except:
+		c=Calendario.objects.all()[0]
 	if 'start' in request.session:
 		start=request.session['start']
 	else:
@@ -246,7 +249,12 @@ def calendario(request,cal_id):
 
 
 def stampa_calendario(request,cal_id):
-	c=Calendario(id=cal_id)
+	try:
+		c=Calendario.objects.get(id=cal_id)
+		pass
+	except:
+		c=Calendario.objects.all()[0]
+
 
 	if 'start' in request.session:
 		start=request.session['start']
