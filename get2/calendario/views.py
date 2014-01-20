@@ -385,11 +385,13 @@ def nuova_disponibilita(request, turno_id, mansione_id, persona_id, disponibilit
 		if verifica_tempo[0]:
 			#una persona puo avere una sola disponibilita per turno
 			if Disponibilita.objects.filter(persona=disp.persona,turno=disp.turno ).exists():
-				esistente=Disponibilita.objects.get(persona=disp.persona, turno=disp.turno )
-				disp.note=esistente.note
-				#if esistente.tipo=='Disponibile':
-					#notifica_disponibilita(request,esistente.persona,esistente.turno,'Non piu disponibile',esistente.mansione)
-				esistente.delete()
+				esistenti=Disponibilita.objects.filter(persona=disp.persona, turno=disp.turno )
+				disp.note='';
+				for e in esistenti:
+					disp.note+=e.note
+					#if esistente.tipo=='Disponibile':
+						#notifica_disponibilita(request,esistente.persona,esistente.turno,'Non piu disponibile',esistente.mansione)
+					e.delete()
 			#risolvo i conflitti con i turni contemporanei
 			for contemporaneo in disp.turno.contemporanei():
 				if contemporaneo != disp.turno:
