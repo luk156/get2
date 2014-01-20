@@ -40,14 +40,14 @@
 	</div>
 
 	{% for r in t.cache_requisito_set.all %}
-		{% if r.requisito.clickabile  %}
+
 			{%if request.user.is_staff %}	
 				<div class="mansione-calendario">
 					<h6 class="h6-mansione-{{r.requisito.mansione.id}}">{{r.requisito.mansione}} 
-					
-						{% if request.user.is_staff %}
-							<a href="/cerca_persona/{{t.id}}/{{r.requisito.mansione.id}}">
-						{% endif %}
+					{% if r.requisito.extra %}<i class="icon-asterisk"></i> {% endif %}
+					{% if request.user.is_staff and r.requisito.clickabile %}
+						<a href="/cerca_persona/{{t.id}}/{{r.requisito.mansione.id}}">
+					{% endif %}
 					{% if r.requisito.sufficiente %}
 						<span class="badge badge-info pull-right">
 					{% elif not r.requisito.necessario %}
@@ -57,12 +57,12 @@
 					{% else %}
 						<span class="badge badge-important pull-right">
 					{% endif %}
-						{% if r.requisito.minimo != 0 %}
-							&ge;{{r.requisito.minimo}}
-						{% endif %}
-						{% if r.requisito.massimo != 0 %}
-							&le;{{r.requisito.massimo}}
-						{% endif %}
+					{% if r.requisito.minimo != 0 %}
+						&ge;{{r.requisito.minimo}}
+					{% endif %}
+					{% if r.requisito.massimo != 0 %}
+						&le;{{r.requisito.massimo}}
+					{% endif %}
 					</span></a></h6> 
 				</div>
 			{% endif %}
@@ -82,29 +82,6 @@
 					
 					</ul>
 				</div>
-		{% endif %}
-		{% if  not r.requisito.clickabile  and request.user.is_staff %}
-				<div class="mansione-calendario">
-					<h6 class="h6-mansione-{{r.requisito.mansione.id}}">{{r.requisito.mansione}}
-					
-					{% if r.requisito.extra %}<i class="icon-asterisk"></i> {% endif %}
-
-					{{requisito.mansione}}
-					{% if r.verificato  %}
-						<span class="badge badge-success pull-right">
-					{% else %}
-						<span class="badge badge-important pull-right">
-					{% endif %}
-						{% if r.requisito.minimo != 0 %}
-							&ge;{{r.requisito.minimo}}
-						{% endif %}
-						{% if r.requisito.massimo != 0 %}
-							&le;{{r.requisito.massimo}}
-						{% endif %}
-					</span>
-					</h6>
-				</div>
-		{% endif %}
 	{% endfor %}
 
 		
