@@ -24,6 +24,9 @@ try:
 except ImportError:
     from StringIO import StringIO
 
+import logging
+logger = logging.getLogger('django.request')
+
 def export_csv(request, queryset, export_data, filter_by=None, file_name='exported_data.csv',
         object_id=None, not_available='n.a.', require_permission=None):
     '''
@@ -401,6 +404,7 @@ def nuova_disponibilita(request, turno_id, mansione_id, persona_id, disponibilit
 				notifica_disponibilita(request,disp.persona,disp.turno,disponibilita,disp.mansione)
 		return verifica_tempo
 	else:
+		logger.error('Disponibilita non autorizzata')
 		return (False,'non autorizzato')
 
 

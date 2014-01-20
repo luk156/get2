@@ -12,3 +12,6 @@ def analytics(request):
 
 def dominio(request):
 	return {'dominio': settings.GET_DOMINIO }
+
+def js_personalizzato(request):
+	return {'js_personalizzato': settings.GET_JS }
