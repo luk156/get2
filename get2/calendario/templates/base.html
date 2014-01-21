@@ -15,9 +15,7 @@
 	<script src="/static/js/jquery.cookie.js"></script>
 	<link href="/static/css/bootstrap-notify.css" rel="stylesheet">
 	<script src="/static/js/bootstrap-notify.js"></script>
-	{% if js_personalizzato  %}
-	<script src="/static/js/{{js_personalizzato}}"></script>
-	{% endif %}
+	
 	<!--[if IE 7]>
 	<link rel="stylesheet" href="/static/bootstrap/css/font-awesome-ie7.min.css">
 	<![endif]-->
@@ -145,6 +143,8 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   ga('send', 'pageview');
 
 </script>
-
+{% if js_personalizzato  %}
+	<script src="/static/js/{{js_personalizzato}}"></script>
+{% endif %}
 </body>
 </html>

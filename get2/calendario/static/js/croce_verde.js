@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).onload(function() {
     $('.persona-turno.hide').each(function() {
         if ($(this).parent().parent().hasClass('persone-requisito-6')) {
             $(this).removeClass('hide');
