@@ -11,7 +11,7 @@ virtualenv_dir = "/home/django/stable-env/"
 
 def runserver():
 	with prefix("source ~/.bashrc"):
-		with prefix("workon venv-get"):
+		with prefix("workon get2"):
 			local("python manage.py runserver")
 
 
