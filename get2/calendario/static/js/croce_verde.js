@@ -4,4 +4,9 @@ $(document).ready(function() {
             $(this).removeClass('hide');
         }
     });
+    $('.persona-turno:not(.hide)').each(function() {
+        if ($(this).attr('data-content').search('icon-ambulance')!= -1){
+        	this.insertAdjacentHTML('beforeend', '<i class="icon-ambulance"></i>');
+        };
+    });
 });

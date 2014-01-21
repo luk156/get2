@@ -71,11 +71,14 @@
 					
 					{% for d in r.disponibilita.all %}
 							<li class="persona-turno {% if r.requisito.nascosto %} hide {%endif%}" 
+								{% if request.user.is_authenticated or touch == "yes" %}
 								data-toggle="tooltip" class="abilita" data-placement="top" data-content='
 					 					{%for m in d.persona.competenze.all%}
 					 					<i class="{{m.icona}}" style="color:{{m.colore}}"></i>
 					 					{%endfor%}
-					 				' >
+					 				'
+					 			{% endif %}	
+					 			>
 							<i class="{{d.mansione.icona}}" style="color:{{d.mansione.colore}}"></i> 
 								{% if request.user.is_authenticated or touch == "yes" %}
 					 				{{d.persona}}
