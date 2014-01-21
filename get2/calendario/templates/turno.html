@@ -70,19 +70,18 @@
 					<ul>
 					
 					{% for d in r.disponibilita.all %}
-							<li class="persona-turno {% if r.requisito.nascosto %} hide {%endif%}" ><i class="{{d.mansione.icona}}" style="color:{{d.mansione.colore}}"></i> 
+							<li class="persona-turno {% if r.requisito.nascosto %} hide {%endif%}" 
+								data-toggle="tooltip" class="abilita" data-placement="top" data-content='
+					 					{%for m in d.persona.competenze.all%}
+					 					<i class="{{m.icona}}" style="color:{{m.colore}}"></i>
+					 					{%endfor%}
+					 				' >
+							<i class="{{d.mansione.icona}}" style="color:{{d.mansione.colore}}"></i> 
 								{% if request.user.is_authenticated or touch == "yes" %}
 					 				{{d.persona}}
 					 				{% if d.note %}
 					 					<i class="tp icon-comment" data-toggle="tooltip" title="{{d.note}}"></i>
 					 				{% endif %}
-					 				<a href="#" data-toggle="tooltip" class="abilita" data-placement="top" data-content='
-					 					{%for m in d.persona.competenze.all%}
-					 					<i class="{{m.icona}}" style="color:{{m.colore}}"></i>
-					 					{%endfor%}
-					 				' >
-					 				<i class="icon-search"></i>
-					 				</a>
 								{% else %}
 					 				----
 								{% endif %}
