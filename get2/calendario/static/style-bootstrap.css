@@ -15,6 +15,8 @@
   text-align: center;
 }
 
+
+
 #loading-image {
   position: absolute;
   top: 200px;
@@ -848,4 +850,11 @@ input {
   font-size: 16px;
   color: rgba(0, 0, 0, 0.25) !important;
   text-shadow: none;
+}
+
+
+#anteprima {
+  margin-top: 7px;
+  padding: 0px;
+  border: 0px;
 }
