@@ -135,12 +135,11 @@ class Mansione(models.Model):
 			return False
 		return True
 
-def capacita(mansione_id):
-	mansione=Mansione.objects.get(id=mansione_id)
-	c=[mansione,]
-	if mansione.padre:
-		c+=capacita(mansione.padre.id)
-	return c
+def figli(mansione_id):
+	f=list(Mansione.objects.filter(padre=mansione_id))
+	for i in f:
+		f+=figli(i.id)
+	return f
 
 
 class MansioneForm(forms.ModelForm):
@@ -192,6 +191,14 @@ class Persona(models.Model):
 		return n
 	def telefono(self):
 		return self.tel1+"</br>"+self.tel2+"</br>"+self.tel3
+	def capacita(self):
+		c = set()
+		for m in self.competenze.all():
+			c.add(m)
+			for f in figli(m.id):
+				c.add(f)
+		return c
+
 	def __unicode__(self):
 		return '%s %s' % (self.cognome,self.nome)
 

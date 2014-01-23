@@ -311,7 +311,10 @@ def calendarioazione(request,cal_id,azione):
 @user_passes_test(lambda u:u.is_staff)
 def cerca_persona(request, turno_id, mansione_id):
 	mansione=Mansione.objects.get(id=mansione_id)
-	persone=Persona.objects.filter(competenze=mansione).order_by('cognome').exclude(stato='indisponibile')
+	persone = []
+	for p in Persona.objects.order_by('cognome').exclude(stato='indisponibile'):
+		if mansione in p.capacita():
+			persone.append(p)
 	turno=Turno.objects.get(id=turno_id)
 	return render(request,'cerca_persona.html',{'persone':persone,'t':turno,'mansione':mansione,'DISPONIBILITA':DISPONIBILITA,'request':request})
 
