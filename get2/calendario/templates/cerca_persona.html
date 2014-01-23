@@ -41,7 +41,7 @@ function nota_disponibilita(disp_id){
 </script>
 
 <div class="row-fluid">
-	<div class="span1">
+	<div class="span2">
 		<div class="box">
 			<div class="box-header">
 				<h5>Anteprima</h5>
@@ -52,7 +52,7 @@ function nota_disponibilita(disp_id){
 			</div>
 		</div>
 	</div>
-	<div class="span6">
+	<div class="span5">
 		<div class="box">
 			<div class="box-header">
 					<h5><i class="icon-search"></i> Cerca persone</h5>
@@ -61,7 +61,7 @@ function nota_disponibilita(disp_id){
 				<table class="table table-striped no-more-tables" id="cerca_persona">
 				<thead>
 					<tr>
-					<th>Nome</th><th>Mansioni</th><th>Telefono</th></th><th>Disponibilita'</th>
+					<th>Nome</th><th>Capacita'</th><th>Telefono</th></th><th>Disponibilita'</th>
 					</tr>
 				</thead>
 				{%for persona in persone%}
@@ -119,7 +119,7 @@ function nota_disponibilita(disp_id){
 					{% endfor %}
 					<tr {%if persona.stato != 'disponibile'%} class="error" {%endif%} id="persona-{{persona.id}}">
 					<td data-title="Nome" class="nome">{{persona}}</td>
-					<td data-title="Mansioni" class="mansioni">{% for m in persona.competenze.all %}<span class="badge-mansione">{{m}}</span>  {% endfor %}</td>
+					<td data-title="Mansioni" class="mansioni">{% for m in persona.capacita %}<span class="badge-mansione">{{m}}</span>  {% endfor %}</td>
 					<td data-title="telefono">{{persona.telefono|safe}}</td>
 					<td data-title="Disponibilita" class="disponibilita">
 						<SELECT NAME="stato" class="span7" ONCHANGE="disp(this);" id="sel-{{persona.id}}">
