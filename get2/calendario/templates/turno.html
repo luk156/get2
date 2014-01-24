@@ -73,7 +73,7 @@
 							<li class="persona-turno {% if r.requisito.nascosto %} hide {%endif%}" 
 								{% if request.user.is_authenticated or touch == "yes" %}
 								data-toggle="tooltip" class="abilita" data-placement="top" data-content='
-					 					{%for m in d.persona.competenze.all%}
+					 					{%for m in d.persona.capacita%}
 					 					<i class="{{m.icona}}" style="color:{{m.colore}}"></i>
 					 					{%endfor%}
 					 				'
