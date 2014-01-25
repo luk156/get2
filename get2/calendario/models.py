@@ -161,7 +161,7 @@ class Turno(models.Model):
 					if (requisito.mansione in [d.mansione,figli(d.mansione.id)]):
 						contatore+=1
 				else:
-				 	if (requisito.mansione in d.persona.capacita ):
+				 	if (requisito.mansione in d.persona.capacita() ):
 						contatore+=1
 				if contatore>requisito.massimo and requisito.massimo!=0:
 					return False

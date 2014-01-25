@@ -212,7 +212,7 @@ def mansioni_disponibili(request,turno_id):
     html=''
     t=Turno.objects.get(id=turno_id)
     for requisito in t.tipo.req_tipo_turno.all():
-        if requisito.mansione in request.user.get_profile().competenze.all() and requisito.clickabile():
+        if requisito.mansione in request.user.get_profile().capacita() and requisito.clickabile():
             if not requisito.mansione in t.mansioni_indisponibili(request.user.get_profile().id):
                 html+='<a href="#" onclick="disponibilita_'+str(t.id)+'('+str(requisito.mansione.id)+');" class="btn btn-primary btn-block btn-large"><i class="'+str(requisito.mansione.icona)+'"></i> '+str(requisito.mansione)+'</a></br>'
     dajax.assign("#mansioni-turno"+str(t.id), "innerHTML", html)
