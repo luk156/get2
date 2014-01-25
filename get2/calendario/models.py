@@ -151,7 +151,7 @@ class Turno(models.Model):
 	def verifica_requisito(self,requisito,mansione_id=0,persona_capacita=0):	
 		if requisito.necessario:
 			contatore=0
-			if mansione_id!=0 and persona_competenze!=0:
+			if mansione_id!=0 and persona_capacita!=0:
 				if (not requisito.extra and requisito.mansione in [Mansione.objects.get(id=mansione_id),figli(mansione_id)]):
 					contatore+=1
 				if (requisito.extra and requisito.mansione in persona_capacita):
@@ -202,7 +202,7 @@ class Turno(models.Model):
 		p=Persona.objects.get(id=persona)
 		persona_capacita=p.capacita()
 		#pdb.set_trace()
-		for m in persona_competenze:
+		for m in persona_capacita:
 			for r in self.tipo.req_tipo_turno.all():
 				if (self.verifica_requisito(r) and not self.verifica_requisito(r,mansione_id=m.id,persona_capacita=persona_capacita) ):
 					m_d.append(m)
