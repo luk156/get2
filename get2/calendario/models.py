@@ -204,7 +204,7 @@ class Turno(models.Model):
 		#pdb.set_trace()
 		for m in persona_competenze:
 			for r in self.tipo.req_tipo_turno.all():
-				if (self.verifica_requisito(r) and not self.verifica_requisito(r,mansione_id=m.id,persona_capacita=persona_capcita) ):
+				if (self.verifica_requisito(r) and not self.verifica_requisito(r,mansione_id=m.id,persona_capacita=persona_capacita) ):
 					m_d.append(m)
 		return m_d
 	def save(self, *args, **kwargs):
