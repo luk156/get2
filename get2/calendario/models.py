@@ -200,11 +200,11 @@ class Turno(models.Model):
 	def mansioni_indisponibili(self,persona):
 		m_d=[]
 		p=Persona.objects.get(id=persona)
-		persona_competenze=p.competenze.all()
+		persona_capacita=p.capacita()
 		#pdb.set_trace()
 		for m in persona_competenze:
 			for r in self.tipo.req_tipo_turno.all():
-				if (self.verifica_requisito(r) and not self.verifica_requisito(r,mansione_id=m.id,persona_competenze=persona_competenze) ):
+				if (self.verifica_requisito(r) and not self.verifica_requisito(r,mansione_id=m.id,persona_capacita=persona_capcita) ):
 					m_d.append(m)
 		return m_d
 	def save(self, *args, **kwargs):
