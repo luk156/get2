@@ -175,8 +175,8 @@ class Persona(models.Model):
 	indirizzo = models.TextField('Indirizzo', blank=True, null=True, )
 	nascita = models.DateField('Data di nascita', blank=True, null=True,)
 	tel1 = models.CharField('Telefono Principale',max_length=30)
-	tel2 = models.CharField('Telefono Secondario',max_length=30, blank=True, null=True)
-	tel3 = models.CharField('Altro telefono',max_length=30, blank=True, null=True)
+	tel2 = models.CharField('Telefono Secondario',max_length=30, blank=True, null=True, default="")
+	tel3 = models.CharField('Altro telefono',max_length=30, blank=True, null=True, default="")
 	#caratteristiche della persona
 	stato = models.CharField('Stato',max_length=40, choices=STATI, default='disponibile' )
 	competenze = models.ManyToManyField(Mansione, blank=True, null=True)
