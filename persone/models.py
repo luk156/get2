@@ -190,7 +190,12 @@ class Persona(models.Model):
 				n+=1
 		return n
 	def telefono(self):
-		return self.tel1+"</br>"+self.tel2+"</br>"+self.tel3
+		str_tel = self.tel1
+		if self.tel2:
+			str_tel += "</br>"+self.tel2
+		if self.tel3:
+			str_tel += "</br>"+self.tel3
+		return str_tel
 	def capacita(self):
 		c = set()
 		for m in self.competenze.all():
