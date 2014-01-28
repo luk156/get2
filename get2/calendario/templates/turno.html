@@ -70,7 +70,7 @@
 					<ul>
 					
 					{% for d in r.disponibilita.all %}
-							<li class="persona-turno {% if r.requisito.nascosto %} hide {%endif%}" >
+							<li class="persona-turno {% if not r.requisito.clickabile %} hide {%endif%}" >
 							<i class="persona-mansione-turno {{d.mansione.icona}}" style="color:{{d.mansione.colore}}"
 								{% if request.user.is_authenticated or touch == "yes" %}
 								data-toggle="tooltip" class="abilita" data-placement="top" data-content='

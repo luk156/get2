@@ -141,6 +141,15 @@ def figli(mansione_id):
 		f+=figli(i.id)
 	return f
 
+def antenati(mansione_id):
+	a=[]
+	m=Mansione.objects.get(id=mansione_id)
+	a.append(m)
+	if m.padre:
+		a+=antenati(m.padre.id)
+	return a
+
+
 
 class MansioneForm(forms.ModelForm):
 	class Meta:

@@ -148,17 +148,21 @@ class Turno(models.Model):
 	calendario = models.ForeignKey(Calendario, null=True, on_delete=models.SET_NULL, default=1)
 	coperto = models.BooleanField(default=False)
 	requisiti = models.ManyToManyField(Requisito, blank=True, null=True, related_name='requisiti_turno', through='Cache_requisito')
-	def verifica_requisito(self,requisito,mansione_id=0,persona_capacita=0):	
+	def verifica_requisito(self,requisito,mansione_id=0,persona_capacita=0):
 		if requisito.necessario:
 			contatore=0
 			if mansione_id!=0 and persona_capacita!=0:
-				if (not requisito.extra and requisito.mansione in [Mansione.objects.get(id=mansione_id),figli(mansione_id)]):
+				f=figli(mansione_id)
+				f.append(Mansione.objects.get(id=mansione_id))
+				if (not requisito.extra and requisito.mansione in f):
 					contatore+=1
 				if (requisito.extra and requisito.mansione in persona_capacita):
 					contatore+=1
 			for d in self.turno_disponibilita.filter(tipo="Disponibile").exclude(mansione__isnull=True).all():
 				if not requisito.extra:
-					if (requisito.mansione in [d.mansione,figli(d.mansione.id)]):
+					f=figli(d.mansione.id)
+					f.append(d.mansione)
+					if (requisito.mansione in f):
 						contatore+=1
 				else:
 				 	if (requisito.mansione in d.persona.capacita() ):
