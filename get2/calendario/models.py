@@ -72,6 +72,7 @@ class Requisito(models.Model):
 	sufficiente=models.BooleanField('Sufficiente', default=False, help_text="Se il requisito e' soddisfatto il turno risulta coperto in ogni caso")
 	nascosto=models.BooleanField('Nascosto', default=False, help_text="Se il requisito risulta nascosto verra comunque verificato ma la persona non potra' segnarsi in quel ruolo")
 	extra=models.BooleanField('Extra', default=False, help_text="Il requisito viene verificato su tutte le capacita delle persone disponibili, indipendentemtne dal loro ruolo nel turno")
+	ignora_gerarchie=models.BooleanField('Ignora gerarchie', default=False, help_text="Durante la verfica vengono ignorate le gerarchie tra le mansioni")
 	def clickabile(self):
 		return  not (self.extra or self.nascosto)
 	def save(self, *args, **kwargs):
@@ -100,6 +101,7 @@ class RequisitoForm(forms.ModelForm):
 			Field('sufficiente'),
 			Field('nascosto'),
 			Field('extra'),
+			Field('ignora_gerarchie'),
 			FormActions(
 				Submit('save', 'Invia', css_class="btn-primary")
 			)
@@ -152,16 +154,18 @@ class Turno(models.Model):
 		if requisito.necessario:
 			contatore=0
 			if mansione_id!=0 and persona_capacita!=0:
-				f=figli(mansione_id)
-				f.append(Mansione.objects.get(id=mansione_id))
+				f=[Mansione.objects.get(id=mansione_id)]
+				if requisito.ignora_gerarchie:
+					f.append(figli(mansione_id))
 				if (not requisito.extra and requisito.mansione in f):
 					contatore+=1
 				if (requisito.extra and requisito.mansione in persona_capacita):
 					contatore+=1
 			for d in self.turno_disponibilita.filter(tipo="Disponibile").exclude(mansione__isnull=True).all():
 				if not requisito.extra:
-					f=figli(d.mansione.id)
-					f.append(d.mansione)
+					f=[d.mansione]
+					if requisito.ignora_gerarchie:
+						f.append(figli(d.mansione.id))
 					if (requisito.mansione in f):
 						contatore+=1
 				else:
