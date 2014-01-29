@@ -155,8 +155,8 @@ class Turno(models.Model):
 			contatore=0
 			if mansione_id!=0 and persona_capacita!=0:
 				f=[Mansione.objects.get(id=mansione_id)]
-				if requisito.ignora_gerarchie:
-					f.append(figli(mansione_id))
+				if not requisito.ignora_gerarchie:
+					f+=figli(mansione_id)
 				if (not requisito.extra and requisito.mansione in f):
 					contatore+=1
 				if (requisito.extra and requisito.mansione in persona_capacita):
@@ -164,8 +164,8 @@ class Turno(models.Model):
 			for d in self.turno_disponibilita.filter(tipo="Disponibile").exclude(mansione__isnull=True).all():
 				if not requisito.extra:
 					f=[d.mansione]
-					if requisito.ignora_gerarchie:
-						f.append(figli(d.mansione.id))
+					if not requisito.ignora_gerarchie:
+						f+=figli(d.mansione.id)
 					if (requisito.mansione in f):
 						contatore+=1
 				else:
