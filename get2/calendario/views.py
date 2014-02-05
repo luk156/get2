@@ -408,8 +408,7 @@ def nuova_disponibilita(request, turno_id, mansione_id, persona_id, disponibilit
 				if contemporaneo != disp.turno:
 					disponibilita_risolvi_contemporaneo(request,persona_id,contemporaneo)
 			disp.save()
-			if not request.user.is_staff:
-				notifica_disponibilita(request,disp.persona,disp.turno,disponibilita,disp.mansione)
+			notifica_disponibilita(request,disp.persona,disp.turno,disponibilita,disp.mansione)
 		return verifica_tempo
 	else:
 		logger.error('Disponibilita non autorizzata')
@@ -441,13 +440,19 @@ def notifica_disponibilita(request,persona,turno,tipo_disponibilita,mansione):
 	notifica.testo=messaggio
 	notifica.data=now
 	notifica.letto=False
-	if Impostazioni_notifica.objects.filter(giorni__contains=turno.inizio.weekday(),tipo_turno=turno.tipo):
-		for i in Impostazioni_notifica.objects.filter(giorni__contains=turno.inizio.weekday(),tipo_turno=turno.tipo):
-			#pdb.set_trace()
-			notifica.destinatario_id=i.utente.id
+	if not request.user.is_staff:
+		if Impostazioni_notifica.objects.filter(giorni__contains=turno.inizio.weekday(),tipo_turno=turno.tipo):
+			for i in Impostazioni_notifica.objects.filter(giorni__contains=turno.inizio.weekday(),tipo_turno=turno.tipo):
+				#pdb.set_trace()
+				notifica.destinatario_id=i.utente.id
+				notifica.save()
+		else:
+			notifica.destinatario_id=settings.GET_ID_ADMIN_NOTIFICHE # se non c'e regola va al admin
 			notifica.save()
-	else:
-		notifica.destinatario_id=settings.GET_ID_ADMIN_NOTIFICHE # se non c'e regola va al admin
+	elif (settings.GET_NOTICA_ALL and not request.user.id == settings.GET_ID_ADMIN_NOTIFICHE):
+		messaggio='<b>%s</b> ha reso <b> %s %s</b> con mansione di <b>%s</b> per il turno del<b> %s </b> delle ore<b> %s - %s </b>' % (str(request.user), str(tipo_disponibilita),str(persona),str(mansione), turno.inizio.strftime("%d-%m-%Y"), turno.inizio.strftime("%H:%M"), turno.fine.strftime("%H:%M"))
+		notifica.testo=messaggio
+		notifica.destinatario_id=settings.GET_ID_ADMIN_NOTIFICHE
 		notifica.save()
 	return True
 
