@@ -128,6 +128,11 @@ def touch(request,v):
 	risposta.set_cookie('touch', max_age=60*60*24*365, value=v)
 	return risposta
 
+def backup(request,password):
+	risposta=HttpResponseRedirect('/')
+	if password=='backupget2':
+		risposta.set_cookie('touch', max_age=60*60*24*365, value='yes')
+	return risposta
 
 #####   calendario   ####
 
