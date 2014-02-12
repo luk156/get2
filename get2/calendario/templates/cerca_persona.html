@@ -159,10 +159,10 @@ $(document).ready(function(){
 
 	$("table#cerca_persona").tablesorter({
 		textExtraction: {
-			4: function(node, table, cellIndex){ 
+			3: function(node, table, cellIndex){ 
 				return $('select option:selected',node).text();  },
 		},
-		sortList: [[4,1]],
+		sortList: [[3,1]],
 		theme : "bootstrap",widthFixed: true,headerTemplate : '{content} {icon}',widgets : [ "uitheme", "filter", "zebra" ],
 		widgetOptions : {zebra : ["even", "odd"], filter_reset : ".reset",	}
 		});

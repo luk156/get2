@@ -199,3 +199,5 @@ GET_ANALYTICS="UA-1111111-1"
 GET_DOMINIO="gestionaleturni.it"
 
 GET_MAIL_NOTIFICA = "no@no.it"
+
+SITE_ID = 1
