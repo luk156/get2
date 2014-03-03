@@ -444,15 +444,18 @@ def notifica_disponibilita(request,persona,turno,tipo_disponibilita,mansione):
 		if Impostazioni_notifica.objects.filter(giorni__contains=turno.inizio.weekday(),tipo_turno=turno.tipo):
 			for i in Impostazioni_notifica.objects.filter(giorni__contains=turno.inizio.weekday(),tipo_turno=turno.tipo):
 				#pdb.set_trace()
+				notifica.pk = None
 				notifica.destinatario_id=i.utente.id
 				notifica.save()
 		else:
 			notifica.destinatario_id=settings.GET_ID_ADMIN_NOTIFICHE # se non c'e regola va al admin
+			notifica.pk = None
 			notifica.save()
 	elif (settings.GET_NOTICA_ALL and not request.user.id == settings.GET_ID_ADMIN_NOTIFICHE):
 		messaggio='<b>%s</b> ha reso <b> %s %s</b> con mansione di <b>%s</b> per il turno del<b> %s </b> delle ore<b> %s - %s </b>' % (str(request.user), str(tipo_disponibilita),str(persona),str(mansione), turno.inizio.strftime("%d-%m-%Y"), turno.inizio.strftime("%H:%M"), turno.fine.strftime("%H:%M"))
 		notifica.testo=messaggio
 		notifica.destinatario_id=settings.GET_ID_ADMIN_NOTIFICHE
+		notifica.pk = None
 		notifica.save()
 	return True
 

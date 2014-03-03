@@ -4,10 +4,20 @@ from get2.calendario.models import Persona, Turno, Disponibilita
 from persone.models import Mansione
 import datetime
 from django.conf import settings
+import MySQLdb
+
+db = MySQLdb.connect(host="localhost", # your host, usually localhost
+                     user="john", # your username
+                      passwd="megajonhy", # your password
+                      db="jonhydb") # name of the data base
+
+# you must create a Cursor object. It will let
+#  you execute all the query you need
+cur = db.cursor() 
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-	conn = psycopg2.connect("dbname=misecampi user=postgres password=paola host=127.0.0.1")
+	
 	cur = conn.cursor()
 	cur.execute("SELECT * FROM abilitazioni;")
 	mansioni = cur.fetchall()
@@ -53,6 +63,13 @@ class Command(BaseCommand):
 			p.competenze.clear()
 			for abilita in  persona_abilitazioni:
 				p.competenze.add(m_dict[abilita[0]])
+			
+			try:
+				u=User.objects.get(username=a[21])
+			else
+				u=User.objects.create_user(a[21], a[20], 'paola03')
+			u.save()
+			p.user=u
 			p.save()
 		else:
 			try:
