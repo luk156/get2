@@ -85,7 +85,7 @@
 	
 </script>
 
-<table id="tabella_persone" class="table table-striped no-more-tables tablesorter">
+<table id="tabella_persone" class="tablesorter">
 
 <thead>	
 	<tr>
@@ -101,7 +101,7 @@
 		<td data-title="Gruppi">{% for g in persona.componenti_gruppo.all %} <span class="badge-gruppo">{{g}}</span> {% endfor %}</td>
 		<td data-title="Stato"><SELECT NAME="stato" class="span7" ONCHANGE="persona_stato(this)" id="sel-{{persona.id}}">
 			{%for key,value in stati %}
-			<OPTION VALUE="{{key}}-{{persona.id}}">{{value}}
+			<OPTION VALUE="{{key}}-{{persona.id}}"  {% if persona.get_stato_display == value%} selected {%endif%} >{{value}}
 			{% endfor%}
 			</SELECT></td>
 		<td data-title="Note">{{persona.note}}
@@ -140,15 +140,6 @@
 </form>
 </div>
 
-{% for persona in persone %}
-<script type="text/javascript">	
-	$(window).load(function(){
-	
-	$('#sel-{{persona.id}} option').filter(function(){return this.text=='{{persona.get_stato_display}}';}).prop('selected', true);
-	
-});
-</script>
-{% endfor %}
 
 <script type="text/javascript">
 $(window).load(function(){
@@ -165,8 +156,8 @@ $(window).load(function(){
 			4: function(node, table, cellIndex){ 
 				return $('select option:selected',node).text();  },
 		},
-		theme : "bootstrap",widthFixed: true,headerTemplate : '{content} {icon}',widgets : [ "uitheme", "filter", "zebra" ],
-		widgetOptions : {zebra : ["even", "odd"], filter_reset : ".reset",}
+		theme : "bootstrap",widthFixed: true,headerTemplate : '{content} {icon}',widgets : [ "uitheme", "filter"],
+		widgetOptions : { filter_reset : ".reset",}
 		});
 });
 </script>

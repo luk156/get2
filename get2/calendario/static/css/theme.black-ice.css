@@ -46,6 +46,7 @@
 }
 .tablesorter-blackice thead .sorter-false {
 	background-image: none;
+	cursor: default;
 	padding: 4px;
 }
 
@@ -175,6 +176,7 @@ caption {
 
 /* ajax error row */
 .tablesorter .tablesorter-errorRow td {
+	text-align: center;
 	cursor: pointer;
 	background-color: #e6bf99;
 }

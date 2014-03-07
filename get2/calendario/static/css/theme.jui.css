@@ -38,6 +38,10 @@
 	margin-top: -8px; /* half the icon height; older IE doesn't like this */
 }
 
+.tablesorter-jui thead .sorter-false {
+	cursor: default;
+}
+
 /* tfoot */
 .tablesorter-jui tfoot th,
 .tablesorter-jui tfoot td {
@@ -140,6 +144,7 @@
 
 /* ajax error row */
 .tablesorter .tablesorter-errorRow td {
+	text-align: center;
 	cursor: pointer;
 	background-color: #e6bf99;
 }
