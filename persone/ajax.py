@@ -38,3 +38,15 @@ def persona_stato(request,stato,persona):
 	dajax.script('$(".bottom-right").notify({ message: { text: "Modifiche apportate con successo" }}).show();')
 	dajax.script("$('#loading').addClass('hidden');")
 	return dajax.json()
+
+
+@dajaxice_register
+def elimina_persona_modal(request,persona_id):
+    dajax=Dajax()
+    import pdb
+    pdb.set_trace()
+    p=Persona.objects.get(id=persona_id)
+    html_elimina = render_to_string( 'persone/elimina_persona.html', { 'persona': p, 'request':request } )
+    dajax.assign('div #elimina-persona-'+str(p.id), 'innerHTML', html_elimina)
+    dajax.script("$('#elimina-persona-"+str(p.id)+"').modal('show');")
+    return dajax.json() 

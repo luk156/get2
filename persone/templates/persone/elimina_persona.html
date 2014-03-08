@@ -1,0 +1,10 @@
+
+<div class="modal-body">
+	<div class="alert alert-error">
+		<h5><i class="icon-warning-sign icon-2x"></i> Vuoi veramente eliminare {{persona}}?</h5>
+	</div>
+</div>
+<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">Annulla</button>
+<button class="btn btn-primary" data-dismiss="modal" onclick="$('#loading').removeClass('hidden'); Dajaxice.persone.elimina_persona(Dajax.process,{'persona_id':{{persona.id}}});">Elimina</button>
+</div>
