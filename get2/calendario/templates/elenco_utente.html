@@ -94,8 +94,8 @@ function utente_staff(selettore){
 			2: function(node, table, cellIndex){ 
 				return $('select option:selected',node).text();  },
 		},
-		theme : "bootstrap",widthFixed: true,headerTemplate : '{content} {icon}',widgets : [ "uitheme", "filter", "zebra" ],
-		widgetOptions : {zebra : ["even", "odd"], filter_reset : ".reset",}
+		theme : "bootstrap",widthFixed: true,headerTemplate : '{content} {icon}',widgets : [ "uitheme", "filter"],
+		widgetOptions : { filter_reset : ".reset",}
 		});
 </script>
 
