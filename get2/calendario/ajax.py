@@ -7,6 +7,7 @@ from dajaxice.utils import deserialize_form
 import pdb
 from django.template.loader import render_to_string
 from django.template import Context, Template
+from django.utils import simplejson
 
 @dajaxice_register
 def mansione_form(request, form):
@@ -234,4 +235,18 @@ def modal_elimina_utente(request,utente_id):
     html_elimina = render_to_string( 'elimina_utente.html', { 'utente': u, 'request':request } )
     dajax.assign('div #elimina-utente-'+str(u.id), 'innerHTML', html_elimina)
     dajax.script("$('#elimina-utente-"+str(u.id)+"').modal('show');")
-    return dajax.json() 
+    return dajax.json()
+
+@dajaxice_register
+def auto_utente_persona_search(request,search_term):
+    # Query DB for suggestions to present to user
+    q = Persona.objects.filter(cognome__istartswith=search_term)
+    data = []
+    #pdb.set_trace()
+    for item in q:
+        # Format returned queryset data, if needed
+        #data_item = str(item)
+        data.append({'label': str(item), 'value': item.id})
+
+    # Return data to callback function *search_result*
+    return simplejson.dumps(data)

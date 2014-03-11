@@ -4,7 +4,9 @@
 	<script src="/static/js/jquery.tablesorter.min.js"></script>
 	<script src="/static/js/jquery.tablesorter.widgets.min.js"></script>
 	<script src="/static/js/jquery.tablesorter.widgets-filter-formatter.min.js"></script>
+	<script src="/static/jquery-ui.min.js"></script>
 	<link href="/static/css/theme.bootstrap.css" rel="stylesheet">
+	<link href="/static/css/smoothness/jquery-ui-1.10.1.custom.min.css" rel="stylesheet">
 {% endblock%}
 
 {% block header %}
@@ -17,18 +19,13 @@
 {% block main %}
 
 <script type="text/javascript">
-function utente_persona(selettore){
-	value=selettore.options[selettore.selectedIndex].value;
-	dati=value.split("/");
-	$('#loading').removeClass('hidden');
-	Dajaxice.get2.calendario.utente_persona(Dajax.process,{'user_id':dati[0],'persona_id':dati[1]});
-}
 
 function utente_staff(selettore){
 	value=selettore.value;
 	$('#loading').removeClass('hidden');
 	Dajaxice.get2.calendario.utente_staff(Dajax.process,{'user_id':value});
 }
+
 </script>
 <script src="/static/sorttable.js"></script>
 </br>
@@ -51,12 +48,7 @@ function utente_staff(selettore){
 	<td  data-title="Username">{{utente}}</td>
 	<td  data-title="E-mail">{{utente.email}}</td>
 	<td  data-title="Persona">
-		<SELECT NAME="stato" ONCHANGE="utente_persona(this)" id="select-{{utente.id}}">
-		<OPTION VALUE="{{utente.id}}/n">Nessuno
-		{% for persona in persone %}
-		<OPTION VALUE="{{utente.id}}/{{persona.id}}"  {% if persona = utente.get_profile %}selected{%endif%}>{{persona}}
-		{% endfor %}
-		</SELECT>
+		<input id="select-{{utente.id}}" utente_id="{{utente.id}}" type="text" class="utente_persona" onkeyup="dajax_utente_persona_search(this);" value="{{utente.get_profile}}">
 	</td>
 	<td data-title="Privilegi staff">{%if not utente.is_superuser%}
  		<input id="staff-{{utente.id}}" type="checkbox" value="{{utente.id}}" ONCHANGE="utente_staff(this);" 
@@ -86,6 +78,7 @@ function utente_staff(selettore){
 
 
 <script type="text/javascript">	
+
 	$("table#tabella_utenti").tablesorter({
 		headers: {
 			4: { sorter: false, filter:false },
@@ -97,6 +90,29 @@ function utente_staff(selettore){
 		theme : "bootstrap",widthFixed: true,headerTemplate : '{content} {icon}',widgets : [ "uitheme", "filter"],
 		widgetOptions : { filter_reset : ".reset",}
 		});
+	var local_source=[""];
+	$(".utente_persona").each(function(){
+		console.log(this);	
+		$(this).autocomplete({source: local_source});
+	});
+	function search_result(data) {
+		$(".utente_persona").each(function(){		
+			$(this).autocomplete({
+				source: data,
+				select: function(event,ui){
+					event.preventDefault();
+					$(this).val(ui.item.label);
+					$('#loading').removeClass('hidden');
+					//console.log($(event.target).attr('utente_id'));
+					Dajaxice.get2.calendario.utente_persona(Dajax.process,{'user_id':$(event.target).attr('utente_id'),'persona_id':ui.item.value});
+				}
+			});
+		});
+    }
+    function dajax_utente_persona_search(t) {
+    	Dajaxice.get2.calendario.auto_utente_persona_search(search_result,{'search_term':$(t).val()});
+    }
+ 
 </script>
 
 {% endblock %}
