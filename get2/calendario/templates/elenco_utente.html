@@ -92,7 +92,6 @@ function utente_staff(selettore){
 		});
 	var local_source=[""];
 	$(".utente_persona").each(function(){
-		console.log(this);	
 		$(this).autocomplete({source: local_source});
 	});
 	function search_result(data) {
