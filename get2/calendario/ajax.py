@@ -226,3 +226,12 @@ def elimina_turno(request,turno_id):
     dajax.assign('div #elimina-turno-'+str(t.id), 'innerHTML', html_elimina)
     dajax.script("$('#elimina-turno-"+str(t.id)+"').modal('show');")
     return dajax.json() 
+
+@dajaxice_register
+def modal_elimina_utente(request,utente_id):
+    dajax=Dajax()
+    u=User.objects.get(id=utente_id)
+    html_elimina = render_to_string( 'elimina_utente.html', { 'utente': u, 'request':request } )
+    dajax.assign('div #elimina-utente-'+str(u.id), 'innerHTML', html_elimina)
+    dajax.script("$('#elimina-utente-"+str(u.id)+"').modal('show');")
+    return dajax.json() 

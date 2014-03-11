@@ -1,0 +1,9 @@
+	<div class="modal-body">
+		<div class="alert alert-error">
+			<h5><i class="icon-warning-sign icon-2x"></i> Vuoi veramente eliminare {{utente}}?</h5>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Annulla</button>
+		<button class="btn btn-primary" data-dismiss="modal" onclick="Dajaxice.get2.calendario.elimina_utente(Dajax.process,{'utente_id':{{utente.id}}});">Elimina</button>
+	</div>

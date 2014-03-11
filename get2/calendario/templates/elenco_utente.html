@@ -54,7 +54,7 @@ function utente_staff(selettore){
 		<SELECT NAME="stato" ONCHANGE="utente_persona(this)" id="select-{{utente.id}}">
 		<OPTION VALUE="{{utente.id}}/n">Nessuno
 		{% for persona in persone %}
-		<OPTION VALUE="{{utente.id}}/{{persona.id}}">{{persona}}
+		<OPTION VALUE="{{utente.id}}/{{persona.id}}"  {% if persona = utente.get_profile %}selected{%endif%}>{{persona}}
 		{% endfor %}
 		</SELECT>
 	</td>
@@ -70,7 +70,7 @@ function utente_staff(selettore){
 			<ul class="dropdown-menu pull-right">
 				<li><a href="/utenti/modifica/{{utente.id}}"><i class="icon-edit"></i> modifica</a></li>
 				<li><a href="/utenti/modifica/{{utente.id}}/password"><i class="icon-key"></i> modifica password</a></li>
-				<li><a href="#elimina-utente-{{utente.id}}" data-toggle="modal"><i class="icon-trash"></i> elimina</a></li>
+				<li><a href="#" onclick="Dajaxice.get2.calendario.modal_elimina_utente(Dajax.process,{'utente_id':{{utente.id}}});"><i class="icon-trash"></i> elimina</a></li>
 			  </ul>
 		</div>
 		{% endif %}
@@ -78,34 +78,11 @@ function utente_staff(selettore){
 </tr>
 
 <div id="elimina-utente-{{utente.id}}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-body">
-		<div class="alert alert-error">
-			<h5><i class="icon-warning-sign icon-2x"></i> Vuoi veramente eliminare {{utente}}?</h5>
-		</div>
-	</div>
-	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Annulla</button>
-		<button class="btn btn-primary" data-dismiss="modal" onclick="Dajaxice.get2.calendario.elimina_utente(Dajax.process,{'utente_id':{{utente.id}}});">Elimina</button>
-	</div>
+
 </div>
 
 {% endfor %}
 </table>
-
-
-{% for utente in utenti %}
-
-<script type="text/javascript">
-	var s = document.getElementById('select-{{utente.id}}');
-	if('{{utente.get_profile.id}}'!=''){
-		for (var i=0 ; i < s.length; i++){
-			if (s.options[i].text=='{{utente.get_profile}}')
-				s.selectedIndex = i;}
-		}
-	;
-</script>
-
-{% endfor %}
 
 
 <script type="text/javascript">	
@@ -123,18 +100,3 @@ function utente_staff(selettore){
 </script>
 
 {% endblock %}
-
-
-{% for utente in utenti %}
-<div id="elimina-utente-{{utente.id}}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-body">
-		<div class="alert alert-error">
-			<h5><i class="icon-warning-sign icon-2x"></i> Vuoi veramente eliminare l'utente {{utente}}?</h5>
-		</div>
-	</div>
-	<div class="modal-footer">
-	<button class="btn" data-dismiss="modal" aria-hidden="true">Annulla</button>
-	<button class="btn btn-primary" data-dismiss="modal" onclick="">Elimina</button>
-	</div>
-</div>
-{% endfor %}
