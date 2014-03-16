@@ -127,6 +127,7 @@ class Mansione(models.Model):
 	colore = models.TextField('Colore', default='#aaa' )
 	padre=SelfForeignKey('self', null=True, blank=True, related_name='children')
 	escludi_stat = models.BooleanField('Escludi dalle statistiche', default=False,  help_text="Le disponibilita per questa mansione saranno escluse dalle statistiche")
+	ereditabile = models.BooleanField('Ereditabile', default=True,  help_text="Le persone con una mansione superiore erediteranno automaticamente questa mansione")
 	def __unicode__(self):
 		return '%s' % (self.nome)
 	# Milite tipo A, milite tipo B, centralinista ecc...
@@ -169,6 +170,7 @@ class MansioneForm(forms.ModelForm):
 				template = 'form_templates/radioselect_inline.html',
 			),
 			Field('escludi_stat'),
+			Field('ereditabile'),
 			FormActions(
 				Submit('save', 'Invia', css_class="btn-primary")
 			)
@@ -210,7 +212,8 @@ class Persona(models.Model):
 		for m in self.competenze.all():
 			c.add(m)
 			for f in figli(m.id):
-				c.add(f)
+				if (f.ereditabile):
+					c.add(f)
 		return c
 
 	def __unicode__(self):

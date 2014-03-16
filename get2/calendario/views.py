@@ -384,16 +384,16 @@ def nuova_disponibilita(request, turno_id, mansione_id, persona_id, disponibilit
 	#pdb.set_trace()
 	per=Persona.objects.get(id=persona_id)
 	if request.user.is_staff or request.user.get_profile()==per:
-		disp=Disponibilita()
-		disp.tipo=disponibilita
-		disp.persona=per
-		disp.ultima_modifica=datetime.datetime.now()
-		disp.creata_da=request.user
-		disp.turno=Turno.objects.get(id=turno_id)
-		disp.mansione=Mansione.objects.get(id=mansione_id)
 		#verifico se la disponibilita e entro i tempi corretti
-		verifica_tempo=disponibilita_verifica_tempo(request, disp.turno)
+		verifica_tempo=disponibilita_verifica_tempo(request, Turno.objects.get(id=turno_id))
 		if verifica_tempo[0]:
+			disp=Disponibilita()
+			disp.tipo=disponibilita
+			disp.persona=per
+			disp.ultima_modifica=datetime.datetime.now()
+			disp.creata_da=request.user
+			disp.turno=Turno.objects.get(id=turno_id)
+			disp.mansione=Mansione.objects.get(id=mansione_id)
 			#una persona puo avere una sola disponibilita per turno
 			if Disponibilita.objects.filter(persona=disp.persona,turno=disp.turno ).exists():
 				esistenti=Disponibilita.objects.filter(persona=disp.persona, turno=disp.turno )
@@ -421,7 +421,8 @@ def disponibilita_url(request, turno_id, mansione_id, persona_id, disponibilita)
 	if d[0]:
 		return HttpResponseRedirect('/calendario/'+str(t.calendario.id))
 	else:
-		print d[1]
+		logger.error(d[1])
+		return HttpResponseRedirect('/calendario/'+str(t.calendario.id))
 
 @user_passes_test(lambda u:u.is_staff)
 def disponibilita_gruppo(request,turno_id,gruppo_id):
@@ -481,7 +482,7 @@ def elenco_utente(request):
 	#if request.user.is_staff:
 	utenti = User.objects.all()
 	persone = Persona.objects.all().order_by('cognome','nome')
-	risposta = HttpResponse(render(request,'elenco_utente.html',{'utenti':utenti,'persone':persone,'request':request,}))
+	risposta = HttpResponse(render(request,'elenco_utente.html',{'utenti':utenti,'request':request,}))
 	return risposta
 	#else:
 	#	return render(request,'staff-no.html')
