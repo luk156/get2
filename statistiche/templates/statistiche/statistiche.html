@@ -66,8 +66,8 @@ $(window).load(function(){
 
 	$("table#tabella_turni").tablesorter({
 		sortList: [[3,1]],
-		theme : "bootstrap",widthFixed: true,headerTemplate : '{content} {icon}',widgets : [ "uitheme", "filter", "zebra" ],
-		widgetOptions : {zebra : ["even", "odd"], filter_reset : ".reset",}
+		theme : "bootstrap",widthFixed: true,headerTemplate : '{content} {icon}',widgets : [ "uitheme", "filter" ],
+		widgetOptions : { filter_reset : ".reset",}
 		});
 });
 
@@ -140,8 +140,8 @@ $(function () {
 $(window).load(function(){
 	$("table#tabella_punti").tablesorter({
 		sortList: [[3,1]],
-		theme : "bootstrap",widthFixed: true,headerTemplate : '{content} {icon}',widgets : [ "uitheme", "filter", "zebra" ],
-		widgetOptions : {zebra : ["even", "odd"], filter_reset : ".reset",}
+		theme : "bootstrap",widthFixed: true,headerTemplate : '{content} {icon}',widgets : [ "uitheme", "filter"],
+		widgetOptions : {filter_reset : ".reset",}
 		});
 });
 

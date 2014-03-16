@@ -28,7 +28,7 @@ def statistiche(request):
 import operator
 from dateutil.relativedelta import relativedelta
 
-def statistiche_intervallo(request, inizio = datetime.datetime.now() + relativedelta( years = -1 ), fine = datetime.datetime.now().date(), mansioni = Mansione.objects.all(), gruppi = Gruppo.objects.all(), senza_gruppo = True):
+def statistiche_intervallo(request, inizio = datetime.datetime(datetime.datetime.now().year , 1 , 1 ), fine = datetime.datetime.now().date(), mansioni = Mansione.objects.all(), gruppi = Gruppo.objects.all(), senza_gruppo = True):
 	tot_turni = []
 	tot_punti = []
 	#Turno.objects.earliest(field_name='inizio')

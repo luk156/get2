@@ -11,6 +11,7 @@
 	<link href="/static/css/theme.bootstrap.css" rel="stylesheet">
 	<script src="/static/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="/static/js/bootstrap-daterangepicker/moment.js"></script>
+	<script type="text/javascript" src="/static/js/bootstrap-daterangepicker/lang/it.js"></script>
     <script type="text/javascript" src="/static/js/bootstrap-daterangepicker/daterangepicker.js"></script>
 	<link rel="stylesheet" type="text/css" media="all" href="/static/js/bootstrap-daterangepicker/daterangepicker-bs2.css" />
 {% endblock%}
@@ -92,49 +93,48 @@ function reset(){
 	$(document).ready(function() {
 		$('#reportrange').daterangepicker(
 		{
-		startDate: moment().subtract('years', 1),
-		endDate: moment(),
-		minDate: moment().subtract('years', 5),
-		maxDate: moment(),
-		//dateLimit: { days: 60 },
-		showDropdowns: true,
-		showWeekNumbers: false,
-		timePicker: false,
-		timePickerIncrement: 1,
-		timePicker12Hour: true,
-		ranges: {
-		   'Ultimi 7 giorni': [moment().subtract('days', 6), moment()],
-		   'Ultimi 30 giorni': [moment().subtract('days', 29), moment()],
-		   'Questo Mese': [moment().startOf('month'), moment().endOf('month')],
-		   'Ultimi 6 mesi': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
-		},
-		opens: 'left',
-		buttonClasses: ['btn btn-default'],
-		applyClass: 'btn-small btn-primary',
-		cancelClass: 'btn-small',
-		format: 'DD/MM/YYYY',
-		separator: ' to ',
-		locale: {
-		    applyLabel: 'Invia',
-		    fromLabel: 'Dal',
-		    toLabel: 'Al',
-		    customRangeLabel: 'Scegli Intervallo',
-		    daysOfWeek: ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven','Sab'],
-		    monthNames: ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'],
-		    firstDay: 1
-		}
+			startDate: moment().startOf('year'),
+			endDate: moment(),
+			minDate: moment().subtract('years', 5),
+			maxDate: moment(),
+			//dateLimit: { days: 60 },
+			showDropdowns: true,
+			showWeekNumbers: false,
+			timePicker: false,
+			timePickerIncrement: 1,
+			timePicker12Hour: true,
+			ranges: {
+			   'Ultimi 7 giorni': [moment().subtract('days', 6), moment()],
+			   'Ultimi 30 giorni': [moment().subtract('days', 29), moment()],
+			   'Questo Mese': [moment().startOf('month'), moment().endOf('month')],
+			   'Ultimi 6 mesi': [moment().subtract('month', 6).startOf('month'), moment().endOf('month')]
+			},
+			opens: 'left',
+			buttonClasses: ['btn btn-default'],
+			applyClass: 'btn-small btn-primary',
+			cancelClass: 'btn-small',
+			format: 'DD/MM/YYYY',
+			separator: ' to ',
+			locale: {
+			    applyLabel: 'Invia',
+			    fromLabel: 'Dal',
+			    toLabel: 'Al',
+			    customRangeLabel: 'Scegli Intervallo',
+			    daysOfWeek: ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven','Sab'],
+			    monthNames: ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'],
+			    firstDay: 1
+			}
 		},
 		function(start, end) {
-		console.log("Callback has been called!");
-		$('#reportrange span').html(start.format('D MMMM, YYYY') + ' - ' + end.format('D MMMM, YYYY'));
+		$('#reportrange span').html(start.format('LL') + ' - ' + end.format('LL'));
 		$("#id_start")[0].value = start.format('D/M/YYYY');
 		$("#id_stop")[0].value = end.format('D/M/YYYY');
 		aggiorna_statistiche();
 		}
 		);
 		//Set the initial state of the picker label
-		$('#reportrange span').html(moment().subtract('years', 1).format('D MMMM, YYYY') + ' - ' + moment().format('D MMMM, YYYY'));
-		$("#id_start")[0].value = moment().subtract('years', 1).format('D/M/YYYY');
+		$('#reportrange span').html(moment().startOf('year').format('LL') + ' - ' + moment().format('LL'));
+		$("#id_start")[0].value = moment().startOf('year').format('D/M/YYYY');
 		$("#id_stop")[0].value = moment().format('D/M/YYYY');
 	});
 </script>
