@@ -121,7 +121,7 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    #'django.contrib.sites',
+    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'south',
@@ -201,3 +201,5 @@ GET_DOMINIO="gestionaleturni.it"
 GET_MAIL_NOTIFICA = "no@no.it"
 
 SITE_ID = 1
+
+GET_JS = "devel.js"
