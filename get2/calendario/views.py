@@ -321,16 +321,16 @@ def cerca_persona(request, turno_id, mansione_id):
 	stato = []
 	turno = Turno.objects.get(id=turno_id)
 
-	impegnati = Persona.objects.filter( persona_disponibilita__turno__in = turno.contemporanei() , persona_disponibilita__tipo = 'Disponibile' )
+	impegnati = Persona.objects.values_list('id').filter( persona_disponibilita__turno__in = turno.contemporanei() , persona_disponibilita__tipo = 'Disponibile')
 
-	for p in Persona.objects.exclude( stato = 'indisponibile' ):
+	for p in Persona.objects.select_related().exclude( stato = 'indisponibile' ):
 		if mansione in p.capacita():
 			persone.append(p)
-			if p in impegnati:
+			if p.id in impegnati:
 				stato.append('Impegnato')
 			else:
 				try:
-					stato.append( Disponibilita.objects.get(turno=turno,persona=p))
+					stato.append( Disponibilita.objects.select_related().get(turno=turno,persona=p))
 					pass
 				except Exception, e:				
 					stato.append('')

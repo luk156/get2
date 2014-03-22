@@ -132,7 +132,7 @@ $(document).ready(function(){
 				if ( $('select option:selected',node).length>0 )
 					return $('select option:selected',node).text();
 				else {
-					return $(node).html();
+					return 'z'+$(node).html().toString();
 				}
 			},
 		},
