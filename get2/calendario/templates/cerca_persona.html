@@ -111,6 +111,7 @@ function nota_disponibilita(disp_id){
 				{% endfor%}
 				<script>
 				$(document).ready(function() {
+
 					$("#titolo-turno-{{t.id}} .dropdown").hide();
 					$('.h6-mansione-{{mansione.id}}').addClass("mansione-sel");
 				});
@@ -128,7 +129,12 @@ $(document).ready(function(){
 	$("table#cerca_persona").tablesorter({
 		textExtraction: {
 			3: function(node, table, cellIndex){ 
-				return $('select option:selected',node).text();  },
+				if ( $('select option:selected',node).length>0 )
+					return $('select option:selected',node).text();
+				else {
+					return $(node).html();
+				}
+			},
 		},
 		sortList: [[3,1]],
 		theme : "bootstrap",widthFixed: true,

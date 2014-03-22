@@ -338,7 +338,7 @@ def cerca_persona(request, turno_id, mansione_id):
 	disp.append(persone)
 	disp.append(stato)
 	disp=zip(*disp)
-	return render(request,'cerca_persona.html',{'persone':persone,'t':turno,'mansione':mansione,'DISPONIBILITA':DISPONIBILITA,'request':request,'disp':disp})
+	return render(request,'cerca_persona.html',{'t':turno,'mansione':mansione,'DISPONIBILITA':DISPONIBILITA,'request':request,'disp':disp})
 
 
 ####   fine calendario   ####
