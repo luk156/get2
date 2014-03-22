@@ -224,7 +224,8 @@ class Persona(models.Model):
 		return '%s %s' % (self.cognome,self.nome)
 	def save(self, *args, **kwargs):
 		super(Persona, self).save(*args, **kwargs)
-		self.competenze=self.capacita(self)
+		for c in self.capacita():
+			self.competenze.add(c)
 		super(Persona, self).save(*args, **kwargs)
 
 class PersonaForm(forms.ModelForm):
