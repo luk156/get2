@@ -315,13 +315,30 @@ def calendarioazione(request,cal_id,azione):
 
 @user_passes_test(lambda u:u.is_staff)
 def cerca_persona(request, turno_id, mansione_id):
-	mansione=Mansione.objects.get(id=mansione_id)
+	
+	mansione = Mansione.objects.get(id=mansione_id)
 	persone = []
-	for p in Persona.objects.order_by('cognome').exclude(stato='indisponibile'):
+	stato = []
+	turno = Turno.objects.get(id=turno_id)
+
+	impegnati = Persona.objects.filter( persona_disponibilita__turno__in = turno.contemporanei() , persona_disponibilita__tipo = 'Disponibile' )
+
+	for p in Persona.objects.exclude( stato = 'indisponibile' ):
 		if mansione in p.capacita():
 			persone.append(p)
-	turno=Turno.objects.get(id=turno_id)
-	return render(request,'cerca_persona.html',{'persone':persone,'t':turno,'mansione':mansione,'DISPONIBILITA':DISPONIBILITA,'request':request})
+			if p in impegnati:
+				stato.append('Impegnato')
+			else:
+				try:
+					stato.append( Disponibilita.objects.get(turno=turno,persona=p))
+					pass
+				except Exception, e:				
+					stato.append('')
+	disp = []
+	disp.append(persone)
+	disp.append(stato)
+	disp=zip(*disp)
+	return render(request,'cerca_persona.html',{'persone':persone,'t':turno,'mansione':mansione,'DISPONIBILITA':DISPONIBILITA,'request':request,'disp':disp})
 
 
 ####   fine calendario   ####

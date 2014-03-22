@@ -244,7 +244,7 @@ def visualizza_persona(request,persona_id):
 		turni.append([start,n])
 		start = stop
 	#import pdb; pdb.set_trace()
-	print turni
+	#print turni
 	if request.user.is_staff or request.user.get_profile()==persona:
 	  return render(request,'dettaglio_persona.html',{'request': request, 'turni': turni, 'mansioni': mansioni ,'persona': persona, 'tot_punti': tot_punti, 'tot_turni': tot_turni})
 

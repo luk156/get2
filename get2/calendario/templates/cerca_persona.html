@@ -64,83 +64,53 @@ function nota_disponibilita(disp_id){
 					<th>Nome</th><th>Capacita'</th><th>Telefono</th></th><th>Disponibilita'</th>
 					</tr>
 				</thead>
-				{%for persona in persone%}
-					{%for c in t.contemporanei.all %}
-						{% for d in c.turno_disponibilita.all %}
-						{% if persona = d.persona %}
-						<script type="text/javascript">
-						$(document).ready(function(){
-							var s = $('#sel-{{persona.id}}');
-							//s.remove(0);
-							if('{{d.mansione.id}}'!='{{mansione.id}}' || '{{c.id}}'!='{{t.id}}'){
-								if('{{d.tipo}}'=='Disponibile'){
-									s.empty();
-									s.append("<option value=''>Gia Impegnato</option>");
-									$('#persona-{{persona.id}}').addClass("error");
-								}
-								else {$('#sel-{{persona.id}} option').filter(function() { return this.text == '{{d.get_tipo_display}}';}).prop('selected', true);
-									 $('#disponibilita-{{persona.id}}').html('<div class="input-prepend input-append small"><span class="add-on"><i class="icon-comment"></i></span><input id="note-disp-{{d.id}}" type="text" value="{{d.note}}"><button class="btn" type="button" onclick="nota_disponibilita({{d.id}});">salva</button></div></br>{{d.creata_da}}:{{d.ultima_modifica|date:"d M"}} {{d.ultima_modifica|time:"H:i"}}');
-									}
-							}
-							else { $('#sel-{{persona.id}} option').filter(function() { return this.text == '{{d.get_tipo_display}}';}).prop('selected', true);
-								 $('#disponibilita-{{persona.id}}').html('<div class="input-prepend input-append small"><span class="add-on"><i class="icon-comment"></i></span><input id="note-disp-{{d.id}}" type="text" value="{{d.note}}"><button class="btn" type="button" onclick="nota_disponibilita({{d.id}});">salva</button></div></br>{{d.creata_da}}:{{d.ultima_modifica|date:"d M"}} {{d.ultima_modifica|time:"H:i"}}');
-								} }
-						);
-						</script>
-						{% endif %}
-						{% endfor %}
-					{% endfor %}
-					{% for d in t.turno_disponibilita.all %}
-					 {% if persona = d.persona and d.mansione.id != mansione.id and d.tipo = "Disponibile" %}
-					  <script type="text/javascript">
-						  $(document).ready(function(){
-							  var s = $('#sel-{{persona.id}}');
-							  $("#sel-{{persona.id}} option:first").remove();
-							  s.prepend("<option value=''>{{d.mansione}} </option>");
-							  $("#sel-{{persona.id}} option:first").prop('selected', true);
-							  $('#disponibilita-{{persona.id}}').html('<div class="input-prepend input-append small"><span class="add-on"><i class="icon-comment"></i></span><input id="note-disp-{{d.id}}" type="text" value="{{d.note}}"><button class="btn" type="button" onclick="nota_disponibilita({{d.id}});">salva</button></div></br>{{d.creata_da}}:{{d.ultima_modifica|date:"d M"}} {{d.ultima_modifica|time:"H:i"}}');
-							  
-							}
-							);
-					  </script> 
-					 {% endif %}
-					 {% if persona = d.persona and d.mansione.id = mansione.id %}
-					  <script type="text/javascript">
-						$(document).ready(function(){
-							$('#sel-{{persona.id}} option').filter(function() { return this.text == '{{d.get_tipo_display}}'; }).prop('selected', true);
-							{% if not request.user.is_superuser %}
-								$("#sel-{{persona.id}} option:first").remove();
-							{% endif %}
-							$('#disponibilita-{{persona.id}}').html('<div class="input-prepend input-append small"><span class="add-on"><i class="icon-comment"></i></span><input id="note-disp-{{d.id}}" type="text" value="{{d.note}}"><button class="btn" type="button" onclick="nota_disponibilita({{d.id}});">salva</button></div></br>{{d.creata_da}}:{{d.ultima_modifica|date:"d M"}} {{d.ultima_modifica|time:"H:i"}}');
-							}
-						);
-					  </script> 
-					 {% endif %}
-					{% endfor %}
+				{%for persona,disponibilita in disp%}
+					
 					<tr {%if persona.stato != 'disponibile'%} class="error" {%endif%} id="persona-{{persona.id}}">
 					<td data-title="Nome" class="nome">{{persona}}</td>
 					<td data-title="Mansioni" class="mansioni">{% for m in persona.capacita %}<span class="badge-mansione">{{m}}</span>  {% endfor %}</td>
 					<td data-title="telefono">{{persona.telefono|safe}}</td>
 					<td data-title="Disponibilita" class="disponibilita">
-						<SELECT NAME="stato" class="span7" ONCHANGE="disp(this);" id="sel-{{persona.id}}">
-							<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/-">----
-							{%for key,value in DISPONIBILITA %}
-								<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/{{key}}">{{value}}
-							{% endfor%}
+					{%if persona.stato = 'disponibile' %}
+						{% if disponibilita = 'Impegnato' %}
+							Già impegnato
+						{% else %}
+							<SELECT NAME="stato" class="span7" ONCHANGE="disp(this);" id="sel-{{persona.id}}">
+							{% if disponibilita.mansione != mansione %}			
+								{% if request.user.is_superuser %}
+									<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/-">----
+								{% endif %}
+								<OPTION VALUE="" selected>{{disponibilita.mansione}}
+								{%for key,value in DISPONIBILITA %}
+									<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/{{key}}" >{{value}}
+								{% endfor%}			
+							{% else %}
+								{% if request.user.is_superuser %}
+									<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/-">----
+								{% endif %}
+								{%for key,value in DISPONIBILITA %}
+									<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/{{key}}" {% if disponibilita.tipo = key %} selected {% endif %}>{{value}}
+								{% endfor%}
+							{% endif %}
 							</SELECT>
-						</br>
+							<div id="disponibilita-{{persona.id}}">
+								<div class="input-prepend input-append small">
+									<span class="add-on"><i class="icon-comment"></i></span>
+									<input id="note-disp-{{disponibilita.id}}" type="text" value="{{disponibilita.note}}">
+									<button class="btn" type="button" onclick="nota_disponibilita({{disponibilita.id}});">salva</button>
+								</div>
+								</br>{{disponibilita.creata_da}} : {{disponibilita.ultima_modifica|date:"d M"}} {{disponibilita.ultima_modifica|time:"H:i"}}
+							</div>
+						{% endif %}
+					{% else %}
+						{{persona.get_stato_display }}
+					{% endif %}
 
-				<div id="disponibilita-{{persona.id}}"></div>
 					</td>
 					</tr>
 
 				<script>
 				$(document).ready(function() {
-					if('disponibile'!='{{persona.stato}}'){
-					$("#sel-{{persona.id}}").hide();
-					$("#persona-{{persona.id}} td.disponibilita").html("{{persona.get_stato_display}}");
-					
-					}
 					$("#titolo-turno-{{t.id}} .dropdown").hide();
 					$('.h6-mansione-{{mansione.id}}').addClass("mansione-sel");
 				});
