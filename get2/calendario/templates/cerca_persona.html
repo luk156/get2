@@ -64,11 +64,11 @@ function nota_disponibilita(disp_id){
 					<th>Nome</th><th>Capacita'</th><th>Telefono</th></th><th>Disponibilita'</th>
 					</tr>
 				</thead>
-				{%for persona,disponibilita in disp%}
+				{%for persona,capacita,disponibilita in disp%}
 					
 					<tr {%if persona.stato != 'disponibile'%} class="error" {%endif%} id="persona-{{persona.id}}">
 					<td data-title="Nome" class="nome">{{persona}}</td>
-					<td data-title="Mansioni" class="mansioni">{% for m in persona.capacita %}<span class="badge-mansione">{{m}}</span>  {% endfor %}</td>
+					<td data-title="Mansioni" class="mansioni">{% for m in capacita %}<span class="badge-mansione">{{m}}</span>  {% endfor %}</td>
 					<td data-title="telefono">{{persona.telefono|safe}}</td>
 					<td data-title="Disponibilita" class="disponibilita">
 					{%if persona.stato = 'disponibile' %}
@@ -129,14 +129,16 @@ $(document).ready(function(){
 	$("table#cerca_persona").tablesorter({
 		textExtraction: {
 			3: function(node, table, cellIndex){ 
-				if ( $('select option:selected',node).length>0 )
-					return $('select option:selected',node).text();
+				if ( $('select',node).length>0 ){
+					t='a'
+					return t+$('select option:selected',node).text();
+				}
 				else {
 					return 'z'+$(node).html().toString();
 				}
 			},
 		},
-		sortList: [[3,1]],
+		sortList: [[3,0]],
 		theme : "bootstrap",widthFixed: true,
 		headerTemplate : '{content} {icon}',
 		widgets : [ "uitheme", "filter"],

@@ -319,23 +319,30 @@ def cerca_persona(request, turno_id, mansione_id):
 	mansione = Mansione.objects.get(id=mansione_id)
 	persone = []
 	stato = []
+	capacita = []
 	turno = Turno.objects.get(id=turno_id)
-
+	disp_turno = list(Disponibilita.objects.filter(turno=turno))
 	impegnati = Persona.objects.values_list('id').filter( persona_disponibilita__turno__in = turno.contemporanei() , persona_disponibilita__tipo = 'Disponibile')
 
-	for p in Persona.objects.select_related().exclude( stato = 'indisponibile' ):
-		if mansione in p.capacita():
+
+	for p in Persona.objects.exclude( stato = 'indisponibile', persona_disponibilita__turno = turno ):
+		#pdb.set_trace()
+		cap = p.capacita()
+		if mansione in cap:
+		#if True:
 			persone.append(p)
+			capacita.append(cap)
 			if p.id in impegnati:
 				stato.append('Impegnato')
 			else:
 				try:
-					stato.append( Disponibilita.objects.select_related().get(turno=turno,persona=p))
+					stato.append( disp_turno.get(persona=p))
 					pass
 				except Exception, e:				
 					stato.append('')
 	disp = []
 	disp.append(persone)
+	disp.append(capacita)
 	disp.append(stato)
 	disp=zip(*disp)
 	return render(request,'cerca_persona.html',{'t':turno,'mansione':mansione,'DISPONIBILITA':DISPONIBILITA,'request':request,'disp':disp})

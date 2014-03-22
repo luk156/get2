@@ -218,6 +218,8 @@ class Persona(models.Model):
 
 	def __unicode__(self):
 		return '%s %s' % (self.cognome,self.nome)
+	def save(self, *args, **kwargs):
+		super(Persona, self).save(*args, **kwargs)
 
 class PersonaForm(forms.ModelForm):
 	class Meta:
