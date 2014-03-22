@@ -108,15 +108,13 @@ function nota_disponibilita(disp_id){
 
 					</td>
 					</tr>
-
+				{% endfor%}
 				<script>
 				$(document).ready(function() {
 					$("#titolo-turno-{{t.id}} .dropdown").hide();
 					$('.h6-mansione-{{mansione.id}}').addClass("mansione-sel");
 				});
 				</script>
-
-				{% endfor%}
 			</table>
 			</div>
 		</div>
