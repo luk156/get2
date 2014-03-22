@@ -71,7 +71,7 @@
 					<tr>
 						<td data-title="Utente">{{persona.user}}</td>
 						<td data-title="Stato">{{persona.stato}}</td>
-						<td data-title="Competenze">{% for mansione in persona.capacita %} 
+						<td data-title="Competenze">{% for mansione in persona.competenze.all %} 
 						<span class="badge-mansione">{{mansione.descrizione}}</span>
 						{% endfor %}</td>
 					</tr>

@@ -135,6 +135,10 @@ class Mansione(models.Model):
 		if self.padre:
 			return False
 		return True
+	def save(self, *args, **kwargs):
+		for p in Persona.objects.all():
+			p.save()
+		super(Mansione, self).save(*args, **kwargs)
 
 def figli(mansione_id):
 	f=list(Mansione.objects.filter(padre=mansione_id))
@@ -219,6 +223,8 @@ class Persona(models.Model):
 	def __unicode__(self):
 		return '%s %s' % (self.cognome,self.nome)
 	def save(self, *args, **kwargs):
+		super(Persona, self).save(*args, **kwargs)
+		self.competenze=self.capacita()
 		super(Persona, self).save(*args, **kwargs)
 
 class PersonaForm(forms.ModelForm):

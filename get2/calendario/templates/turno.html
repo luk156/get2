@@ -75,7 +75,7 @@
 								{% if request.user.is_authenticated or touch == "yes" %}
 								data-toggle="tooltip" class="abilita" data-placement="top" data-content='
 					 					<small>capacita: </small> 
-					 					{%for m in d.persona.capacita%}
+					 					{%for m in d.persona.competenze.all %}
 					 					<i class="{{m.icona}}" style="color:{{m.colore}}"></i>
 					 					{%endfor%}
 					 				'
