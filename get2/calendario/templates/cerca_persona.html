@@ -78,18 +78,18 @@ function nota_disponibilita(disp_id){
 							<SELECT NAME="stato" class="span7" ONCHANGE="disp(this);" id="sel-{{persona.id}}">
 							{% if disponibilita.mansione != mansione %}			
 								{% if request.user.is_superuser %}
-									<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/-">----
+									<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/-">----</option>
 								{% endif %}
-								<OPTION VALUE="" selected>{{disponibilita.mansione}}
+									<OPTION VALUE="" selected>{{disponibilita.mansione}}</option>
 								{%for key,value in DISPONIBILITA %}
-									<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/{{key}}" >{{value}}
+									<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/{{key}}" >{{value}}</option>
 								{% endfor%}			
 							{% else %}
 								{% if request.user.is_superuser %}
-									<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/-">----
+									<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/-">----</option>
 								{% endif %}
 								{%for key,value in DISPONIBILITA %}
-									<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/{{key}}" {% if disponibilita.tipo = key %} selected {% endif %}>{{value}}
+									<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/{{key}}" {% if disponibilita.tipo = key %} selected {% endif %}>{{value}}</option>
 								{% endfor%}
 							{% endif %}
 							</SELECT>
@@ -129,12 +129,15 @@ $(document).ready(function(){
 	$("table#cerca_persona").tablesorter({
 		textExtraction: {
 			3: function(node, table, cellIndex){ 
-				if ( $('select',node).length>0 ){
-					t='a'
-					return t+$('select option:selected',node).text();
+				if ( $('select option:selected',node).length>0 ){		
+					if ( $('select option:selected',node).text() == ''){
+						return 'z';
+					}
+					else
+						return $('select option:selected',node).text();
 				}
 				else {
-					return 'z'+$(node).html().toString();
+					return 'zz'+$(node).html().toString();
 				}
 			},
 		},

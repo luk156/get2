@@ -335,10 +335,12 @@ def cerca_persona(request, turno_id, mansione_id):
 			if p.id in impegnati:
 				stato.append('Impegnato')
 			else:
-				try:
-					stato.append( disp_turno.get(persona=p))
-					pass
-				except Exception, e:				
+				find = False
+				for d in disp_turno:
+					if d.persona==p:
+						stato.append( d )
+						find = True
+				if not find:
 					stato.append('')
 	disp = []
 	disp.append(persone)
