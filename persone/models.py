@@ -10,7 +10,6 @@ from django.utils.text import capfirst
 from django.db.models import Q
 from django.utils.functional import cached_property
 
-
 # Create your models here.
 
 class MultiSelectFormField(forms.MultipleChoiceField):
@@ -138,7 +137,8 @@ class Mansione(models.Model):
 			return False
 		return True
 
-def figli(mansione_id, mansioni = Mansione.objects.all().values_list('id','padre')):	
+def figli(mansione_id):
+	mansioni = Mansione.objects.all().values_list('id','padre')
 	f = [v for i, v in enumerate(mansioni) if v[1] == mansione_id]
 	figli_list = f
 	while f:
@@ -193,17 +193,16 @@ class Persona(models.Model):
 	giorniNotificaMail = models.PositiveSmallIntegerField('Giorni di anticipo', choices=GIORNI, default=2, blank=True, null=True )
 	def notifiche_non_lette(self):
 		return self.user.destinatario_user.filter(letto=False).count()
-	@property
+	@cached_property
 	def telefono(self):
 		tel_fields = filter(bool, [self.tel1, self.tel2, self.tel3])
 		return '<br>'.join(tel_fields)
-
+	@cached_property
 	def capacita(self):
 		c = set()
-		mansioni = Mansione.objects.all().values_list('id','padre')
 		for m in self.competenze.all():
 			c.add(m)
-			for f in figli(m.id, mansioni):
+			for f in figli(m.id):
 				if (f.ereditabile):
 					c.add(f)
 		return c
