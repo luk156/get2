@@ -162,7 +162,6 @@ def disp(request, turno_id, mansione_id, persona_id, disp):
 	dajax = Dajax()
 	p=Persona.objects.get(id=persona_id)
 	t=Turno.objects.get(id=turno_id)
-	#pdb.set_trace()
 	if disp!="-":
 		d=nuova_disponibilita(request, turno_id, mansione_id, persona_id, disp)
 		if not d[0]:
@@ -212,11 +211,13 @@ def mansioni_disponibili(request,turno_id):
     dajax=Dajax()
     html=''
     t=Turno.objects.get(id=turno_id)
+    mansioni = []
     for requisito in t.tipo.req_tipo_turno.all():
-        if requisito.mansione in request.user.get_profile().competenze.all() and requisito.clickabile():
+        if requisito.mansione in request.user.get_profile().capacita and requisito.clickabile():
             if not requisito.mansione in t.mansioni_indisponibili(request.user.get_profile().id):
-                html+='<a href="#" onclick="disponibilita_'+str(t.id)+'('+str(requisito.mansione.id)+');" class="btn btn-primary btn-block btn-large"><i class="'+str(requisito.mansione.icona)+'"></i> '+str(requisito.mansione)+'</a></br>'
-    dajax.assign("#mansioni-turno"+str(t.id), "innerHTML", html)
+                mansioni.append(requisito.mansione)
+    html_disp = render_to_string( 'disponibilita_turno.html', { 't': t, 'mansioni': mansioni, 'request':request } )
+    dajax.assign("#disponibilita-turno-"+str(t.id)+" > .modal-body ", "innerHTML", html_disp)
     return dajax.json() 
 
 @dajaxice_register

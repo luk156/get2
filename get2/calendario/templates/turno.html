@@ -75,7 +75,7 @@
 								{% if request.user.is_authenticated or touch == "yes" %}
 								data-toggle="tooltip" class="abilita" data-placement="top" data-content='
 					 					<small>capacita: </small> 
-					 					{%for m in d.persona.competenze.all %}
+					 					{%for m in d.persona.capacita %}
 					 					<i class="{{m.icona}}" style="color:{{m.colore}}"></i>
 					 					{%endfor%}
 					 				'
@@ -138,43 +138,10 @@
 		{% endif %}
 	</div>
 	<div class="modal-body">
-		{% if t|turno_intervallo_disponibilita:request.user.get_profile %}
-			{% if not request.user.get_profile|gia_disponibile:t %}
-				<legend>Seleziona la mansione che vuoi ricoprire:</legend>
-				<div id="mansioni-turno{{t.id}}">
 				<i class="icon-spinner icon-spin icon-2x"></i>
-				</div>
-			{% else %}
-				Vuoi cancellarti dal turno del {{t.inizio|date:"d M"}}, ore {{t.inizio|time:"H:i"}} - {{t.fine|time:"H:i"}}?
-			{% endif %}
-		{% else %}
-			Non puoi modificare la tua disponibilita per questo turno:</br>
-			<span class="emblem-important">{{t|errore_turno_intervallo_disponibilita:request.user.get_profile}}</span>
-			<hr>
-			{{t.tipo.msg_errore|safe}}
-		{% endif %}
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Annulla</button>
-		{% if t|turno_intervallo_disponibilita:request.user.get_profile %}
-			{% if not request.user.get_profile|gia_disponibile:t %}
-				<script>
-					function disponibilita_{{t.id}}(mansione){
-						persona="{{request.user.get_profile.id}}"
-						if (mansione!=""){url="/disponibilita/{{t.id}}/" +mansione+ "/" +persona+ "/Disponibile/";}
-						window.location = url;}
-				</script>
-			{% else %}
-				<script>
-					function disponibilita_{{t.id}}(){
-						var url="/rimuovi_disponibilita/{{request.user.get_profile|gia_disponibile:t.id}}";
-						window.location = url;}
-				</script>
-				<button class="btn btn-primary" type="button" onclick="disponibilita_{{t.id}}();">Rimuovi disponibilita'</button>
-			{% endif %}
-		{% else %}
-			
-		{% endif %}
 	</div>
 </div>
 {% endif %}

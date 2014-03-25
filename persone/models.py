@@ -8,6 +8,8 @@ from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Field, M
 from crispy_forms.bootstrap import *
 from django.utils.text import capfirst
 from django.db.models import Q
+from django.utils.functional import cached_property
+
 
 # Create your models here.
 
@@ -135,24 +137,15 @@ class Mansione(models.Model):
 		if self.padre:
 			return False
 		return True
-	def save(self, *args, **kwargs):
-		for p in Persona.objects.all():
-			p.save()
-		super(Mansione, self).save(*args, **kwargs)
 
-def figli(mansione_id):
-	f=list(Mansione.objects.filter(padre=mansione_id))
-	for i in f:
-		f+=figli(i.id)
-	return f
-
-def antenati(mansione_id):
-	a=[]
-	m=Mansione.objects.get(id=mansione_id)
-	a.append(m)
-	if m.padre:
-		a+=antenati(m.padre.id)
-	return a
+def figli(mansione_id, mansioni = Mansione.objects.all().values_list('id','padre')):	
+	f = [v for i, v in enumerate(mansioni) if v[1] == mansione_id]
+	figli_list = f
+	while f:
+		for k in f:
+			f=[v for i, v in enumerate(mansioni) if v[1] == k[0]]
+			figli_list+=f
+	return Mansione.objects.filter( id__in=[x for (x,y) in figli_list] )
 
 
 
@@ -199,34 +192,24 @@ class Persona(models.Model):
 	notificaMail = models.BooleanField('Attiva', default=False )
 	giorniNotificaMail = models.PositiveSmallIntegerField('Giorni di anticipo', choices=GIORNI, default=2, blank=True, null=True )
 	def notifiche_non_lette(self):
-		n=0
-		for m in self.user.destinatario_user.all():
-			if(m.letto == False):
-				n+=1
-		return n
+		return self.user.destinatario_user.filter(letto=False).count()
+	@property
 	def telefono(self):
-		str_tel = self.tel1
-		if self.tel2:
-			str_tel += "</br>"+self.tel2
-		if self.tel3:
-			str_tel += "</br>"+self.tel3
-		return str_tel
+		tel_fields = filter(bool, [self.tel1, self.tel2, self.tel3])
+		return '<br>'.join(tel_fields)
+
 	def capacita(self):
 		c = set()
+		mansioni = Mansione.objects.all().values_list('id','padre')
 		for m in self.competenze.all():
 			c.add(m)
-			for f in figli(m.id):
+			for f in figli(m.id, mansioni):
 				if (f.ereditabile):
 					c.add(f)
 		return c
 
 	def __unicode__(self):
 		return '%s %s' % (self.cognome,self.nome)
-	def save(self, *args, **kwargs):
-		super(Persona, self).save(*args, **kwargs)
-		for c in self.capacita():
-			self.competenze.add(c)
-		super(Persona, self).save(*args, **kwargs)
 
 class PersonaForm(forms.ModelForm):
 	class Meta:

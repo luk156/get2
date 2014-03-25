@@ -326,10 +326,8 @@ def cerca_persona(request, turno_id, mansione_id):
 
 
 	for p in Persona.objects.exclude( stato = 'indisponibile', persona_disponibilita__turno = turno ):
-		#pdb.set_trace()
-		cap = p.competenze.all()
+		cap = p.capacita
 		if mansione in cap:
-		#if True:
 			persone.append(p)
 			capacita.append(cap)
 			if p.id in impegnati:

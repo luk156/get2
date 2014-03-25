@@ -78,3 +78,9 @@ def change_user_password(name, password, host='localhost', **kwargs):
             'host': host
         }, **kwargs)
     puts("Change password for MySQL user '%s'." % name)
+
+def populate_demo(name):
+	django.project('get2')
+	from get2.persone.models import Persona
+	for i in Persona.objects.all():
+		print(i)

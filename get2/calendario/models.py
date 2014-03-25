@@ -169,7 +169,7 @@ class Turno(models.Model):
 					if (requisito.mansione in f):
 						contatore+=1
 				else:
-				 	if (requisito.mansione in d.persona.competenze.all() ):
+				 	if (requisito.mansione in d.persona.capacita ):
 						contatore+=1
 				if contatore>requisito.massimo and requisito.massimo!=0:
 					return False
@@ -208,7 +208,7 @@ class Turno(models.Model):
 	def mansioni_indisponibili(self,persona):
 		m_d=[]
 		p=Persona.objects.get(id=persona)
-		persona_capacita=p.competenze.all()
+		persona_capacita=p.capacita
 		#pdb.set_trace()
 		for m in persona_capacita:
 			for r in self.tipo.req_tipo_turno.all():
