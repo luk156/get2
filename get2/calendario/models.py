@@ -215,7 +215,7 @@ class Turno(models.Model):
 	def mansioni_indisponibili(self,persona):
 		m_d = []
 		p = Persona.objects.get(id=persona)
-		persona_capacita = p.capacita()
+		persona_capacita = p.capacita
 		req = self.tipo.req_tipo_turno.all()
 		for m in persona_capacita:
 			for r in req:
