@@ -9,6 +9,7 @@ from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Field, M
 from crispy_forms.bootstrap import *
 from django.utils.text import capfirst
 from persone.models import *
+from django.utils.functional import cached_property
 
 STATI=(('disponibile','Disponibile'),('ferie','In ferie'),('malattia','In malattia'),('indisponibile','Indisponibile'))
 
@@ -180,9 +181,10 @@ class Turno(models.Model):
 			return True
 	def posti_liberi(self,requisito):
 		posti = requisito.requisito.minimo - requisito.disponibilita.filter(tipo="Disponibile").exclude(mansione__isnull=True).count()
-		if posti >0:
+		if posti > 0:
 			return range(posti)
 		return range(0)
+	@cached_property
 	def calcola_coperto(self):
 		if self.tipo:
 			for r in Requisito.objects.filter(tipo_turno=self.tipo_id):
@@ -191,27 +193,32 @@ class Turno(models.Model):
 				elif r.sufficiente:
 					return True
 		return True
+	@cached_property
 	def calcola_coperto_cache(self):
 		if self.tipo:
+			#if not Cache_requisito.objects.filter(turno=self).filter( ( models.Q(requisito__sufficiente=True) & models.Q(verificato=True) ) | ( ~models.Q(verificato=False) ) ).count() > 0:
+			#	return False
 			for c in Cache_requisito.objects.filter(turno=self):
 				if not c.verificato:
 					return False
 				elif c.requisito.sufficiente:
 					return True
 		return True
+	@cached_property
 	def contemporanei(self):
 		i=self.inizio+datetime.timedelta(seconds=60)
 		f=self.fine-datetime.timedelta(seconds=60)
 		return Turno.objects.filter( (models.Q(inizio__lte=i) & models.Q(fine__gte=f)) | models.Q(inizio__range=(i ,f)) | models.Q(fine__range=(i,f)) ).exclude(id=self.id)
+	@cached_property
 	def mansioni(self):
 		return Mansione.objects.filter(req_mansione__tipo_turno=self.tipo)
 	def mansioni_indisponibili(self,persona):
-		m_d=[]
-		p=Persona.objects.get(id=persona)
-		persona_capacita=p.capacita()
-		#pdb.set_trace()
+		m_d = []
+		p = Persona.objects.get(id=persona)
+		persona_capacita = p.capacita()
+		req = self.tipo.req_tipo_turno.all()
 		for m in persona_capacita:
-			for r in self.tipo.req_tipo_turno.all():
+			for r in req:
 				if (self.verifica_requisito(r) and not self.verifica_requisito(r,mansione_id=m.id,persona_capacita=persona_capacita) ):
 					m_d.append(m)
 		return m_d
@@ -337,7 +344,7 @@ class Disponibilita(models.Model):
 	note =  models.TextField( blank=True, null=True, default="")
 	class Meta:
 		ordering = ['mansione']
-         unique_together = ('persona', 'turno')
+		unique_together = ('persona', 'turno')
 	def save(self, *args, **kwargs):
 		super(Disponibilita, self).save(*args, **kwargs)
 		self.turno.save()
