@@ -208,7 +208,7 @@ class Turno(models.Model):
 	def mansioni_indisponibili(self,persona):
 		m_d=[]
 		p=Persona.objects.get(id=persona)
-		persona_capacita=p.capacita
+		persona_capacita=p.capacita()
 		#pdb.set_trace()
 		for m in persona_capacita:
 			for r in self.tipo.req_tipo_turno.all():
@@ -337,6 +337,7 @@ class Disponibilita(models.Model):
 	note =  models.TextField( blank=True, null=True, default="")
 	class Meta:
 		ordering = ['mansione']
+         unique_together = ('persona', 'turno')
 	def save(self, *args, **kwargs):
 		super(Disponibilita, self).save(*args, **kwargs)
 		self.turno.save()
