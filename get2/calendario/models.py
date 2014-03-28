@@ -79,12 +79,12 @@ class Requisito(models.Model):
 	def save(self, *args, **kwargs):
 		super(Requisito, self).save(*args, **kwargs)
 		for t in Turno.objects.filter(tipo=self.tipo_turno, inizio__gte=datetime.datetime.now().date()):
-			t.coperto = t.calcola_coperto_cache()
+			t.coperto = t.calcola_coperto_cache
 			t.save()
 	def delete(self, *args, **kwargs):
 		super(Requisito, self).delete(*args, **kwargs)
 		for t in Turno.objects.filter(tipo=self.tipo_turno, inizio__gte=datetime.datetime.now().date()):
-			t.coperto = t.calcola_coperto_cache()
+			t.coperto = t.calcola_coperto_cache
 			t.save()
 
 class RequisitoForm(forms.ModelForm):
@@ -239,7 +239,7 @@ class Turno(models.Model):
 			cr.verificato=self.verifica_requisito(r)
 			cr.disponibilita=self.turno_disponibilita.filter(tipo="Disponibile",mansione=r.mansione)
 			cr.save()
-		self.coperto = self.calcola_coperto_cache()
+		self.coperto = self.calcola_coperto_cache
 		super(Turno, self).save(*args, **kwargs)
 
 
