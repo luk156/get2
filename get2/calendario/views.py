@@ -325,7 +325,7 @@ def cerca_persona(request, turno_id, mansione_id):
 	impegnati = Persona.objects.values_list('id').filter( persona_disponibilita__turno__in = turno.contemporanei , persona_disponibilita__tipo = 'Disponibile')
 
 
-	for p in Persona.objects.exclude( stato = 'indisponibile', persona_disponibilita__turno = turno ):
+	for p in Persona.objects.exclude( stato = 'indisponibile', persona_disponibilita__turno = turno ).order_by('cognome','nome'):
 		cap = p.capacita
 		if mansione in cap:
 			persone.append(p)
