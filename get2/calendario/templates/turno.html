@@ -71,16 +71,7 @@
 					
 					{% for d in r.disponibilita.all %}
 							<li class="persona-turno {% if not r.requisito.clickabile %} hide {%endif%}" >
-							<i class="persona-mansione-turno {{d.mansione.icona}}" style="color:{{d.mansione.colore}}"
-								{% if request.user.is_authenticated or touch == "yes" %}
-								data-toggle="tooltip" class="abilita" data-placement="top" data-content='
-					 					<small>capacita: </small> 
-					 					{%for m in d.persona.capacita %}
-					 					<i class="{{m.icona}}" style="color:{{m.colore}}"></i>
-					 					{%endfor%}
-					 				'
-					 			{% endif %}	
-							></i> 
+							<i class="persona-mansione-turno {{d.mansione.icona}}" style="color:{{d.mansione.colore}}"></i> 
 								{% if request.user.is_authenticated or touch == "yes" %}
 					 				{{d.persona}}
 					 				{% if d.note %}
