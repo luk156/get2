@@ -8,6 +8,7 @@ import pdb
 from django.template.loader import render_to_string
 from django.template import Context, Template
 from django.utils import simplejson
+from django.conf import settings
 
 @dajaxice_register
 def mansione_form(request, form):
@@ -251,3 +252,18 @@ def auto_utente_persona_search(request,search_term):
 
     # Return data to callback function *search_result*
     return simplejson.dumps(data)
+
+@dajaxice_register
+def sync_misecampi(request):
+    from django.core.management import call_command
+    call_command('MiseCampi')
+    dajax.script("setInterval(function() {dajaxice.get2.calendario.sync_misecampi_status(Dajax.process,{});}, 3000);")
+
+@dajaxice_register
+def sync_misecampi_status(request):
+    import MySQLdb
+    database = settings.DATABASES['default']
+    db = MySQLdb.connect(host=database['HOST'], user=database['USER'], passwd=database['PASSWORD'], db=database['NAME'])
+    cur_my = db.cursor()
+    cur_my.execute("SELECT * FROM sincronizza WHERE stato=INCORSO AND ; ")
+    # cerca se esiste un record con data succesiva ad ora
