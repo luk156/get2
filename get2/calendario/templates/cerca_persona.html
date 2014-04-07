@@ -75,18 +75,22 @@ function nota_disponibilita(disp_id){
 						{% if disponibilita = 'Impegnato' %}
 							Già impegnato
 						{% else %}
+                                                
 							<SELECT NAME="stato" class="span7" ONCHANGE="disp(this);" id="sel-{{persona.id}}">
-							{% if disponibilita.mansione != mansione %}			
+							{% if disponibilita.mansione != mansione and disponibilita.tipo = 'Disponibile' %}			
 								{% if request.user.is_superuser %}
-									<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/-">----</option>
+									<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/-"></option>
 								{% endif %}
 									<OPTION VALUE="" selected>{{disponibilita.mansione}}</option>
 								{%for key,value in DISPONIBILITA %}
 									<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/{{key}}" >{{value}}</option>
 								{% endfor%}			
 							{% else %}
+                                                                 
 								{% if request.user.is_superuser %}
-									<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/-">----</option>
+									<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/-"></option>
+                                                                {% else %}
+                                                                        <OPTION VALUE=""></option>
 								{% endif %}
 								{%for key,value in DISPONIBILITA %}
 									<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/{{key}}" {% if disponibilita.tipo = key %} selected {% endif %}>{{value}}</option>
@@ -128,7 +132,8 @@ $(document).ready(function(){
 
 	$("table#cerca_persona").tablesorter({
 		textExtraction: {
-			3: function(node, table, cellIndex){ 
+			3: function(node, table, cellIndex){
+                            console.log($('select option:selected',node).text());
 				if ( $('select option:selected',node).length>0 ){		
 					if ( $('select option:selected',node).text() == ''){
 						return 'z';
