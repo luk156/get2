@@ -61,12 +61,12 @@ function nota_disponibilita(disp_id){
 				<table class="table table-striped no-more-tables" id="cerca_persona">
 				<thead>
 					<tr>
-					<th>Nome</th><th>Capacita'</th><th>Telefono</th></th><th>Disponibilita'</th>
+					<th>Nome</th><th>Capacita'</th><th>Telefono</th><th>Disponibilita'</th>
 					</tr>
 				</thead>
 				{%for persona,capacita,disponibilita in disp%}
 					
-					<tr {%if persona.stato != 'disponibile'%} class="error" {%endif%} id="persona-{{persona.id}}">
+					<tr {%if persona.stato != 'disponibile' %} class="error" {%endif%} id="persona-{{persona.id}}">
 					<td data-title="Nome" class="nome">{{persona}}</td>
 					<td data-title="Mansioni" class="mansioni">{% for m in capacita %}<span class="badge-mansione">{{m}}</span>  {% endfor %}</td>
 					<td data-title="telefono">{{persona.telefono|safe}}</td>
@@ -133,7 +133,6 @@ $(document).ready(function(){
 	$("table#cerca_persona").tablesorter({
 		textExtraction: {
 			3: function(node, table, cellIndex){
-                            console.log($('select option:selected',node).text());
 				if ( $('select option:selected',node).length>0 ){		
 					if ( $('select option:selected',node).text() == ''){
 						return 'z';

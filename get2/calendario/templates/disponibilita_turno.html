@@ -4,7 +4,7 @@
 		<legend>Seleziona la mansione che vuoi ricoprire:</legend>
 		<div id="mansioni-turno{{t.id}}">
 		{% for m in mansioni %}
-			<a href="/disponibilita/{{t.id}}/{{m.id}}/{{request.user.get_profile.id}}/Disponibile/" class="btn btn-primary btn-block btn-large"><i class="{{m.icona}})"></i> {{m}} </a></br>
+			<a href="/disponibilita/{{t.id}}/{{m.id}}/{{request.user.get_profile.id}}/Disponibile/" class="btn btn-primary btn-block btn-large"><i class="{{m.icona}}"></i> {{m}} </a></br>
 		{% endfor %}
 		</div>
 	{% else %}
