@@ -83,11 +83,11 @@ function disp(selettore){
 						<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/-">----
 						{% for m in persona.capacita %}
 							{% for r in t.tipo.req_tipo_turno.all %}
-							
+							{% if r.clickabile %}
 								{% if m == r.mansione %}
 									<OPTION VALUE="{{t.id}}/{{m.id}}/{{persona.id}}/Disponibile">{{m}}
 								{% endif %}
-							
+							{% endif %}
 							{% endfor %}
 						{% endfor %}
 						</SELECT>
