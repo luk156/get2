@@ -35,7 +35,6 @@ class Command(BaseCommand):
             mansioni = cur.fetchall()
             #mansioni_get = Mansione.objects.all()
             m_dict={}
-            print mansioni
             for a in mansioni: 
                 try:
                     m=Mansione.objects.get(id=a[0])
@@ -62,7 +61,6 @@ class Command(BaseCommand):
                         p=Persona.objects.get(id=a[0])
                     except:
                         p=Persona(id=a[0])
-                        #esistente=True
                     p.nome = a[2].title()
                     p.cognome = a[1].title()
                     print a[1]
@@ -83,7 +81,6 @@ class Command(BaseCommand):
                     p.tel1,p.tel2,p.tel3=tel
                     cur.execute("SELECT idabilitazione FROM abvolontari WHERE idvol="+str(a[0])+";")
                     persona_abilitazioni=cur.fetchall()
-                    print persona_abilitazioni
                     p.save()
                     p.competenze.clear()
                     for abilita in  persona_abilitazioni:
