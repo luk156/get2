@@ -29,7 +29,7 @@ class Command(BaseCommand):
             cur_my.execute("INSERT INTO sincronizza (stato,progresso) VALUES ('INCORSO','start'); ")
 	    db.commit()
             sync_id = cur_my.lastrowid
-            conn = psycopg2.connect(host=settings.EXT_HOST,user=settings.EXT_USER,passwd=settings.EXT_PASS,db=settings.EXT_DB)
+            conn = psycopg2.connect(host=settings.EXT_HOST,user=settings.EXT_USER,password=settings.EXT_PASS,db=settings.EXT_DB)
             cur = conn.cursor()
             cur.execute("SELECT * FROM abilitazioni;")
             mansioni = cur.fetchall()
