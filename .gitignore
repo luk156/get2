@@ -6,3 +6,4 @@ get2/settings.py
 get2/calendario/settings_calendario.py
 get2/static
 get2_dev
+/get2/static2/

@@ -81,7 +81,7 @@ function disp(selettore){
 					<td class="mansioni_da_ricoprire">
 						<SELECT NAME="stato"  ONCHANGE="disp(this);" id="sel-{{persona.id}}">
 						<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/-">----
-						{% for m in persona.competenze.all %}
+						{% for m in persona.capacita %}
 							{% for r in t.tipo.req_tipo_turno.all %}
 							{% if r.clickabile %}
 								{% if m == r.mansione %}
