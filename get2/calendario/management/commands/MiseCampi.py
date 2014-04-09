@@ -45,7 +45,7 @@ class Command(BaseCommand):
                 m.descrizione=a[1]
                 m.save()
                 m_dict[a[0]]=m
-            cur.execute("SELECT * FROM volontari where datadecesso='' ;")
+            cur.execute("SELECT * FROM volontari;")
             persone_utenti = cur.fetchall()
             #persone_get = Persona.objects.all()
             tot=len(persone_utenti)
