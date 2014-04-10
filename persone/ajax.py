@@ -54,7 +54,7 @@ def sync_misecampi(request):
     dajax=Dajax()
     from django.core.management import call_command
     #pdb.set_trace()
-    call_command('MiseCampi')
+    #call_command('MiseCampi')
     dajax.script("setInterval(function() {Dajaxice.persone.sync_misecampi_status(Dajax.process,{});}, 3000);")
     return dajax.json() 
 
@@ -71,5 +71,5 @@ def sync_misecampi_status(request):
     if len(last_sync) > 0:
         dajax.script("$('.box-header.persone > .btn-group > a', '#persone').html('Sincronizzaizone in corso ("+last_sync[0][3]+")').addClass('disabled')")
     else:
-        dajax.script("$('.box-header.persone > .btn-group > a', '#persone').html('<i class=\"icon-refresh\"> </i> Sincronizza').removeClass('disabled')")
+        dajax.script("location.reload();")
     return dajax.json() 
