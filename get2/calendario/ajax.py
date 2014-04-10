@@ -252,22 +252,3 @@ def auto_utente_persona_search(request,search_term):
 
     # Return data to callback function *search_result*
     return simplejson.dumps(data)
-
-@dajaxice_register
-def sync_misecampi(request):
-    from django.core.management import call_command
-    call_command('MiseCampi')
-    dajax.script("setInterval(function() {dajaxice.get2.calendario.sync_misecampi_status(Dajax.process,{});}, 3000);")
-
-@dajaxice_register
-def sync_misecampi_status(request):
-    import MySQLdb
-    database = settings.DATABASES['default']
-    db = MySQLdb.connect(host=database['HOST'], user=database['USER'], passwd=database['PASSWORD'], db=database['NAME'])
-    cur_my = db.cursor()
-    cur_my.execute("SELECT * FROM sincronizza WHERE stato='INCORSO' ORDER BY data DESC LIMIT 1; ")
-    last_sync = cur_my.fetchall()
-    if last_sync > 0:
-        dajax.script("$('.box-header.persone > .btn-group > a', '#persone').html('Sincronizzaizone in corso ("+last_sync[3]+")').addClass('disabled')")
-    else:
-        dajax.script("$('.box-header.persone > .btn-group > a', '#persone').html('<i class=\"icon-refresh\"> </i> Sincronizza').removeClass('disabled')")
