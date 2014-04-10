@@ -3,6 +3,10 @@ $(document).ready(function() {
     $('select', div_persone).attr('disabled', 'disabled');
     $('.box-header.persone > .btn-group', div_persone).html('<a href="#" class="btn" onclick="Dajaxice.persone.sync_misecampi(Dajax.process,{});"><i class="icon-refresh"> </i> Sincronizza</a>"')
     $('td[data-title=Operazioni]', div_persone).html('');
+    var div_utenti = $('#utenti');
+    $('.utente_persona', div_utenti).attr('disabled', 'disabled');
+    $('td[data-title=Operazioni]', div_utenti).html('');
+    $('.btn', div_utenti).remove();
     var th=0;
     var h=0;
     if ($(window).width()>756){
