@@ -2,7 +2,6 @@ import psycopg2
 from django.core.management.base import BaseCommand
 from get2.calendario.models import Persona
 from persone.models import Mansione
-#import datetime
 from django.conf import settings
 import MySQLdb
 from django.contrib.auth.models import User
@@ -21,7 +20,6 @@ cur_my = db.cursor()
 class Command(BaseCommand):
     def handle(self, *args, **options):
         cur_my.execute("SELECT * FROM sincronizza WHERE stato='INCORSO'; ")
-	#print cur_my.fetchall()
         lock = len(cur_my.fetchall()) > 0
         if lock:
             print 'sincronizzazione in corso'
@@ -33,7 +31,6 @@ class Command(BaseCommand):
             cur = conn.cursor()
             cur.execute("SELECT * FROM abilitazioni;")
             mansioni = cur.fetchall()
-            #mansioni_get = Mansione.objects.all()
             m_dict={}
             for a in mansioni: 
                 try:
@@ -46,7 +43,6 @@ class Command(BaseCommand):
                 m_dict[a[0]]=m
             cur.execute("SELECT * FROM volontari;")
             persone_utenti = cur.fetchall()
-            #persone_get = Persona.objects.all()
             tot=len(persone_utenti)
             n_p=0
             for a in persone_utenti:

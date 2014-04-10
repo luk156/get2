@@ -265,5 +265,9 @@ def sync_misecampi_status(request):
     database = settings.DATABASES['default']
     db = MySQLdb.connect(host=database['HOST'], user=database['USER'], passwd=database['PASSWORD'], db=database['NAME'])
     cur_my = db.cursor()
-    cur_my.execute("SELECT * FROM sincronizza WHERE stato=INCORSO AND ; ")
-    # cerca se esiste un record con data succesiva ad ora
+    cur_my.execute("SELECT * FROM sincronizza WHERE stato='INCORSO' ORDER BY data DESC LIMIT 1; ")
+    last_sync = cur_my.fetchall()
+    if last_sync > 0:
+        dajax.script("$('.box-header.persone > .btn-group > a', '#persone').html('Sincronizzaizone in corso ("+last_sync[3]+")').addClass('disabled')")
+    else:
+        dajax.script("$('.box-header.persone > .btn-group > a', '#persone').html('<i class=\"icon-refresh\"> </i> Sincronizza').removeClass('disabled')")

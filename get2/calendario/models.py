@@ -338,7 +338,7 @@ class Disponibilita(models.Model):
 	tipo = models.CharField(max_length=20, choices=DISPONIBILITA)
 	persona = models.ForeignKey(Persona, related_name='persona_disponibilita')
 	ultima_modifica = models.DateTimeField()
-	creata_da = models.ForeignKey(User, related_name='creata_da_disponibilita')
+	creata_da = models.ForeignKey(User, related_name='creata_da_disponibilita',blank=True, null=True, on_delete=models.SET_NULL)
 	turno = models.ForeignKey(Turno, related_name='turno_disponibilita')
 	mansione = models.ForeignKey(Mansione, related_name='mansione_disponibilita',blank=True, null=True, on_delete=models.SET_NULL)
 	note =  models.TextField( blank=True, null=True, default="")
