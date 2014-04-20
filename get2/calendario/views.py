@@ -252,6 +252,7 @@ def calendario(request,cal_id):
 	risposta = HttpResponse(corpo)
 	request.session['start'] = start
 	request.session['stop'] = stop
+        request.session['calId'] = cal_id
 	risposta.set_cookie('sezione', value='calendario')
 	return risposta
 

@@ -1,0 +1,14 @@
+
+{% load template_filters %}
+
+<div class="row">
+    <div class="span7 titolo-giorno {% cycle 'giorno1' 'giorno2' %}">
+        <header><h4 class="{{giorno|data_festa}}">{{giorno|date:"D d M"}}</h4></header>
+    </div>
+</div>
+{% for t in turno %}
+    <div class="row">
+        {% include "turno.html" %}
+    </div>
+{% endfor %}
+
