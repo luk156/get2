@@ -197,6 +197,14 @@ class Persona(models.Model):
 	def telefono(self):
 		tel_fields = filter(bool, [self.tel1, self.tel2, self.tel3])
 		return '<br>'.join(tel_fields)
+        @cached_property
+        def autista_cv(self):
+            try:
+                self.competenze.get(id=6)
+                return True
+            except:
+                return False
+            
 	@cached_property
 	def capacita(self):
 		c = set()

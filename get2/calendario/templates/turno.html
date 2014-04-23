@@ -73,13 +73,8 @@
 							<li class="persona-turno {% if not r.requisito.clickabile %} hide {%endif%}" >
                                                             <i class="persona-mansione-turno {{d.mansione.icona}}" style="color:{{d.mansione.colore}}"></i>
                                                            
-                                                           {% if js_personalizzato = "croce_verde.js" %}
-                                                           {{d.persona.capacita.id }}
-                                                                {%for m in d.persona.capacita %}
-                                                                    {%if m.id = 6 %}
+                                                           {% if js_personalizzato = "croce_verde.js" and d.persona.autista_cv %}
                                                                         <i class="icon-ambulance" style="color:{{d.mansione.colore}}"></i>
-                                                                    {%endif%}
-                                                                {%endfor%}
                                                             {% endif %}
                                                         
 
