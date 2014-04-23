@@ -71,13 +71,17 @@
 					
 					{% for d in r.disponibilita.all %}
 							<li class="persona-turno {% if not r.requisito.clickabile %} hide {%endif%}" >
-                                                        <i class="persona-mansione-turno {{d.mansione.icona}}" style="color:{{d.mansione.colore}}"
-                                                           {% if js_personalizzato == "croce_verde.js" %}
-                                                                {%if "6" in d.persona.capacita|dictsort:"id" %}
-                                                                    <i class="icon-ambulance"></i>
-                                                                {%endif%}
+                                                            <i class="persona-mansione-turno {{d.mansione.icona}}" style="color:{{d.mansione.colore}}"></i>
+                                                           
+                                                           {% if js_personalizzato = "croce_verde.js" %}
+                                                           {{d.persona.capacita.id }}
+                                                                {%for m in d.persona.capacita %}
+                                                                    {%if m.id = 6 %}
+                                                                        <i class="icon-ambulance" style="color:{{d.mansione.colore}}"></i>
+                                                                    {%endif%}
+                                                                {%endfor%}
                                                             {% endif %}
-                                                        ></i>
+                                                        
 
                                                         {% if request.user.is_authenticated or touch == "yes" %}
 					 				{{d.persona}}
