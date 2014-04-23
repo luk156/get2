@@ -24,8 +24,8 @@
             <a class="btn " href="/turno/{{cal_id}}/nuovo"><i class="icon-plus"> </i> Nuovo Turno</a>
         </div>
         <h4 class="header">
-			Calendario
-		</h4>
+            Calendario
+	</h4>
 	{% endif %}
 {% endblock %}
 
@@ -74,20 +74,7 @@
 {% include "pager_calendario.html" %}
 
 <script type="text/javascript">
-// if ($(window).width()>756){
-//  for (var i=1;i<9;i++)
-//     {
-//         var h_max=0;
-//         $(".turno."+i).each(function(){
-//             h=$(this).offset().top + $(this).height() + 8;
-//             if (h>h_max){h_max=h;}
-//         });
-//         console.log(h_max);
-//         $(".turno."+(i+1).toString()).each(function(){ $(this).offset({top:h_max}) });
-//     }};
-
-$('.persona-mansione-turno').popover({trigger:'hover',html:true,});
-
- </script>
+    $('.persona-mansione-turno').popover({trigger:'hover',html:true,});
+</script>
 
 {% endblock %}
