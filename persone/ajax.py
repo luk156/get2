@@ -54,7 +54,7 @@ def sync_misecampi(request):
     dajax=Dajax()
     from django.core.management import call_command
     #pdb.set_trace()
-    #call_command('MiseCampi')
+    call_command('MiseCampi')
     dajax.script("setInterval(function() {Dajaxice.persone.sync_misecampi_status(Dajax.process,{});}, 3000);")
     return dajax.json() 
 

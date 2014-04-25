@@ -30,6 +30,7 @@ def deploy(name):
 					run("python manage.py syncdb")
 					run("python manage.py migrate")
 					run("python manage.py collectstatic --noinput")
+					sed("get2/settings.py", "#_toremove_" , "")
 				run ("cp get2/get2.wsgi.sample get2/get2.wsgi")
 				sed("get2/get2.wsgi", "_envdir_", virtualenv_dir)
 				sed("virtualhost.sample", "_name_", name)
@@ -46,7 +47,8 @@ def configure(name, password):
 	sed("get2/settings.py", "_password_", password)
 
 def create_database(name):
-	with settings(mysql_user='root', mysql_password='Franchini03'):
+	mysql_password = prompt("Inserisci la password di amministratore del database")
+	with settings(mysql_user='root', mysql_password=mysql_password):
 		password = prompt("Inserisci la password per l'utente: %s" % name)
 		if not fabtools.mysql.user_exists(name):
 			fabtools.mysql.create_user(name, password)

@@ -19,7 +19,7 @@ cur_my = db.cursor()
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        cur_my.execute("SELECT * FROM sincronizza WHERE stato='INCORSO'; ")
+        cur_my.execute("SELECT * FROM sincronizza WHERE stato='INCORSO' AND data <= DATEADD(n,-15, GETDATE()); ")
         lock = len(cur_my.fetchall()) > 0
         if lock:
             print 'sincronizzazione in corso'

@@ -97,6 +97,8 @@ TEMPLATE_LOADERS = (
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.request',
+    'django.contrib.messages.context_processors.messages',
     'get2.calendario.context_processors.calendari',
     'get2.calendario.context_processors.titolo')
 
@@ -130,7 +132,7 @@ INSTALLED_APPS = (
     'get2.calendario',
     'persone',
     'crispy_forms',
-    #'statistiche',
+    #_toremove_'statistiche',
     #'gcm',
     #'debug_toolbar',
     # Uncomment the next line to enable the admin:
