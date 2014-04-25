@@ -60,12 +60,12 @@ def export_csv(request, queryset, export_data, filter_by=None, file_name='export
                 if isinstance(res, unicode) is True:
                     res = res.encode('utf-8')
                 elif isinstance(res, datetime.date) or isinstance(res, datetime.datetime):
-                	res=res.__str__()
+                    res=res.__str__()
                 elif isinstance(res, django.db.models.query.QuerySet) is True:
-                	elenco=''
-                	for i in res:
-                		elenco+=i.__unicode__()+", "
-                	res=elenco
+                    elenco=''
+                    for i in res:
+                        elenco+=i.__unicode__()+", "
+                    res=elenco
                 elif isinstance(res, str) is False:
                     res = str(res)
                 row.append(res)
@@ -125,41 +125,51 @@ def nuovo_persona(request):
 	#else:
 	#	return render(request,'staff-no.html')
 
-@user_passes_test(lambda u:u.is_staff)
+@login_required
 def modifica_persona(request,persona_id):
-	azione = 'modifica'
-	per = Persona.objects.get(id=persona_id)
-	if request.method == 'POST':  # If the form has been submitted...
-		form = PersonaForm(request.POST, instance=per)  # necessario per modificare la riga preesistente
-		form.helper.form_action = '/persone/modifica/'+str(per.id)+'/'
-		if form.is_valid():
-			form.save()
-			return HttpResponseRedirect('/persone') # Redirect after POST
-	else:
-		form = PersonaForm(instance=per)
-		form.helper.form_action = '/persone/modifica/'+str(per.id)+'/'
-	return render(request,'form_persona.html',{'request': request, 'form': form,'azione': azione, 'per': per,'mansione_form':MansioneForm()})
+    azione = 'modifica'
+    per = Persona.objects.get(id=persona_id)
+    if request.method == 'POST':  # If the form has been submitted...
+        if request.user.is_staff:
+            form = PersonaForm(request.POST, instance=per)
+        elif request.user.get_profile()==per:
+            form = PersonaFormLite(request.POST, instance=per)
+        form.helper.form_action = '/persone/modifica/'+str(per.id)+'/'
+        if form.is_valid():
+            form.save()
+            if request.user.is_staff:
+                return HttpResponseRedirect('/persone')
+            elif request.user.get_profile()==per:
+                return HttpResponseRedirect('/persone/visualizza/'+persona_id)
+    else:
+        if request.user.is_staff:
+            form = PersonaForm(instance=per)
+        elif request.user.get_profile()==per:
+            form = PersonaFormLite(instance=per)
+        else:
+            return HttpResponseRedirect('/')
+        form.helper.form_action = '/persone/modifica/'+str(per.id)+'/'
+    return render(request,'form_persona.html',{'request': request, 'form': form,'azione': azione, 'per': per,'mansione_form':MansioneForm()})
 
 @user_passes_test(lambda u: u.is_superuser)
 def elimina_persona(request,persona_id):
-	p=Persona.objects.get(id=persona_id)
-	p.delete()
-	return HttpResponseRedirect('/persone/')
+    p=Persona.objects.get(id=persona_id)
+    p.delete()
+    return HttpResponseRedirect('/persone/')
 
 @user_passes_test(lambda u:u.is_staff)
 def nuovo_gruppo(request):
-	#if request.user.is_staff:
-	azione = 'nuovo'
-	if request.method == 'POST':
-		form = GruppoForm(request.POST)
-		form.helper.form_action = '/persone/gruppo/nuovo/'
-		if form.is_valid():
-			form.save()
-			return HttpResponseRedirect('/persone')
-	else:
-		form = GruppoForm()
-		form.helper.form_action = '/persone/gruppo/nuovo/'
-	return render(request,'form_gruppo.html',{'request':request,'form': form,'azione': azione,})
+    azione = 'nuovo'
+    if request.method == 'POST':
+        form = GruppoForm(request.POST)
+        form.helper.form_action = '/persone/gruppo/nuovo/'
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/persone')
+    else:
+        form = GruppoForm()
+        form.helper.form_action = '/persone/gruppo/nuovo/'
+    return render(request,'form_gruppo.html',{'request':request,'form': form,'azione': azione,})
 	#else:
 	#	return render(request,'staff-no.html')
 
@@ -225,27 +235,25 @@ from django.db.models import Q, Count, Sum
 
 @login_required
 def visualizza_persona(request,persona_id):
-	persona = Persona.objects.get(id=persona_id)
-	oggi = datetime.datetime.today()
-	disponibilita = Disponibilita.objects.filter(persona=persona, tipo="Disponibile", turno__fine__lte=oggi).order_by('turno__inizio')
-	try :
-		start=disponibilita[:1].get().turno.inizio
-	except:
-		start=datetime.datetime.today()
-	turni=[]
-	mansioni=Mansione.objects.exclude(escludi_stat=True).filter(mansione_disponibilita__persona=persona,mansione_disponibilita__tipo="Disponibile", mansione_disponibilita__turno__fine__lte=oggi).annotate(parziale=Count('id'))
-	tot_turni = disponibilita.count()
-	tot_punti = 0
-	for d in disponibilita:
-			tot_punti += d.turno.valore
-	while start < oggi:
-		stop = start + relativedelta( months = +1 )
-		n=disponibilita.filter(turno__inizio__gte=start, turno__fine__lte=stop).count()
-		turni.append([start,n])
-		start = stop
-	#import pdb; pdb.set_trace()
-	#print turni
-	if request.user.is_staff or request.user.get_profile()==persona:
-	  return render(request,'dettaglio_persona.html',{'request': request, 'turni': turni, 'mansioni': mansioni ,'persona': persona, 'tot_punti': tot_punti, 'tot_turni': tot_turni})
+    persona = Persona.objects.get(id=persona_id)
+    oggi = datetime.datetime.today()
+    disponibilita = Disponibilita.objects.filter(persona=persona, tipo="Disponibile", turno__fine__lte=oggi).order_by('turno__inizio')
+    try :
+        start=disponibilita[:1].get().turno.inizio
+    except:
+        start=datetime.datetime.today()
+    turni = []
+    mansioni = Mansione.objects.exclude(escludi_stat=True).filter(mansione_disponibilita__persona=persona,mansione_disponibilita__tipo="Disponibile", mansione_disponibilita__turno__fine__lte=oggi).annotate(parziale=Count('id'))
+    tot_turni = disponibilita.count()
+    tot_punti = 0
+    for d in disponibilita:
+        tot_punti += d.turno.valore
+    while start < oggi:
+        stop = start + relativedelta( months = +1 )
+        n = disponibilita.filter(turno__inizio__gte=start, turno__fine__lte=stop).count()
+        turni.append([start,n])
+        start = stop
+    if (request.user.is_staff or request.user.get_profile()==persona):
+        return render(request,'dettaglio_persona.html',{'request': request, 'turni': turni, 'mansioni': mansioni ,'persona': persona, 'tot_punti': tot_punti, 'tot_turni': tot_turni})
 
 #### fine pagina persona ####

@@ -259,6 +259,45 @@ class PersonaForm(forms.ModelForm):
 		)
 		super(PersonaForm, self).__init__(*args, **kwargs)
 
+class PersonaFormLite(forms.ModelForm):
+    class Meta:
+        model = Persona
+        exclude = ('competenze', 'user')
+    def __init__(self, *args, **kwargs):
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            HTML('<div class="row">'),
+            Div(
+                Fieldset(
+                    'Informazioni Anagrafiche',
+                    'nome',
+                    'cognome',
+                    'indirizzo',
+                    ),
+                AppendedText('nascita', '<i class="icon-calendar"></i>'),
+                AppendedText('tel1', '<i class="icon-phone"></i>'),
+                AppendedText('tel2', '<i class="icon-phone"></i>'),
+                AppendedText('tel3', '<i class="icon-phone"></i>'),
+                css_class="span3",
+                ),
+            Div(
+                Fieldset(
+                    'Altre informazioni',
+                    'stato',
+                    ),
+                css_class="span3"
+            ),
+            Fieldset(
+                'Notifiche via E-mail',
+                'notificaMail',
+                AppendedText('giorniNotificaMail', '<i class="icon-envelope"></i>'),
+                ),
+            HTML('</div>'),
+            FormActions(
+                Submit('save', 'Invia', css_class="btn-primary"),
+                )
+        )
+        super(PersonaFormLite, self).__init__(*args, **kwargs)
 
 class Gruppo(models.Model):
 	nome = models.CharField('Nome',max_length=30)

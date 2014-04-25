@@ -6,7 +6,9 @@
 	<script src="/static/js/highcharts/highcharts-more.js"></script>
 {% endblock %}
 
-{% block header %}<h4 class="header">
+{% block header %}
+
+    <h4 class="header">
 	{% if request.user.is_staff %}	<a href="/persone/">{% endif %}
 		Persone e gruppi
 	{% if request.user.is_staff %} </a> {% endif %}
@@ -21,6 +23,9 @@
 	<div class="span7">
 		<div class="box">
 			<div class="box-header">
+                <div class="btn-group pull-right">
+                    <a class="btn primary" href="/persone/modifica/{{ persona.id }}"><i class="icon-edit"> </i> Modifica informazioni</a>
+                </div>
 				<!-- <a href="/impostazioni/mansione/nuovo" class="pull-right btn"><i class="icon-edit"></i> modifica</a> -->
 				<h5>Informazioni Anagrafiche</h5>
 			</div>
