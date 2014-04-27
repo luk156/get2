@@ -12,8 +12,9 @@ from django.utils.functional import cached_property
 
 
 class GetModelManager(models.Manager):
-    def get_query_set(self):
-        return super(GetModelManager, self).get_query_set().filter(cancellata=False)
+	use_for_related_fields = True
+	def get_query_set(self):
+		return super(GetModelManager, self).get_query_set().filter(cancellata=False)
 
 # Create your models here.
 
