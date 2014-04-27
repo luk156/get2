@@ -255,29 +255,30 @@ def auto_utente_persona_search(request,search_term):
 
 @dajaxice_register
 def scorri_calendario(request,direction):
-    dajax=Dajax()
-    
-    if direction == '+1': 
-        remove_day = request.session['start']
-        start = request.session['start'] + datetime.timedelta(days=7)
-        stop = start + datetime.timedelta(days=1)
-        request.session['start'] = request.session['start'] + datetime.timedelta(days=1)
-        
-    elif direction == '-1':   
-        remove_day = request.session['start'] + datetime.timedelta(days=6)
-        start = request.session['start']  - datetime.timedelta(days=1)
-        stop = request.session['start']
-        request.session['start'] = request.session['start'] - datetime.timedelta(days=1)
-        
-    c = Calendario.objects.get(id=request.session['calId'])
-    t = Turno.objects.filter(inizio__range=(start, stop),calendario=c).order_by('inizio', 'tipo__priorita')
-    html_giorno = render_to_string( 'giorno.html', { 'turno': t, 'giorno': start, 'request':request } )
-    dajax.remove('div #giorno-'+remove_day.strftime("%d_%m_%Y"))
-    if direction == '+1':
-        dajax.script("$('.row-fluid.calendario').append('<div id=\"giorno-"+start.strftime("%d_%m_%Y")+"\" class=\"giorno span1\" ></div>');")
-    elif direction == '-1': 
-        dajax.script("$('.row-fluid.calendario').prepend('<div id=\"giorno-"+start.strftime("%d_%m_%Y")+"\" class=\"giorno span1\" ></div>');")
+	dajax=Dajax()
 
-    dajax.assign('div #giorno-'+start.strftime("%d_%m_%Y"), 'innerHTML', html_giorno)
-    dajax.script("$('#loading').addClass('hidden');")
-    return dajax.json()
+	if direction == '+1':
+		remove_day = request.session['start']
+		start = request.session['start'] + datetime.timedelta(days=7)
+		stop = start + datetime.timedelta(days=1)
+		request.session['start'] = request.session['start'] + datetime.timedelta(days=1)
+
+	elif direction == '-1':
+		remove_day = request.session['start'] + datetime.timedelta(days=6)
+		start = request.session['start']  - datetime.timedelta(days=1)
+		stop = request.session['start']
+		request.session['start'] = request.session['start'] - datetime.timedelta(days=1)
+
+	c = Calendario.objects.get(id=request.session['calId'])
+	t = Turno.objects.filter(inizio__range=(start, stop),calendario=c).order_by('inizio', 'tipo__priorita')
+	html_giorno = render_to_string( 'giorno.html', { 'turno': t, 'giorno': start, 'request':request } )
+	dajax.remove('div #giorno-'+remove_day.strftime("%d_%m_%Y"))
+	if direction == '+1':
+		dajax.script("$('.row-fluid.calendario').append('<div id=\"giorno-"+start.strftime("%d_%m_%Y")+"\" class=\"giorno span1\" ></div>');")
+	elif direction == '-1':
+		dajax.script("$('.row-fluid.calendario').prepend('<div id=\"giorno-"+start.strftime("%d_%m_%Y")+"\" class=\"giorno span1\" ></div>');")
+
+	dajax.assign('div #giorno-'+start.strftime("%d_%m_%Y"), 'innerHTML', html_giorno)
+	dajax.script("$('#loading').addClass('hidden');")
+	dajax.script("window.allinea_calendario();")
+	return dajax.json()

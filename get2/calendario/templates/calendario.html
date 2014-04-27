@@ -57,6 +57,7 @@
     $(document).ready(function(){
         $(".tp").tooltip();
     });
+    window.allinea_calendario = function(){};
 </script>
 
 <div class="row-fluid calendario">
@@ -73,8 +74,6 @@
 
 {% include "pager_calendario.html" %}
 
-<script type="text/javascript">
-    $('.persona-mansione-turno').popover({trigger:'hover',html:true,});
-</script>
+
 
 {% endblock %}
