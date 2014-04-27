@@ -11,9 +11,9 @@ from django.db.models import Q
 from django.utils.functional import cached_property
 
 
-# class GetModelManager(models.Manager):
-#     def get_query_set(self):
-#         return super(GetModelManager, self).get_query_set().filter(cancellata=False)
+class GetModelManager(models.Manager):
+    def get_query_set(self):
+        return super(GetModelManager, self).get_query_set().filter(cancellata=False)
 
 # Create your models here.
 
@@ -198,8 +198,8 @@ class Persona(models.Model):
 	note = models.TextField( blank=True, null=True, )
 	notificaMail = models.BooleanField('Attiva', default=False )
 	giorniNotificaMail = models.PositiveSmallIntegerField('Giorni di anticipo', choices=GIORNI, default=2, blank=True, null=True )
-	#cancellata = models.BooleanField(default=False )
-	#objects = GetModelManager()
+	cancellata = models.BooleanField(default=False )
+	objects = GetModelManager()
 	def notifiche_non_lette(self):
 		return self.user.destinatario_user.filter(letto=False).count()
 	@cached_property

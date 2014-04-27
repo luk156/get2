@@ -11,9 +11,9 @@ from django.utils.text import capfirst
 from persone.models import *
 from django.utils.functional import cached_property
 
-#class GetModelManager(models.Manager):
-#    def get_query_set(self):
-#        return super(GetModelManager, self).get_query_set().filter(cancellata=False)
+class GetModelManager(models.Manager):
+    def get_query_set(self):
+        return super(GetModelManager, self).get_query_set().filter(cancellata=False)
 
 
 STATI=(('disponibile','Disponibile'),('ferie','In ferie'),('malattia','In malattia'),('indisponibile','Indisponibile'))
@@ -49,8 +49,8 @@ class TipoTurno(models.Model):
 	priorita = models.IntegerField('priorita', default=0, )
 	msg_errore = models.TextField('Messaggio errore disponibilita', blank=True, null=True, help_text="Il messaggio viene visualizzato nel caso non sia possibile modificare la disponibilta")
 	#msg_lontano = models.TextField( blank=True, null=True, )
-	#cancellata =  models.BooleanField(default=False )
-	#objects = GetModelManager()
+	cancellata =  models.BooleanField(default=False )
+	objects = GetModelManager()
 	def __unicode__(self):
 		return '%s' % (self.identificativo)
 
