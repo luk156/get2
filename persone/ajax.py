@@ -11,9 +11,10 @@ from django.template import Context, Template
 def elimina_persona(request,persona_id):
 	dajax = Dajax()
 	if request.user.is_superuser:
-            per=Persona.objects.get(id=persona_id)
-            per.delete()
-            dajax.remove('#persona-'+str(persona_id))
+		per=Persona.objects.get(id=persona_id)
+		per.cancellata=True
+		per.save()
+		dajax.remove('#persona-'+str(persona_id))
 	dajax.script("$('#loading').addClass('hidden');")
 	return dajax.json()
 

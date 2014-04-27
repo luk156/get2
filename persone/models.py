@@ -11,9 +11,10 @@ from django.db.models import Q
 from django.utils.functional import cached_property
 
 
-class GetModelManager(models.Manager):
-    def get_query_set(self):
-        return super(GetModelManager, self).get_query_set().filter(cancellata=False)
+# class GetModelManager(models.Manager):
+#     def get_query_set(self):
+#         return super(GetModelManager, self).get_query_set().filter(cancellata=False)
+
 # Create your models here.
 
 class MultiSelectFormField(forms.MultipleChoiceField):
@@ -133,8 +134,8 @@ class Mansione(models.Model):
 	padre=SelfForeignKey('self', null=True, blank=True, related_name='children')
 	escludi_stat = models.BooleanField('Escludi dalle statistiche', default=False,  help_text="Le disponibilita per questa mansione saranno escluse dalle statistiche")
 	ereditabile = models.BooleanField('Ereditabile', default=True,  help_text="Le persone con una mansione superiore erediteranno automaticamente questa mansione")
-	cancellata =  models.BooleanField(default=False )
-	objects = GetModelManager()
+	#cancellata =  models.BooleanField(default=False )
+	#objects = GetModelManager()
 	def __unicode__(self):
 		return '%s' % (self.nome)
 	# Milite tipo A, milite tipo B, centralinista ecc...
@@ -197,8 +198,8 @@ class Persona(models.Model):
 	note = models.TextField( blank=True, null=True, )
 	notificaMail = models.BooleanField('Attiva', default=False )
 	giorniNotificaMail = models.PositiveSmallIntegerField('Giorni di anticipo', choices=GIORNI, default=2, blank=True, null=True )
-	cancellata = models.BooleanField(default=False )
-	objects = GetModelManager()
+	#cancellata = models.BooleanField(default=False )
+	#objects = GetModelManager()
 	def notifiche_non_lette(self):
 		return self.user.destinatario_user.filter(letto=False).count()
 	@cached_property
