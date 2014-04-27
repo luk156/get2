@@ -13,6 +13,6 @@ $(document).ready(function() {
             });
             $(".turno."+(i+1).toString()).each(function(){ $(this).offset({top:h_max}) });
         }
-    $('.row-fluid.calendario').height(h-th-8);
+    $('.row-fluid.calendario').height(h-th+60);
     };
 });

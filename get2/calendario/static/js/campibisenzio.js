@@ -20,7 +20,7 @@ $(document).ready(function() {
             });
             $(".turno."+(i+1).toString()).each(function(){ $(this).offset({top:h_max}) });
         }
-    $('.row-fluid.calendario').height(h-th-8);
+    $('.row-fluid.calendario').height(h-th+60);
     };
     $('#footer').prepend('<div class="campi_footer">Per qualsiasi necessità o per richiedere i dati d’accesso utilizzare l’apposito modello o inviare una mail a <a href="mailto:informatico@misericordia-campi-bisenzio.it">informatico@misericordia-campi-bisenzio.it</a></div><hr>')
 });
