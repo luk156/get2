@@ -609,7 +609,8 @@ def modifica_mansione(request, mansione_id):
 @user_passes_test(lambda u: u.is_superuser)
 def elimina_mansione(request,mansione_id):
 	m=Mansione.objects.get(id=mansione_id)
-	m.delete()
+	m.cancellata = True
+	m.save()
 	return HttpResponseRedirect('/impostazioni/')
 
 #### fine mansioni ####
@@ -695,7 +696,8 @@ def modifica_tipo_turno(request, tipo_turno_id):
 @user_passes_test(lambda u: u.is_superuser)
 def elimina_tipo_turno(request,tipo_turno_id):
 	t=TipoTurno.objects.get(id=tipo_turno_id)
-	t.delete()
+	t.cancellata=True
+	t.save()
 	return HttpResponseRedirect('/impostazioni/')
 
 @user_passes_test(lambda u: u.is_staff)

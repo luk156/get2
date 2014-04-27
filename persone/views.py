@@ -153,9 +153,10 @@ def modifica_persona(request,persona_id):
 
 @user_passes_test(lambda u: u.is_superuser)
 def elimina_persona(request,persona_id):
-    p=Persona.objects.get(id=persona_id)
-    p.delete()
-    return HttpResponseRedirect('/persone/')
+	p=Persona.objects.get(id=persona_id)
+	p.cancellata = True
+	p.save()
+	return HttpResponseRedirect('/persone/')
 
 @user_passes_test(lambda u:u.is_staff)
 def nuovo_gruppo(request):

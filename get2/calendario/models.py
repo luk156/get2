@@ -11,6 +11,11 @@ from django.utils.text import capfirst
 from persone.models import *
 from django.utils.functional import cached_property
 
+class GetModelManager(models.Manager):
+    def get_query_set(self):
+        return super(GetModelManager, self).get_query_set().filter(cancellata=False)
+
+
 STATI=(('disponibile','Disponibile'),('ferie','In ferie'),('malattia','In malattia'),('indisponibile','Indisponibile'))
 
 GIORNI=((1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), (6, '6'), (7, '7'))
@@ -44,6 +49,8 @@ class TipoTurno(models.Model):
 	priorita = models.IntegerField('priorita', default=0, )
 	msg_errore = models.TextField('Messaggio errore disponibilita', blank=True, null=True, help_text="Il messaggio viene visualizzato nel caso non sia possibile modificare la disponibilta")
 	#msg_lontano = models.TextField( blank=True, null=True, )
+	cancellata =  models.BooleanField(default=False )
+	objects = GetModelManager()
 	def __unicode__(self):
 		return '%s' % (self.identificativo)
 
@@ -336,11 +343,11 @@ DISPONIBILITA = (("Disponibile","Disponibile"),("Indisponibile","Indisponibile")
 
 class Disponibilita(models.Model):
 	tipo = models.CharField(max_length=20, choices=DISPONIBILITA)
-	persona = models.ForeignKey(Persona, related_name='persona_disponibilita')
+	persona = models.ForeignKey(Persona, related_name='persona_disponibilita', on_delete=models.PROTECT)
 	ultima_modifica = models.DateTimeField()
-	creata_da = models.ForeignKey(User, related_name='creata_da_disponibilita',blank=True, null=True, on_delete=models.SET_NULL)
+	creata_da = models.ForeignKey(User, related_name='creata_da_disponibilita', blank=True, null=True, on_delete=models.SET_NULL)
 	turno = models.ForeignKey(Turno, related_name='turno_disponibilita')
-	mansione = models.ForeignKey(Mansione, related_name='mansione_disponibilita',blank=True, null=True, on_delete=models.SET_NULL)
+	mansione = models.ForeignKey(Mansione, related_name='mansione_disponibilita', null=True, blank=True, on_delete=models.PROTECT)
 	note =  models.TextField( blank=True, null=True, default="")
 	class Meta:
 		ordering = ['mansione']

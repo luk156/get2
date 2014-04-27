@@ -10,6 +10,10 @@ from django.utils.text import capfirst
 from django.db.models import Q
 from django.utils.functional import cached_property
 
+
+class GetModelManager(models.Manager):
+    def get_query_set(self):
+        return super(GetModelManager, self).get_query_set().filter(cancellata=False)
 # Create your models here.
 
 class MultiSelectFormField(forms.MultipleChoiceField):
@@ -109,17 +113,17 @@ STATI=(('disponibile','Disponibile'),('ferie','In ferie'),('malattia','In malatt
 GIORNI=((1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), (6, '6'), (7, '7'))
 
 ICONE = (
-	('icon-user','icon-user'),
-	('icon-ambulance','icon-ambulance'),
-	('icon-truck','icon-truck'),
-	('icon-user-md','icon-user-md'),
-	('icon-phone','icon-phone'),
-	('icon-stethoscope','icon-stethoscope'),
-	('icon-eye-open','icon-eye-open'),
-	('icon-bolt','icon-bolt'),
-	('icon-male','icon-male'),
-	('icon-female','icon-female'),
-	)
+    ('icon-user','icon-user'),
+    ('icon-ambulance','icon-ambulance'),
+    ('icon-truck','icon-truck'),
+    ('icon-user-md','icon-user-md'),
+    ('icon-phone','icon-phone'),
+    ('icon-stethoscope','icon-stethoscope'),
+    ('icon-eye-open','icon-eye-open'),
+    ('icon-bolt','icon-bolt'),
+    ('icon-male','icon-male'),
+    ('icon-female','icon-female'),
+    )
 
 class Mansione(models.Model):
 	nome =models.CharField('Nome',max_length=30)
@@ -129,6 +133,8 @@ class Mansione(models.Model):
 	padre=SelfForeignKey('self', null=True, blank=True, related_name='children')
 	escludi_stat = models.BooleanField('Escludi dalle statistiche', default=False,  help_text="Le disponibilita per questa mansione saranno escluse dalle statistiche")
 	ereditabile = models.BooleanField('Ereditabile', default=True,  help_text="Le persone con una mansione superiore erediteranno automaticamente questa mansione")
+	cancellata =  models.BooleanField(default=False )
+	objects = GetModelManager()
 	def __unicode__(self):
 		return '%s' % (self.nome)
 	# Milite tipo A, milite tipo B, centralinista ecc...
@@ -138,42 +144,42 @@ class Mansione(models.Model):
 		return True
 
 def figli(mansione_id):
-	mansioni = Mansione.objects.all().values_list('id','padre')
-	f = [v for i, v in enumerate(mansioni) if v[1] == mansione_id]
-	figli_list = f
-	while f:
-		for k in f:
-			f=[v for i, v in enumerate(mansioni) if v[1] == k[0]]
-			figli_list+=f
-	return Mansione.objects.filter( id__in=[x for (x,y) in figli_list] )
+    mansioni = Mansione.objects.all().values_list('id','padre')
+    f = [v for i, v in enumerate(mansioni) if v[1] == mansione_id]
+    figli_list = f
+    while f:
+        for k in f:
+            f=[v for i, v in enumerate(mansioni) if v[1] == k[0]]
+            figli_list+=f
+    return Mansione.objects.filter( id__in=[x for (x,y) in figli_list] )
 
 
 
 class MansioneForm(forms.ModelForm):
-	class Meta:
-		model = Mansione
-	def __init__(self, *args, **kwargs):
-		self.helper = FormHelper()
-		self.helper.layout = Layout(
-			Field('nome'),
-			Field('descrizione'),
-			Field('padre'),
-			Field(
-				'colore',
-				template = 'form_templates/color.html'
-			),
-			Field(
-				'icona',
-				template = 'form_templates/radioselect_inline.html',
-			),
-			Field('escludi_stat'),
-			Field('ereditabile'),
-			FormActions(
-				Submit('save', 'Invia', css_class="btn-primary")
-			)
-		)
-		super(MansioneForm, self).__init__(*args, **kwargs)
-		self.fields['padre'].queryset = Mansione.objects.exclude(id__exact=self.instance.id)
+    class Meta:
+        model = Mansione
+    def __init__(self, *args, **kwargs):
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Field('nome'),
+            Field('descrizione'),
+            Field('padre'),
+            Field(
+                'colore',
+                template = 'form_templates/color.html'
+            ),
+            Field(
+                'icona',
+                template = 'form_templates/radioselect_inline.html',
+            ),
+            Field('escludi_stat'),
+            Field('ereditabile'),
+            FormActions(
+                Submit('save', 'Invia', css_class="btn-primary")
+            )
+        )
+        super(MansioneForm, self).__init__(*args, **kwargs)
+        self.fields['padre'].queryset = Mansione.objects.exclude(id__exact=self.instance.id)
 
 
 class Persona(models.Model):
@@ -191,20 +197,21 @@ class Persona(models.Model):
 	note = models.TextField( blank=True, null=True, )
 	notificaMail = models.BooleanField('Attiva', default=False )
 	giorniNotificaMail = models.PositiveSmallIntegerField('Giorni di anticipo', choices=GIORNI, default=2, blank=True, null=True )
+	cancellata = models.BooleanField(default=False )
+	objects = GetModelManager()
 	def notifiche_non_lette(self):
 		return self.user.destinatario_user.filter(letto=False).count()
 	@cached_property
 	def telefono(self):
 		tel_fields = filter(bool, [self.tel1, self.tel2, self.tel3])
 		return '<br>'.join(tel_fields)
-        @cached_property
-        def autista_cv(self):
-            try:
-                self.competenze.get(id=6)
-                return True
-            except:
-                return False
-            
+	@cached_property
+	def autista_cv(self):
+		try:
+			self.competenze.get(id=6)
+			return True
+		except:
+			return False
 	@cached_property
 	def capacita(self):
 		c = set()
@@ -219,45 +226,45 @@ class Persona(models.Model):
 		return '%s %s' % (self.cognome,self.nome)
 
 class PersonaForm(forms.ModelForm):
-	class Meta:
-		model = Persona
-	def __init__(self, *args, **kwargs):
-		self.helper = FormHelper()
-		self.helper.layout = Layout(
-			HTML('<div class="row">'),
-			Div(
-				Fieldset(
-					'Informazioni Anagrafiche',
-					'nome',
-					'cognome',
-					'indirizzo',
-					),
-				AppendedText('nascita', '<i class="icon-calendar"></i>'),
-				AppendedText('tel1', '<i class="icon-phone"></i>'),
-				AppendedText('tel2', '<i class="icon-phone"></i>'),
-				AppendedText('tel3', '<i class="icon-phone"></i>'),
-				css_class="span3",
-			),
-			Div(
-				Fieldset(
-					'Altre informazioni',
-					'user',
-					'stato',
-					),
-				InlineCheckboxes('competenze', css_class="badge-mansione"),
-				css_class="span3"
-			),
-			Fieldset(
-				'Notifiche via E-mail',
-				'notificaMail',
-				AppendedText('giorniNotificaMail', '<i class="icon-envelope"></i>'),
-				),
-			HTML('</div>'),
-			FormActions(
-				Submit('save', 'Invia', css_class="btn-primary"),
-			)
-		)
-		super(PersonaForm, self).__init__(*args, **kwargs)
+    class Meta:
+        model = Persona
+    def __init__(self, *args, **kwargs):
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            HTML('<div class="row">'),
+            Div(
+                Fieldset(
+                    'Informazioni Anagrafiche',
+                    'nome',
+                    'cognome',
+                    'indirizzo',
+                    ),
+                AppendedText('nascita', '<i class="icon-calendar"></i>'),
+                AppendedText('tel1', '<i class="icon-phone"></i>'),
+                AppendedText('tel2', '<i class="icon-phone"></i>'),
+                AppendedText('tel3', '<i class="icon-phone"></i>'),
+                css_class="span3",
+            ),
+            Div(
+                Fieldset(
+                    'Altre informazioni',
+                    'user',
+                    'stato',
+                    ),
+                InlineCheckboxes('competenze', css_class="badge-mansione"),
+                css_class="span3"
+            ),
+            Fieldset(
+                'Notifiche via E-mail',
+                'notificaMail',
+                AppendedText('giorniNotificaMail', '<i class="icon-envelope"></i>'),
+                ),
+            HTML('</div>'),
+            FormActions(
+                Submit('save', 'Invia', css_class="btn-primary"),
+            )
+        )
+        super(PersonaForm, self).__init__(*args, **kwargs)
 
 class PersonaFormLite(forms.ModelForm):
     class Meta:
@@ -300,32 +307,32 @@ class PersonaFormLite(forms.ModelForm):
         super(PersonaFormLite, self).__init__(*args, **kwargs)
 
 class Gruppo(models.Model):
-	nome = models.CharField('Nome',max_length=30)
-	componenti = models.ManyToManyField(Persona, blank=True, null=True, related_name='componenti_gruppo')
-	note = models.TextField( blank=True, null=True, )
-	escludi_stat = models.BooleanField('Escludi dalle statistiche', default=False,  help_text="le persone appartenenti a questo gruppo saranno escluse dalle statistiche")
-	def numero_componenti(self):
-		n=0
-		for c in self.componenti.all():
-			n+=1
-		return n
-	def __unicode__(self):
-		return '%s' % (self.nome)
+    nome = models.CharField('Nome',max_length=30)
+    componenti = models.ManyToManyField(Persona, blank=True, null=True, related_name='componenti_gruppo')
+    note = models.TextField( blank=True, null=True, )
+    escludi_stat = models.BooleanField('Escludi dalle statistiche', default=False,  help_text="le persone appartenenti a questo gruppo saranno escluse dalle statistiche")
+    def numero_componenti(self):
+        n=0
+        for c in self.componenti.all():
+            n+=1
+        return n
+    def __unicode__(self):
+        return '%s' % (self.nome)
 
 class GruppoForm(forms.ModelForm):
-	#nascita = forms.DateField(label='Data di nascita', required=False, widget=widgets.AdminDateWidget)
-	class Meta:
-		model = Gruppo
-		exclude = ('componenti',)
-	def __init__(self, *args, **kwargs):
-		self.helper = FormHelper()
-		self.helper.layout = Layout(
-			Field('nome'),
-			Field('note'),
-			Field('escludi_stat'),
-			FormActions(
-				Submit('save', 'Invia', css_class="btn-primary")
-			)
-		)
-		super(GruppoForm, self).__init__(*args, **kwargs)
+    #nascita = forms.DateField(label='Data di nascita', required=False, widget=widgets.AdminDateWidget)
+    class Meta:
+        model = Gruppo
+        exclude = ('componenti',)
+    def __init__(self, *args, **kwargs):
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Field('nome'),
+            Field('note'),
+            Field('escludi_stat'),
+            FormActions(
+                Submit('save', 'Invia', css_class="btn-primary")
+            )
+        )
+        super(GruppoForm, self).__init__(*args, **kwargs)
 
