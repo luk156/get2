@@ -135,18 +135,20 @@ class Mansione(models.Model):
 	padre=SelfForeignKey('self', null=True, blank=True, related_name='children')
 	escludi_stat = models.BooleanField('Escludi dalle statistiche', default=False,  help_text="Le disponibilita per questa mansione saranno escluse dalle statistiche")
 	ereditabile = models.BooleanField('Ereditabile', default=True,  help_text="Le persone con una mansione superiore erediteranno automaticamente questa mansione")
-	#cancellata =  models.BooleanField(default=False )
-	#objects = GetModelManager()
+	cancellata =  models.BooleanField(default=False )
+	objects = models.Manager()
+	objectsGet = GetModelManager()
 	def __unicode__(self):
 		return '%s' % (self.nome)
-	# Milite tipo A, milite tipo B, centralinista ecc...
 	def root(self):
 		if self.padre:
 			return False
 		return True
+	def figli(self):
+		return Mansione.objectsGet.filter(padre=self)
 
 def figli(mansione_id):
-    mansioni = Mansione.objects.all().values_list('id','padre')
+    mansioni = Mansione.objectsGet.all().values_list('id','padre')
     f = [v for i, v in enumerate(mansioni) if v[1] == mansione_id]
     figli_list = f
     while f:
@@ -195,12 +197,13 @@ class Persona(models.Model):
 	tel3 = models.CharField('Altro telefono',max_length=30, blank=True, null=True, default="")
 	#caratteristiche della persona
 	stato = models.CharField('Stato',max_length=40, choices=STATI, default='disponibile' )
-	competenze = models.ManyToManyField(Mansione, blank=True, null=True)
+	competenze = models.ManyToManyField(Mansione, related_name='competenze_persona', blank=True, null=True)
 	note = models.TextField( blank=True, null=True, )
 	notificaMail = models.BooleanField('Attiva', default=False )
 	giorniNotificaMail = models.PositiveSmallIntegerField('Giorni di anticipo', choices=GIORNI, default=2, blank=True, null=True )
 	cancellata = models.BooleanField(default=False )
-	objects = GetModelManager()
+	objects = models.Manager()
+	objectsGet = GetModelManager()
 	def notifiche_non_lette(self):
 		return self.user.destinatario_user.filter(letto=False).count()
 	@cached_property
@@ -217,7 +220,7 @@ class Persona(models.Model):
 	@cached_property
 	def capacita(self):
 		c = set()
-		for m in self.competenze.all():
+		for m in self.competenze.filter(cancellata=False):
 			c.add(m)
 			for f in figli(m.id):
 				if (f.ereditabile):
@@ -228,45 +231,47 @@ class Persona(models.Model):
 		return '%s %s' % (self.cognome,self.nome)
 
 class PersonaForm(forms.ModelForm):
-    class Meta:
-        model = Persona
-    def __init__(self, *args, **kwargs):
-        self.helper = FormHelper()
-        self.helper.layout = Layout(
-            HTML('<div class="row">'),
-            Div(
-                Fieldset(
-                    'Informazioni Anagrafiche',
-                    'nome',
-                    'cognome',
-                    'indirizzo',
-                    ),
-                AppendedText('nascita', '<i class="icon-calendar"></i>'),
-                AppendedText('tel1', '<i class="icon-phone"></i>'),
-                AppendedText('tel2', '<i class="icon-phone"></i>'),
-                AppendedText('tel3', '<i class="icon-phone"></i>'),
-                css_class="span3",
-            ),
-            Div(
-                Fieldset(
-                    'Altre informazioni',
-                    'user',
-                    'stato',
-                    ),
-                InlineCheckboxes('competenze', css_class="badge-mansione"),
-                css_class="span3"
-            ),
-            Fieldset(
-                'Notifiche via E-mail',
-                'notificaMail',
-                AppendedText('giorniNotificaMail', '<i class="icon-envelope"></i>'),
-                ),
-            HTML('</div>'),
-            FormActions(
-                Submit('save', 'Invia', css_class="btn-primary"),
-            )
-        )
-        super(PersonaForm, self).__init__(*args, **kwargs)
+	class Meta:
+		model = Persona
+	def __init__(self, *args, **kwargs):
+		self.helper = FormHelper()
+		self.helper.layout = Layout(
+			HTML('<div class="row">'),
+			Div(
+				Fieldset(
+					'Informazioni Anagrafiche',
+					'nome',
+					'cognome',
+					'indirizzo',
+					),
+				AppendedText('nascita', '<i class="icon-calendar"></i>'),
+				AppendedText('tel1', '<i class="icon-phone"></i>'),
+				AppendedText('tel2', '<i class="icon-phone"></i>'),
+				AppendedText('tel3', '<i class="icon-phone"></i>'),
+				css_class="span3",
+			),
+			Div(
+				Fieldset(
+					'Altre informazioni',
+					'user',
+					'stato',
+					),
+				InlineCheckboxes('competenze', css_class="badge-mansione"),
+				css_class="span3"
+			),
+			Fieldset(
+				'Notifiche via E-mail',
+				'notificaMail',
+				AppendedText('giorniNotificaMail', '<i class="icon-envelope"></i>'),
+				),
+			HTML('</div>'),
+			FormActions(
+				Submit('save', 'Invia', css_class="btn-primary"),
+			)
+		)
+
+		super(PersonaForm, self).__init__(*args, **kwargs)
+		self.fields['competenze'].queryset=Mansione.objectsGet.all()
 
 class PersonaFormLite(forms.ModelForm):
     class Meta:

@@ -12,9 +12,8 @@ from persone.models import *
 from django.utils.functional import cached_property
 
 class GetModelManager(models.Manager):
-	use_for_related_fields = True
-	def get_query_set(self):
-		return super(GetModelManager, self).get_query_set().filter(cancellata=False)
+    def get_query_set(self):
+        return super(GetModelManager, self).get_query_set().filter(cancellata=False)
 
 
 STATI=(('disponibile','Disponibile'),('ferie','In ferie'),('malattia','In malattia'),('indisponibile','Indisponibile'))
@@ -51,7 +50,8 @@ class TipoTurno(models.Model):
 	msg_errore = models.TextField('Messaggio errore disponibilita', blank=True, null=True, help_text="Il messaggio viene visualizzato nel caso non sia possibile modificare la disponibilta")
 	#msg_lontano = models.TextField( blank=True, null=True, )
 	cancellata =  models.BooleanField(default=False )
-	objects = GetModelManager()
+	objects = models.Manager()
+	objectsGet = GetModelManager()
 	def __unicode__(self):
 		return '%s' % (self.identificativo)
 
@@ -153,10 +153,10 @@ class Turno(models.Model):
 	identificativo = models.CharField(max_length=30, blank=True , default='')
 	inizio = models.DateTimeField()
 	fine = models.DateTimeField()
-	tipo = models.ForeignKey(TipoTurno, blank=True, null=True, on_delete=models.SET_NULL)
+	tipo = models.ForeignKey(TipoTurno, related_name='tipo_turno_turno', blank=True, null=True, on_delete=models.SET_NULL)
 	occorrenza = models.ForeignKey(Occorrenza, blank=True, null=True)
 	valore = models.IntegerField('Punteggio',default=1)
-	calendario = models.ForeignKey(Calendario, null=True, on_delete=models.SET_NULL, default=1)
+	calendario = models.ForeignKey(Calendario, related_name='calendario_turno' ,null=True, on_delete=models.SET_NULL, default=1)
 	coperto = models.BooleanField(default=False)
 	requisiti = models.ManyToManyField(Requisito, blank=True, null=True, related_name='requisiti_turno', through='Cache_requisito')
 	def verifica_requisito(self,requisito,mansione_id=0,persona_capacita=0):
@@ -277,6 +277,7 @@ class TurnoForm(forms.ModelForm):
 		)
 		super(TurnoForm, self).__init__(*args, **kwargs)
 		self.fields['tipo'].required = True
+		self.fields['tipo'].queryset = TipoTurno.objectsGet.all()
 	class Meta:
 		model = Turno
 		exclude = ('occorrenza','requisiti')
@@ -325,6 +326,7 @@ class TurnoFormRipeti(TurnoForm):
 		)
 		super(TurnoForm, self).__init__(*args, **kwargs)
 		self.fields['tipo'].required = True
+		self.fields['tipo'].queryset = TipoTurno.objectsGet.all()
 	def clean(self):
 		data = self.cleaned_data
 		ripeti=data.get('ripeti')
@@ -412,3 +414,4 @@ class Impostazioni_notificaForm(forms.ModelForm):
 			)
 		)
 		super(Impostazioni_notificaForm, self).__init__(*args, **kwargs)
+		self.fields['tipo_turno'].queryset = TipoTurno.objectsGet.all()

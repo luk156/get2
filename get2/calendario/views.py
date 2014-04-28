@@ -323,10 +323,10 @@ def cerca_persona(request, turno_id, mansione_id):
 	capacita = []
 	turno = Turno.objects.get(id=turno_id)
 	disp_turno = list(Disponibilita.objects.filter(turno=turno))
-	impegnati = Persona.objects.values_list('id').filter( persona_disponibilita__turno__in = turno.contemporanei , persona_disponibilita__tipo = 'Disponibile')
+	impegnati = Persona.objectsGet.values_list('id').filter( persona_disponibilita__turno__in = turno.contemporanei , persona_disponibilita__tipo = 'Disponibile')
 
 
-	for p in Persona.objects.exclude( stato = 'indisponibile', persona_disponibilita__turno = turno ).order_by('cognome','nome'):
+	for p in Persona.objectsGet.exclude( stato = 'indisponibile', persona_disponibilita__turno = turno ).order_by('cognome','nome'):
 		cap = p.capacita
 		if mansione in cap:
 			persone.append(p)
@@ -610,7 +610,12 @@ def modifica_mansione(request, mansione_id):
 def elimina_mansione(request,mansione_id):
 	m=Mansione.objects.get(id=mansione_id)
 	m.cancellata = True
+	m.padre = None
 	m.save()
+	for c in m.figli():
+		c.padre = None
+		c.save()
+
 	return HttpResponseRedirect('/impostazioni/')
 
 #### fine mansioni ####
@@ -621,10 +626,10 @@ def elimina_mansione(request,mansione_id):
 @user_passes_test(lambda u:u.is_staff)
 def impostazioni(request):
 	return render(request,'impostazioni.html',{
-		'tipi_turno':TipoTurno.objects.all(),
+		'tipi_turno':TipoTurno.objectsGet.all(),
 		'calendari':Calendario.objects.all(),
 		'tipo_turno_form':TipoTurnoForm(),
-		'mansioni':Mansione.objects.filter(padre__isnull=True),
+		'mansioni':Mansione.objectsGet.filter(padre__isnull=True),
 		'impostazioni_notifica_utente':Impostazioni_notifica.objects.all(),
 		'request':request})
 

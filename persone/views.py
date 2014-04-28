@@ -100,7 +100,7 @@ def export_persona(request):
 @user_passes_test(lambda u:u.is_staff)
 def elenco_persona(request):
 	#if request.user.is_staff:
-	persone = Persona.objects.all().order_by('cognome')
+	persone = Persona.objectsGet.all().order_by('cognome')
 	gruppi = Gruppo.objects.all()
 	mansioni = Mansione.objects.all()
 	risposta = HttpResponse(render(request,'elenco_persona.html',{'persone':persone,'stati':STATI,'request':request,'gruppi':gruppi,'mansioni':mansioni}))
@@ -244,7 +244,7 @@ def visualizza_persona(request,persona_id):
     except:
         start=datetime.datetime.today()
     turni = []
-    mansioni = Mansione.objects.exclude(escludi_stat=True).filter(mansione_disponibilita__persona=persona,mansione_disponibilita__tipo="Disponibile", mansione_disponibilita__turno__fine__lte=oggi).annotate(parziale=Count('id'))
+    mansioni = Mansione.objectsGet.exclude(escludi_stat=True).filter(mansione_disponibilita__persona=persona,mansione_disponibilita__tipo="Disponibile", mansione_disponibilita__turno__fine__lte=oggi).annotate(parziale=Count('id'))
     tot_turni = disponibilita.count()
     tot_punti = 0
     for d in disponibilita:

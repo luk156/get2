@@ -137,12 +137,10 @@ def tipo_turno_form(request, form):
     if form.is_valid():
         f=form.save()
         tipo_turno=TipoTurno.objects.get(id=f.id)
-        mansioni=Mansione.objects.all()
+        mansioni=Mansione.objectsGet.all()
         html_dettagli = render_to_string( 'elenco_tipo_turno/dettagli.html', { 'tipo_turno': tipo_turno, 'mansioni': mansioni } )
-        #dajax.alert(html_dettagli)
         dajax.append('#elenco', 'innerHTML', html_dettagli)
         dajax.script('$("#form_tipo_turno" ).dialog("close"); $( "div#tipo_turno-'+str(f.id)+'.riga a").button(); $( ".dettagli_requisito").hide();')
-        #dajax.alert("aggiunto!")
     else:
         dajax.remove_css_class('#form_tipo_turno input', 'error')
         for error in form.errors:
@@ -242,7 +240,7 @@ def modal_elimina_utente(request,utente_id):
 @dajaxice_register
 def auto_utente_persona_search(request,search_term):
     # Query DB for suggestions to present to user
-    q = Persona.objects.filter(cognome__istartswith=search_term)
+    q = Persona.objectsGet.filter(cognome__istartswith=search_term)
     data = []
     #pdb.set_trace()
     for item in q:

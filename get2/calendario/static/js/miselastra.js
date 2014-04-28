@@ -18,5 +18,5 @@ $(document).ready(function() {
         };
     };
     window.allinea_calendario();
-    
+
 });

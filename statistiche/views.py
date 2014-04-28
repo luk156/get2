@@ -33,10 +33,10 @@ def statistiche_intervallo(request, inizio = datetime.datetime(datetime.datetime
 	tot_punti = []
 	#Turno.objects.earliest(field_name='inizio')
 	if senza_gruppo:
-		persone = Persona.objects.exclude(componenti_gruppo__escludi_stat=True).filter(Q(Q(componenti_gruppo__isnull=True) | Q(componenti_gruppo__in=gruppi))).distinct().values('id','nome','cognome')
+		persone = Persona.objectsGet.exclude(componenti_gruppo__escludi_stat=True).filter(Q(Q(componenti_gruppo__isnull=True) | Q(componenti_gruppo__in=gruppi))).distinct().values('id','nome','cognome')
 		#print persone
 	else:
-		persone = Persona.objects.exclude(componenti_gruppo__escludi_stat=True).filter(componenti_gruppo__in=gruppi).values('id','nome','cognome')
+		persone = Persona.objectsGet.exclude(componenti_gruppo__escludi_stat=True).filter(componenti_gruppo__in=gruppi).values('id','nome','cognome')
 
 	for p in persone:
 		disp = Disponibilita.objects.values('turno__valore').filter(persona_id = p["id"], tipo = "Disponibile", turno__inizio__gte=inizio, turno__fine__lte=fine, mansione__in=mansioni.exclude(escludi_stat=True))
