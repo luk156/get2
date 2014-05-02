@@ -41,7 +41,6 @@ def aggiorna_statistiche(request,da,al,mansioni,gruppi):
 @dajaxice_register
 def dettaglio_turni(request,da,al,mansioni,id):
 	dajax=Dajax()
-	import pdb; pdb.set_trace()
 	elenco_mansioni=Mansione.objects.all().filter(id__in=mansioni.rsplit('_')).exclude(escludi_stat=True)
 	data_da=datetime.date(datetime.datetime.today().year,1,1)
 	data_al=datetime.datetime.now().date()

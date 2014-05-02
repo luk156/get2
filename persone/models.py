@@ -255,6 +255,7 @@ class PersonaForm(forms.ModelForm):
 					'Altre informazioni',
 					'user',
 					'stato',
+					'note',
 					),
 				InlineCheckboxes('competenze', css_class="badge-mansione"),
 				css_class="span3"
