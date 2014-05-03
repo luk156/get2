@@ -248,7 +248,7 @@ class PersonaForm(forms.ModelForm):
 				AppendedText('tel1', '<i class="icon-phone"></i>'),
 				AppendedText('tel2', '<i class="icon-phone"></i>'),
 				AppendedText('tel3', '<i class="icon-phone"></i>'),
-				css_class="span3",
+				css_class="span2",
 			),
 			Div(
 				Fieldset(
@@ -258,13 +258,16 @@ class PersonaForm(forms.ModelForm):
 					'note',
 					),
 				InlineCheckboxes('competenze', css_class="badge-mansione"),
-				css_class="span3"
+				css_class="span2"
 			),
-			Fieldset(
-				'Notifiche via E-mail',
-				'notificaMail',
-				AppendedText('giorniNotificaMail', '<i class="icon-envelope"></i>'),
-				),
+			Div(
+				Fieldset(
+					'Notifiche via E-mail',
+					'notificaMail',
+					AppendedText('giorniNotificaMail', '<i class="icon-envelope"></i>'),
+					),
+				css_class="span2"
+			),
 			HTML('</div>'),
 			FormActions(
 				Submit('save', 'Invia', css_class="btn-primary"),

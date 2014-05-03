@@ -26,7 +26,7 @@ $(document).ready(function() {
         };
     };
 
-    window.allinea_calendario();
+    window.setTimeout(window.allinea_calendario,500);
 
     $('#footer').prepend('<div class="campi_footer">Per qualsiasi necessità o per richiedere i dati d’accesso utilizzare l’apposito modello o inviare una mail a <a href="mailto:informatico@misericordia-campi-bisenzio.it">informatico@misericordia-campi-bisenzio.it</a></div><hr>')
 });

@@ -17,6 +17,6 @@ $(document).ready(function() {
         $('.row-fluid.calendario').height(h-th+60);
         };
     };
-    window.allinea_calendario();
+    window.setTimeout(window.allinea_calendario,500);
 
 });
