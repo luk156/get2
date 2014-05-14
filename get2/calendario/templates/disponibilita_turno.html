@@ -4,12 +4,12 @@
 		<legend>Seleziona la mansione che vuoi ricoprire:</legend>
 		<div id="mansioni-turno{{t.id}}">
 		{% for m in mansioni %}
-			<a href="/disponibilita/{{t.id}}/{{m.id}}/{{request.user.get_profile.id}}/Disponibile/" class="btn btn-primary btn-block btn-large"><i class="{{m.icona}}"></i> {{m}} </a></br>
+			<a href="/disponibilita/{{t.id}}/{{m.id}}/{{request.user.get_profile.id}}/Disponibile/" class="btn btn-primary btn-block btn-large" onclick="$('#loading').removeClass('hidden');"><i class="{{m.icona}}"></i> {{m}} </a></br>
 		{% endfor %}
 		</div>
 	{% else %}
 		Vuoi cancellarti dal turno del {{t.inizio|date:"d M"}}, ore {{t.inizio|time:"H:i"}} - {{t.fine|time:"H:i"}}?
-		<a href="/rimuovi_disponibilita/{{request.user.get_profile|gia_disponibile:t.id}}" class="btn btn-primary btn-block btn-large"><i class=""></i> Cancellami </a></br>
+		<a href="/rimuovi_disponibilita/{{request.user.get_profile|gia_disponibile:t.id}}" class="btn btn-primary btn-block btn-large" onclick="$('#loading').removeClass('hidden');"><i class=""></i> Cancellami </a></br>
 	{% endif %}
 {% else %}
 	Non puoi modificare la tua disponibilita per questo turno:</br>
