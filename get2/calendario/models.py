@@ -332,12 +332,13 @@ class TurnoFormRipeti(TurnoForm):
 		ripeti=data.get('ripeti')
 		da=data.get('ripeti_da')
 		al=data.get('ripeti_al')
-		if (data.get('fine')-data.get('inizio')).days>0:
-			raise forms.ValidationError('Il turno deve durare al massimo 24H')
-		if data.get('inizio')>data.get('fine'):
-			raise forms.ValidationError('Il turno termina prima di iniziare! controlla inizio e fine')
-		if ripeti and (da==None or al==None):
-			raise forms.ValidationError('Specifica l\' intervallo in cui ripetere il turno')
+		if (data.get('fine') and data.get('inizio')):
+			if (data.get('fine')-data.get('inizio')).days>0:
+				raise forms.ValidationError('Il turno deve durare al massimo 24H')
+			if data.get('inizio')>data.get('fine'):
+				raise forms.ValidationError('Il turno termina prima di iniziare! controlla inizio e fine')
+			if ripeti and (da==None or al==None):
+				raise forms.ValidationError('Specifica l\' intervallo in cui ripetere il turno')
 		return data
 
 
