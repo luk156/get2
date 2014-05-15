@@ -20,7 +20,7 @@ $(document).ready(function() {
     window.setTimeout(window.allinea_calendario,500);
 
     if (window.location.pathname.split("/")[0]!="calendario" && $.cookie("touch")==='yes'){
-        window.setTimeout(function(){window.location.reload();},60000);
+        window.setTimeout(function(){location.href="/calendario/1/oggi";},180000);
     }
 
 });
