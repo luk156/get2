@@ -58,12 +58,18 @@
 	$(document).ready(function(){
 	{% if not request.user.is_staff %}
 		$('.staff').hide()
+    {% else %}
+        window.staff = true;
 	{% endif %}
 	{% if not request.user.id %}
 		$('.user').hide()
+    {% else %}
+        window.user=true;
 	{% endif %}
 	{% if not request.user.is_superuser %}
 		$('.superuser').hide()
+    {% else %}
+        window.superuser=true;
 	{% endif %}
 	});
 </script>
