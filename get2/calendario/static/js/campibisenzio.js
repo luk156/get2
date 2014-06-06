@@ -1,6 +1,6 @@
 $(document).ready(function() {
     var div_persone = $('#persone');
-    
+
     $("select[name='azione'] option[value='aggiungi_m']").remove();
     $("select[name='azione'] option[value='rimuovi_m']").remove();
     $('.box-header.persone > .btn-group', div_persone).html('<a href="#" class="btn" onclick="Dajaxice.persone.sync_misecampi(Dajax.process,{});"><i class="icon-refresh"> </i> Sincronizza</a>"')

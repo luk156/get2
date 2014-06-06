@@ -64,6 +64,8 @@ urlpatterns += patterns('get2.calendario',
 	# notifiche
    	(r'^notifiche/$', 'views.elenco_notifica'),
    	(r'^notifiche/elimina/(?P<notifica_id>\w+)/$', 'views.elimina_notifica'),
+	# ajax
+	(r'^ajax_request/$', 'views.ajax_request')
 )
 
 urlpatterns += patterns('django.contrib.auth.views',

@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+
+{% block title %} Notifiche {% endblock %}
+
+{% block header %}
+		<h4 class="header">Notifiche</h4>
+{% endblock %}
+
+{% block main %}
+
+<script type="text/javascript">
+function notifiche(value){
+	var counter = 0;  // counter for checked checkboxes  
+	var i = 0;  // loop variable
+	var url = '';
+	var input_obj = document.getElementsByClassName('ch');
+
+	for (i=0; i < input_obj.length; i++){ 
+		if (input_obj[i].type == 'checkbox' && input_obj[i].checked == true){  
+			counter++;  
+       			url = url +'_' + input_obj[i].value;  
+     			}
+   		}  
+	if (counter > 0){  
+	url = url.substr(1);
+	// alert(url);
+	Dajaxice.get2.calendario.notifiche(Dajax.process,{'option':value,'url':url});
+	}  
+	else alert("Non ci sono notifiche selezionate!");  
+
+}
+
+function checkAll() {
+  checkboxes = document.getElementsByName('not_id');
+  for(var i in checkboxes)
+    checkboxes[i].checked = true;
+}
+
+function uncheckAll() {
+  checkboxes = document.getElementsByName('not_id');
+  for(var i in checkboxes)
+    checkboxes[i].checked = false;
+}
+
+</script>
+
+
+{% if notifiche %}
+
+<div class="row-fluid">
+	<div class="span3">
+		<form action="/notifica/letto/" method="get" class="form-inline">
+			<a class="btn" name="CheckAll" onClick="checkAll()"><i class="icon-check"></i> Seleziona tutto</a>
+			<a class="btn" name="UnCheckAll" onClick="uncheckAll()"><i class="icon-check-empty"></i> Annulla selezione</a>
+	</div>
+	<div class="span4">
+		<div class=" pull-right">
+			Se selezionati:
+			<select id="sele" name="letto" onchange="notifiche(this.options[this.selectedIndex].value)">
+			<option value="">---
+			<option value="letto">segna come letto
+			<option value="nonletto">segna come NON letto
+			<option value="cancella">Elimina
+			</select>
+		</div>
+	</div>
+	<div class="span7">
+		<table class="table table-striped no-more-tables">
+			<thead>
+				<tr >
+				  <th></th>
+				  <th>Data</th>
+				  <th>testo</th>
+				  <th></th>
+				</tr>
+			</thead>
+			{% for notifica in notifiche %}
+			<tr id='not-{{notifica.id}}' class="{%if not notifica.letto%} warning {%endif%}">
+				  <td><input type="checkbox" name="not_id" value="{{notifica.id}}" class="ch"></td>
+				  <td>{{notifica.data|date:"D d M G:i"}}</td>
+				  <td>{{notifica.testo|safe}}</td>
+				  <td><a href="/notifiche/elimina/{{notifica.id}}"><span class="img_elimina"></span></a></td>
+			</tr>
+			{% endfor %}
+		</table></form>
+	</div>
+{% else %}
+    <p>Nessuna notifica ricevuta</p>
+{% endif %}
+<br>
+</div>
+
+</div>
+
+{% endblock %}

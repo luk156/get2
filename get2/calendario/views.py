@@ -113,6 +113,21 @@ def export_csv(request, queryset, export_data, filter_by=None, file_name='export
     return rsp
 
 
+from get2.calendario.ajax_get import ajax_request_manager
+import json
+
+def ajax_request(request):
+	if("callback" in request.GET.keys()):
+		callback = request.GET["callback"]
+		data = request.GET
+	else:
+		callback = None
+		data = request.POST
+	if data.get('apikey') == settings.GET_API:
+		res = ajax_request_manager(data.get('control'),data.get('type'),json.loads(data.get('data')), request)
+	else:
+		res = "{error: 'non autorizzato'}"
+	return HttpResponse("%s(%s)" % (callback,res) , content_type = "application/json")
 
 def home(request):
 	if Calendario.objects.all():
