@@ -11,7 +11,7 @@ def ajax_request_manager(control,type,data,request):
 			start = date.fromtimestamp(float(data['start']))
 			stop = date.fromtimestamp(float(data['stop']))
 			calendario = []
-			c=Calendario.objects.get(id=1)
+			c=Calendario.objects.get(id=data['cal_id'])
 			while start<stop + datetime.timedelta(days=1):
 				giorno = {}
 				giorno['data']=start.isoformat()
@@ -23,6 +23,7 @@ def ajax_request_manager(control,type,data,request):
 					t['inizio'] = turno.inizio.isoformat()
 					t['fine'] = turno.fine.isoformat()
 					t['requisiti'] = []
+					t['coperto'] = turno.calcola_coperto_cache
 					for cache_r in turno.cache_requisito_set.all():
 						r=model_to_dict(cache_r.requisito)
 						r['mansione'] = model_to_dict(cache_r.requisito.mansione)
@@ -35,6 +36,5 @@ def ajax_request_manager(control,type,data,request):
 					giorno['turni'].append(t)
 				start = start + datetime.timedelta(days=1)
 				calendario.append(giorno)
-			print calendario
 			return simplejson.dumps(calendario)
 	return res
