@@ -183,7 +183,7 @@ class MansioneForm(forms.ModelForm):
             )
         )
         super(MansioneForm, self).__init__(*args, **kwargs)
-        self.fields['padre'].queryset = Mansione.objects.exclude(id__exact=self.instance.id)
+        self.fields['padre'].queryset = Mansione.objectsGet.exclude(id__exact=self.instance.id)
 
 
 class Persona(models.Model):
