@@ -629,10 +629,16 @@ def elimina_mansione(request,mansione_id):
 	m.padre = None
 	m.save()
 	for c in m.figli():
-		c.padre = None
-		c.save()
-
+		elimina_mansione_ric(c)
 	return HttpResponseRedirect('/impostazioni/')
+
+def elimina_mansione_ric(m):
+	m.cancellata = True
+	m.padre = None
+	m.save()
+	for c in m.figli():
+		elimina_mansione_ric(c)
+	return
 
 #### fine mansioni ####
 
