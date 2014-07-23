@@ -782,6 +782,7 @@ def nuovo_turno(request, cal_id):
 				start=data.get('ripeti_da')
 				stop=data.get('ripeti_al')
 				giorno=data.get('ripeti_il_giorno')
+				escludi=data.get('escludi_il_giorno')
 				ora_inizio=data.get('inizio').time()
 				start=datetime.datetime.combine(start,ora_inizio)
 				durata=data.get('fine')-data.get('inizio')
@@ -795,9 +796,10 @@ def nuovo_turno(request, cal_id):
 					data['fine']=(start+durata)
 					f=TurnoFormRipeti(data)
 					if ((str(start.weekday()) in giorno) or (('101' in giorno) and prefestivo(start)) or (('102' in giorno) and festivo(start)) or ('99' in giorno) or (('103' in giorno) and (not prefestivo(start) and not festivo(start)) )) and f.is_valid():
-						t=f.save()
-						t.occorrenza=o
-						t.save()
+						if not ((str(start.weekday()) in escludi) or (('101' in escludi) and prefestivo(start)) or (('102' in escludi) and festivo(start)) or ('99' in escludi) or (('103' in escludi) and (not prefestivo(start) and not festivo(start)) )):
+							t=f.save()
+							t.occorrenza=o
+							t.save()
 					start+=delta
 			return HttpResponseRedirect('/calendario/'+str(cal_id)) # Redirect after POST
 	else:

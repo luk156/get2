@@ -143,7 +143,6 @@ class FiltroCalendario(forms.Form):
 			InlineCheckboxes('giorni'),
 			ButtonHolder( Submit('submit', 'Filtra', css_class='button white'), ),)
 		self.helper.form_method = 'post'
-		#self.helper.form_action = 'submit_survey'
 		super(FiltroCalendario, self).__init__(*args, **kwargs)
 
 class Occorrenza(models.Model):
@@ -294,6 +293,7 @@ class TurnoFormRipeti(TurnoForm):
 	ripeti_da = forms.DateField(required=False)
 	ripeti_al = forms.DateField(required=False)
 	ripeti_il_giorno = forms.MultipleChoiceField(choices=GIORNO_EXT, widget=forms.CheckboxSelectMultiple(),required=False)
+	escludi_il_giorno = forms.MultipleChoiceField(choices=GIORNO_EXT, widget=forms.CheckboxSelectMultiple(),required=False)
 	def __init__(self, *args, **kwargs):
 		self.helper = FormHelper()
 		self.helper.layout = Layout(
@@ -318,7 +318,10 @@ class TurnoFormRipeti(TurnoForm):
 				AppendedText(
 					'ripeti_al', '<i class="icon-calendar"></i>'
 				),
-				InlineCheckboxes('ripeti_il_giorno'), css_id="ripeti"
+				InlineCheckboxes('ripeti_il_giorno'),
+				InlineCheckboxes('escludi_il_giorno'),
+				css_id="ripeti",
+
 			),
 			FormActions(
 				Submit('save', 'Aggiungi', css_class="btn-primary")
