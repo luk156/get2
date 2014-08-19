@@ -9,7 +9,7 @@ from crispy_forms.bootstrap import *
 from django.utils.text import capfirst
 from django.db.models import Q
 from django.utils.functional import cached_property
-
+from django.core.cache import cache
 
 class GetModelManager(models.Manager):
 	use_for_related_fields = True
