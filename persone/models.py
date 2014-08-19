@@ -146,6 +146,10 @@ class Mansione(models.Model):
 		return True
 	def figli(self):
 		return Mansione.objectsGet.filter(padre=self)
+    def save(self, *args, **kwargs):
+        for p in Persona.objects.all():
+            cache.delete('capacita_'+str(p.id))
+        super(Mansione, self).save(*args, **kwargs)
 
 def figli(mansione_id):
     mansioni = Mansione.objectsGet.all().values_list('id','padre')
@@ -219,16 +223,22 @@ class Persona(models.Model):
 			return False
 	@cached_property
 	def capacita(self):
-		c = set()
-		for m in self.competenze.filter(cancellata=False):
-			c.add(m)
-			for f in figli(m.id):
-				if (f.ereditabile):
-					c.add(f)
+        if cache.get('capacita_'+str(self.id)) != None:
+            return cache.get('capacita_'+str(self.id))
+        else:
+    		c = set()
+    		for m in self.competenze.filter(cancellata=False):
+    			c.add(m)
+    			for f in figli(m.id):
+    				if (f.ereditabile):
+    					c.add(f)
+            cache.set('capacita_'+str(self.id), c)
 		return c
-
 	def __unicode__(self):
 		return '%s %s' % (self.cognome,self.nome)
+    def save(self, *args, **kwargs):
+        cache.delete('capacita_'+str(self.id))
+        super(Persona, self).save(*args, **kwargs)
 
 class PersonaForm(forms.ModelForm):
 	class Meta:
@@ -276,6 +286,7 @@ class PersonaForm(forms.ModelForm):
 
 		super(PersonaForm, self).__init__(*args, **kwargs)
 		self.fields['competenze'].queryset=Mansione.objectsGet.all()
+		self.fields['competenze'].help_text = ''
 
 class PersonaFormLite(forms.ModelForm):
     class Meta:
@@ -316,6 +327,7 @@ class PersonaFormLite(forms.ModelForm):
                 )
         )
         super(PersonaFormLite, self).__init__(*args, **kwargs)
+		self.fields['competenze'].help_text = ''
 
 class Gruppo(models.Model):
     nome = models.CharField('Nome',max_length=30)

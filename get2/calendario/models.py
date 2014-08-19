@@ -419,3 +419,5 @@ class Impostazioni_notificaForm(forms.ModelForm):
 		)
 		super(Impostazioni_notificaForm, self).__init__(*args, **kwargs)
 		self.fields['tipo_turno'].queryset = TipoTurno.objectsGet.all()
+		self.fields['giorni'].help_text = ''
+		self.fields['tipo_turno'].help_text = ''
