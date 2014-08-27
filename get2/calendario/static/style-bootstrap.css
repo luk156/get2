@@ -268,7 +268,7 @@ div.turno {
 	padding:1px;
 	cursor:pointer;
 	position:relative;
-	margin-top:0px;
+	margin-top:-1px;
 	margin-bottom: 2px;
 	padding-left: 3px;
 	color: #ffffff;
