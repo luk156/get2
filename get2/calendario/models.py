@@ -154,7 +154,7 @@ class Turno(models.Model):
 	fine = models.DateTimeField()
 	tipo = models.ForeignKey(TipoTurno, related_name='tipo_turno_turno', blank=True, null=True, on_delete=models.SET_NULL)
 	occorrenza = models.ForeignKey(Occorrenza, blank=True, null=True)
-	valore = models.IntegerField('Punteggio',default=1)
+	valore = models.IntegerField('Punteggio')
 	calendario = models.ForeignKey(Calendario, related_name='calendario_turno' ,null=True, on_delete=models.SET_NULL, default=1)
 	coperto = models.BooleanField(default=False)
 	requisiti = models.ManyToManyField(Requisito, blank=True, null=True, related_name='requisiti_turno', through='Cache_requisito')
