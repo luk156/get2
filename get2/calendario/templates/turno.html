@@ -41,8 +41,8 @@
 
 	{% for r in t.cache_requisito_set.all %}
 
-			{%if request.user.is_staff %}
-				<div class="mansione-calendario">
+			
+				<div class="mansione-calendario" {%if not request.user.is_staff %}style="display:none;"{% endif %}>
 					<h6 class="h6-mansione-{{r.requisito.mansione.id}}">{{r.requisito.mansione}} 
 					{% if r.requisito.extra %}<i class="icon-asterisk"></i> {% endif %}
 					{% if request.user.is_staff and r.requisito.clickabile %}
@@ -65,7 +65,7 @@
 					{% endif %}
 					</span></a></h6> 
 				</div>
-			{% endif %}
+			
 				<div class="persone persone-requisito-{{r.requisito.mansione.id}}">
 					<ul>
 					
