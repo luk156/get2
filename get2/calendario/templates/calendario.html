@@ -18,10 +18,10 @@
             }
     </script>
 
-        <div class="btn-group pull-right">
-            <a class="btn {% if request.session.form_data %}active{% endif %}" href="#" onclick="filtro($(this))"><i class="icon-filter"> </i> Filtra</a>
-            <a class="btn " href="/stampa_calendario/{{cal_id}}"><i class="icon-print"> </i> Versione stampabile</a>
-            <a class="btn " href="/turno/{{cal_id}}/nuovo"><i class="icon-plus"> </i> Nuovo Turno</a>
+        <div class="btn-group pull-right cal-action">
+            <a class="btn {% if request.session.form_data %}active{% endif %} cal-filter" href="#" onclick="filtro($(this))"><i class="icon-filter"> </i> Filtra</a>
+            <a class="btn cal-print" href="/stampa_calendario/{{cal_id}}"><i class="icon-print"> </i> Versione stampabile</a>
+            <a class="btn cal-newturn" href="/turno/{{cal_id}}/nuovo"><i class="icon-plus"> </i> Nuovo Turno</a>
         </div>
         <h4 class="header">
             Calendario
