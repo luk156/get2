@@ -203,7 +203,8 @@ class Persona(models.Model):
 	stato = models.CharField('Stato',max_length=40, choices=STATI, default='disponibile' )
 	competenze = models.ManyToManyField(Mansione, related_name='competenze_persona', blank=True, null=True)
 	note = models.TextField( blank=True, null=True, )
-	notificaMail = models.BooleanField('Attiva', default=False )
+	notificaMail = models.BooleanField('Attiva Mail', default=False )
+	notificaSMS = models.BooleanField('Attiva SMS', default=False )
 	giorniNotificaMail = models.PositiveSmallIntegerField('Giorni di anticipo', choices=GIORNI, default=2, blank=True, null=True )
 	cancellata = models.BooleanField(default=False )
 	objects = models.Manager()
@@ -272,8 +273,9 @@ class PersonaForm(forms.ModelForm):
 			),
 			Div(
 				Fieldset(
-					'Notifiche via E-mail',
+					'Notifiche',
 					'notificaMail',
+					'notificaSMS',
 					AppendedText('giorniNotificaMail', '<i class="icon-envelope"></i>'),
 					),
 				css_class="span2"
