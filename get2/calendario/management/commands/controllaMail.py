@@ -5,6 +5,7 @@ import datetime
 from django.conf import settings
 import urllib
 import urllib2
+import re
 
 def UrlEncode(recipients):
 	resultString = ''
