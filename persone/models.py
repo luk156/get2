@@ -196,7 +196,7 @@ class Persona(models.Model):
 	cognome = models.CharField('Cognome',max_length=200)
 	indirizzo = models.TextField('Indirizzo', blank=True, null=True, )
 	nascita = models.DateField('Data di nascita', blank=True, null=True,)
-	tel1 = models.CharField('Telefono Principale',max_length=30)
+	tel1 = models.CharField('Telefono Principale',max_length=30,help_text="Numero utilizzato per le eventuali notifiche SMS, non inserire il prefisso +39")
 	tel2 = models.CharField('Telefono Secondario',max_length=30, blank=True, null=True, default="")
 	tel3 = models.CharField('Altro telefono',max_length=30, blank=True, null=True, default="")
 	#caratteristiche della persona
