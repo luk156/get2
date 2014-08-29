@@ -82,9 +82,9 @@ class Command(BaseCommand):
 				if(dis.persona.user.email != '' and dis.persona.notificaMail):
 					listaMessaggi += (('Get 2.0 - Avviso turno', messaggio, settings.GET_MAIL_NOTIFICA, [dis.persona.user.email]),)
 
-				if(cell_rule.search(disp.persona.tel1) and dis.persona.notificaSMS):
+				if(cell_rule.search(dis.persona.tel1) and dis.persona.notificaSMS):
 					recipients=[]
-					recipients.append('39'+disp.persona.tel1)
+					recipients.append('39'+dis.persona.tel1)
 					result = skebbyGatewaySendSMS(settings.GET_SKEBBY_USERNAME,settings.GET_SKEBBY_PASSWORD,recipients,messaggio,'classic','','GeT')
 					print result
 		send_mass_mail(listaMessaggi)
