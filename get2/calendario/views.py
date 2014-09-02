@@ -338,8 +338,8 @@ def cerca_persona(request, turno_id, mansione_id):
 	capacita = []
 	turno = Turno.objects.get(id=turno_id)
 	disp_turno = list(Disponibilita.objects.filter(turno=turno))
-	if settings.GET_IGNORA_CONTEMPORANEI == False:
-		impegnati=None
+	if settings.GET_IGNORA_CONTEMPORANEI == True:
+		impegnati = [] 
 	else:
 		impegnati = Persona.objectsGet.values_list('id').filter( persona_disponibilita__turno__in = turno.contemporanei , persona_disponibilita__tipo = 'Disponibile')
 
@@ -447,7 +447,7 @@ def nuova_disponibilita(request, turno_id, mansione_id, persona_id, disponibilit
 						#if esistente.tipo=='Disponibile':
 							#notifica_disponibilita(request,esistente.persona,esistente.turno,'Non piu disponibile',esistente.mansione)
 						e.delete()
-				if not settings.GET_IGNORA_CONTEMPORANEI == False:
+				if not settings.GET_IGNORA_CONTEMPORANEI == True:
 					#risolvo i conflitti con i turni contemporanei
 					for contemporaneo in disp.turno.contemporanei:
 						if contemporaneo != disp.turno:
