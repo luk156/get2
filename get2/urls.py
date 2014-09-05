@@ -1,7 +1,7 @@
 from django.conf.urls import *
 from django.views.generic import TemplateView
 from dajaxice.core import dajaxice_autodiscover, dajaxice_config
-
+from django.http import HttpResponse
 dajaxice_autodiscover()
 
 # Uncomment the next two lines to enable the admin:
@@ -11,6 +11,7 @@ dajaxice_autodiscover()
 urlpatterns = patterns('',
     url(dajaxice_config.dajaxice_url, include('dajaxice.urls')),
     # statistiche
+    url(r'^robots\.txt$', lambda r: HttpResponse("User-agent: *\nDisallow: /", mimetype="text/plain")),
     url(r'^statistiche/', include('statistiche.urls')),
     url(r'^persone/', include('persone.urls')),
     #url(r'^gestione/', include('gestione.urls')),
