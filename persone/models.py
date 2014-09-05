@@ -327,7 +327,7 @@ class PersonaFormLite(forms.ModelForm):
 				)
 		)
 		super(PersonaFormLite, self).__init__(*args, **kwargs)
-		self.fields['competenze'].help_text = ''
+
 
 class Gruppo(models.Model):
 	nome = models.CharField('Nome',max_length=30)
