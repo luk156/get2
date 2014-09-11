@@ -208,6 +208,11 @@ SITE_ID = 1
 
 GET_JS = "devel.js"
 
+<<<<<<< HEAD
 GET_FOOTER_SITE="www.gestionaleturni.it"
 GET_FOOTER_MAIL="matteo@luccalug.it"
 GET_FOOTER_DOC="documentazione.gestionaleturni.it"
+=======
+GET_SKEBBY_USERNAME=""
+GET_SKEBBY_PASSWORD=""
+>>>>>>> d1338e19ee64f286a901afc8f6e2bd3cbd1abd53

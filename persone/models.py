@@ -196,14 +196,15 @@ class Persona(models.Model):
 	cognome = models.CharField('Cognome',max_length=200)
 	indirizzo = models.TextField('Indirizzo', blank=True, null=True, )
 	nascita = models.DateField('Data di nascita', blank=True, null=True,)
-	tel1 = models.CharField('Telefono Principale',max_length=30)
+	tel1 = models.CharField('Telefono Principale',max_length=30,help_text="Numero utilizzato per le eventuali notifiche SMS, non inserire il prefisso +39")
 	tel2 = models.CharField('Telefono Secondario',max_length=30, blank=True, null=True, default="")
 	tel3 = models.CharField('Altro telefono',max_length=30, blank=True, null=True, default="")
 	#caratteristiche della persona
 	stato = models.CharField('Stato',max_length=40, choices=STATI, default='disponibile' )
 	competenze = models.ManyToManyField(Mansione, related_name='competenze_persona', blank=True, null=True)
 	note = models.TextField( blank=True, null=True, )
-	notificaMail = models.BooleanField('Attiva', default=False )
+	notificaMail = models.BooleanField('Attiva Mail', default=False )
+	notificaSMS = models.BooleanField('Attiva SMS', default=False )
 	giorniNotificaMail = models.PositiveSmallIntegerField('Giorni di anticipo', choices=GIORNI, default=2, blank=True, null=True )
 	cancellata = models.BooleanField(default=False )
 	objects = models.Manager()
@@ -272,8 +273,9 @@ class PersonaForm(forms.ModelForm):
 			),
 			Div(
 				Fieldset(
-					'Notifiche via E-mail',
+					'Notifiche',
 					'notificaMail',
+					'notificaSMS',
 					AppendedText('giorniNotificaMail', '<i class="icon-envelope"></i>'),
 					),
 				css_class="span2"
