@@ -211,5 +211,7 @@ GET_JS = "devel.js"
 GET_FOOTER_SITE="www.gestionaleturni.it"
 GET_FOOTER_MAIL="matteo@luccalug.it"
 GET_FOOTER_DOC="documentazione.gestionaleturni.it"
+
+GET_ACTIVATE_SMS=False
 GET_SKEBBY_USERNAME=""
 GET_SKEBBY_PASSWORD=""
