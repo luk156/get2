@@ -14,7 +14,7 @@ urlpatterns = patterns('',
     url(r'^robots\.txt$', lambda r: HttpResponse("User-agent: *\nDisallow: /", mimetype="text/plain")),
     url(r'^statistiche/', include('statistiche.urls')),
     url(r'^persone/', include('persone.urls')),
-    #url(r'^gestione/', include('gestione.urls')),
+
 )
 
 urlpatterns += patterns('get2.calendario',
@@ -66,7 +66,9 @@ urlpatterns += patterns('get2.calendario',
    	(r'^notifiche/$', 'views.elenco_notifica'),
    	(r'^notifiche/elimina/(?P<notifica_id>\w+)/$', 'views.elimina_notifica'),
 	# ajax
-	(r'^ajax_request/$', 'views.ajax_request')
+	(r'^ajax_request/$', 'views.ajax_request'),
+	# gestione installazione
+	(r'^stato_installazione/$', 'views.stato_installazione')
 )
 
 urlpatterns += patterns('django.contrib.auth.views',

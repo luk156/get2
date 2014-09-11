@@ -1,6 +1,7 @@
 from django.shortcuts import render
 import json
 from django.http import HttpResponse
+from get2.calendario.models import Calendario
 
 # Create your views here.
 def get_class( kls ):
@@ -16,3 +17,6 @@ def numero_istanze(request,classe):
 	response_data = {}
 	response_data['numero'] = get_class(classe).objects.all().count()
 	return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+def home(request):
+	return True

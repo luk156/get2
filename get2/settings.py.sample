@@ -100,7 +100,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     'django.contrib.messages.context_processors.messages',
     'get2.calendario.context_processors.calendari',
-    'get2.calendario.context_processors.titolo')
+    'get2.calendario.context_processors.notifiche_non_lette',
+    'get2.calendario.context_processors.get_settings',
+    )
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
@@ -205,3 +207,7 @@ GET_MAIL_NOTIFICA = "no@no.it"
 SITE_ID = 1
 
 GET_JS = "devel.js"
+
+GET_FOOTER_SITE="www.gestionaleturni.it"
+GET_FOOTER_MAIL="matteo@luccalug.it"
+GET_FOOTER_DOC="documentazione.gestionaleturni.it"

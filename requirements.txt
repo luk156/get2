@@ -1,23 +1,21 @@
-argparse (1.2.1)
-diff-match-patch (20110725.1)
-Django (1.5.4)
-django-crispy-forms (1.4.0)
-django-dajax (0.9.2)
-django-dajaxice (0.5.5)
-django-import-export (0.2.2)
-django-mptt (0.6.0)
-django-suit (0.2.8)
-ecdsa (0.11)
-Fabric (1.8.3)
-fabtools (0.17.0)
-MySQL-python (1.2.5)
-paramiko (1.12.3)
-pip (1.4.1)
-pycrypto (2.6.1)
-python-dateutil (2.2)
-setuptools (0.9.8)
-simplejson (3.5.2)
-six (1.5.2)
-South (0.8.4)
-tablib (0.9.11)
-wsgiref (0.1.2)
+Django==1.5.4
+Fabric==1.8.3
+MySQL-python==1.2.5
+South==0.8.4
+argparse==1.2.1
+diff-match-patch==20110725.1
+django-crispy-forms==1.4.0
+django-dajax==0.9.2
+django-dajaxice==0.5.5
+django-import-export==0.2.2
+django-mptt==0.6.0
+django-suit==0.2.8
+ecdsa==0.11
+fabtools==0.17.0
+paramiko==1.12.3
+pycrypto==2.6.1
+python-dateutil==2.2
+simplejson==3.5.2
+six==1.5.2
+tablib==0.9.11
+wsgiref==0.1.2

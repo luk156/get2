@@ -129,6 +129,13 @@ def ajax_request(request):
 		res = "{error: 'non autorizzato'}"
 	return HttpResponse("%s(%s)" % (callback,res) , content_type = "application/json")
 
+def stato_installazione(request):
+	stato = {}
+	stato['numero_calendari']=Calendario.objects.count()
+	stato['numero_persone']=Persona.objectsGet.count()
+	stato['numero_utenti']=User.objects.count()
+	return HttpResponse(json.dumps(stato) , content_type = "application/json")
+
 def home(request):
 	if Calendario.objects.all():
 		c=Calendario.objects.all()[0]
