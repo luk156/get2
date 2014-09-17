@@ -89,8 +89,10 @@ function nota_disponibilita(disp_id){
                                                                  
 								{% if request.user.is_superuser %}
 									<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/-"></option>
-                                                                {% else %}
-                                                                        <OPTION VALUE=""></option>
+                                {% else %}
+                                	{% if not disponibilita.mansione = mansione %}
+                                    	<OPTION VALUE=""></option>
+                                    {% endif %}
 								{% endif %}
 								{%for key,value in DISPONIBILITA %}
 									<OPTION VALUE="{{t.id}}/{{mansione.id}}/{{persona.id}}/{{key}}" {% if disponibilita.tipo = key %} selected {% endif %}>{{value}}</option>
