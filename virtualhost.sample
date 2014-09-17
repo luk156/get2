@@ -1,5 +1,5 @@
 <VirtualHost *:80>
-      ServerName _name_.gestionaleturni.it
+      ServerName _name_._domain_
       ServerAdmin matteo@luccalug.it
 
       # Log Files
@@ -13,5 +13,10 @@
       # Setup mod_wsgi
       WSGIScriptAlias / /home/django/_name_/get2/get2/get2.wsgi
 
+<Directory /home/django/_name_/get2>
+    Require all granted
+    Order allow,deny
+    Allow from all
+</Directory>
 
 </VirtualHost>

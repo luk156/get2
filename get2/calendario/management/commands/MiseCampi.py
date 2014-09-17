@@ -7,7 +7,6 @@ import MySQLdb
 from django.contrib.auth.models import User
 import re
 
-
 # you must create a Cursor object. It will let
 #  you execute all the query you need
 database = settings.DATABASES['default']
@@ -19,7 +18,7 @@ cur_my = db.cursor()
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        cur_my.execute("SELECT * FROM sincronizza WHERE stato='INCORSO' AND data <= DATEADD(n,-15, GETDATE()); ")
+        cur_my.execute("SELECT * FROM sincronizza WHERE stato='INCORSO' AND data >= date_sub(now(),interval 20 minute); ")
         lock = len(cur_my.fetchall()) > 0
         if lock:
             print 'sincronizzazione in corso'
@@ -36,7 +35,9 @@ class Command(BaseCommand):
                 try:
                     m=Mansione.objects.get(id=a[0])
                 except:
-                    m=Mansione(id=a[0])
+		    if a[0]!=0:
+                    	m=Mansione(id=a[0])
+		print a
                 m.nome=a[1]
                 m.descrizione=a[1]
                 m.save()

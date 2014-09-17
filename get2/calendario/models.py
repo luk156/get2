@@ -158,6 +158,8 @@ class Turno(models.Model):
 	calendario = models.ForeignKey(Calendario, related_name='calendario_turno' ,null=True, on_delete=models.SET_NULL, default=1)
 	coperto = models.BooleanField(default=False)
 	requisiti = models.ManyToManyField(Requisito, blank=True, null=True, related_name='requisiti_turno', through='Cache_requisito')
+	def passato(self):
+		return self.inizio>datetime.datetime.now()
 	def verifica_requisito(self,requisito,mansione_id=0,persona_capacita=0):
 		if requisito.necessario:
 			contatore=0

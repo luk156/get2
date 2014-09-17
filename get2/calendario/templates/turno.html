@@ -22,7 +22,10 @@
 				</a>
 				<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
 					<li><a href="/turno/modifica/{{t.id}}">Modifica</a></li>
+					{% if t.passato %}
+
 					<li><a href="#" onclick="Dajaxice.get2.calendario.elimina_turno(Dajax.process,{'turno_id':{{t.id}}});">Elimina</a></li>
+					{% endif %}
 				</ul>
 			</div>
 			<div class="dropdown gruppo-turno">
