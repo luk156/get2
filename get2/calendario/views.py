@@ -584,11 +584,31 @@ def modifica_password_utente(request,utente_id):
 		form = AdminPasswordChangeForm(user=user)
 	return render(request,'form_password_utente.html',{'request':request, 'form': form, 'user': user,})
 
+class getPasswordChangeForm(PasswordChangeForm):
+	def clean_new_password1(self):
+		password1 = self.cleaned_data.get("new_password1")
+		digit = False
+		upper = False
+		if getattr(settings, 'GET_SECURE_PASSWORD', False):
+			if len(password1) < 8:
+				raise forms.ValidationError('Inserisci una password di almeno 8 caratteri')
+			for char in password1:
+				if char.isdigit():
+					digit=True
+				if char.isupper():
+						upper=True
+			if not digit:
+				raise forms.ValidationError('Inserisci una password con almeno un numero')
+			if not upper:
+				raise forms.ValidationError('Inserisci una password almeno una maiuscola')
+		return password1
+
+
 def modifica_password_personale(request,utente_id):
 	user = User.objects.get(id=utente_id)
 	if request.user.is_staff or request.user==user:
 		if request.method == 'POST': # If the form has been submitted...
-			form = PasswordChangeForm(user=user, data=request.POST)
+			form = getPasswordChangeForm(user=user, data=request.POST)
 			if form.is_valid():
 				form.save()
 				return HttpResponseRedirect('/') # Redirect after POST

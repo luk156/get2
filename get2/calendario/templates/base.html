@@ -4,7 +4,7 @@
 <html lang="it">
 <head>
 	<meta charset="utf-8">
-	<title>{% block title %}GeT | {{titolo}}{% endblock %}</title>
+	<title>{% block title %}{{ app_name }} {{ titolo }}{% endblock %}</title>
 	<meta name="copyright" content="GNU Affero General Public License" />
 	<meta name="source-code" content="https://github.com/luk156/get2" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -81,7 +81,14 @@
 	<div class="navbar navbar-static-top">
 		
 		<div class="navbar-inner">
-			<a class="brand" href="/">GeT | <span style="color: #084B8A;">{{titolo}}</span></a>
+			<a class="brand" href="/">
+                {% if logo %}
+                    <img src="/static/{{ logo }}">
+                {% else %}
+                    {{ app_name }} |
+			    {% endif %}
+                <span style="color: {{ titolo_color }};">{{titolo}}</span>
+            </a>
 				{% if request.user.id%}
 					<div class="btn-group pull-right">
 						<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">

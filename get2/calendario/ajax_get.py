@@ -24,6 +24,9 @@ def ajax_request_manager(control,type,data,request):
 					t['fine'] = turno.fine.isoformat()
 					t['requisiti'] = []
 					t['coperto'] = turno.calcola_coperto_cache
+					t['note'] = turno.note
+					t['identificativo'] = turno.identificativo
+					t['tipo'] = str(turno.tipo)
 					for cache_r in turno.cache_requisito_set.all():
 						r=model_to_dict(cache_r.requisito)
 						r['mansione'] = model_to_dict(cache_r.requisito.mansione)

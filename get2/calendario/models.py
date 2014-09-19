@@ -10,6 +10,7 @@ from crispy_forms.bootstrap import *
 from django.utils.text import capfirst
 from persone.models import *
 from django.utils.functional import cached_property
+from django.conf import settings
 
 class GetModelManager(models.Manager):
     def get_query_set(self):
@@ -158,6 +159,7 @@ class Turno(models.Model):
 	calendario = models.ForeignKey(Calendario, related_name='calendario_turno' ,null=True, on_delete=models.SET_NULL, default=1)
 	coperto = models.BooleanField(default=False)
 	requisiti = models.ManyToManyField(Requisito, blank=True, null=True, related_name='requisiti_turno', through='Cache_requisito')
+	note = models.TextField( blank=True, null=True, default="")
 	def passato(self):
 		return self.inizio>datetime.datetime.now()
 	def verifica_requisito(self,requisito,mansione_id=0,persona_capacita=0):
@@ -272,6 +274,7 @@ class TurnoForm(forms.ModelForm):
 			Field('tipo'),
 			Field('valore'),
 			Field('calendario'),
+			Field('note'),
 			FormActions(
 				Submit('save', 'Modifica', css_class="btn-primary")
 			)
@@ -309,6 +312,7 @@ class TurnoFormRipeti(TurnoForm):
 			Field('tipo'),
 			Field('valore'),
 			Field('calendario'),
+			Field('note'),
 			Fieldset(
 				'<span id="ripeti-switch" onclick="ripeti_toggle()"><i class="icon-chevron-down"></i> Ripeti turno</span>'
 			),
@@ -392,13 +396,29 @@ class UserCreationForm2(UserCreationForm):
 	class Meta:
 		model = User
 		fields = ("username", "email", )
+	def clean_password1(self):
+		password1 = self.cleaned_data.get("password1")
+		digit = False
+		upper = False
+		if getattr(settings, 'GET_SECURE_PASSWORD', False):
+			if len(password1) < 8:
+				raise forms.ValidationError('Inserisci una password di almeno 8 caratteri')
+			for char in password1:
+				if char.isdigit():
+					digit=True
+				if char.isupper():
+						upper=True
+			if not digit:
+				raise forms.ValidationError('Inserisci una password con almeno un numero')
+			if not upper:
+				raise forms.ValidationError('Inserisci una password almeno una maiuscola')
+		return password1
 
 class UserChangeForm2(UserChangeForm):
 	class Meta:
 		model = User
 		fields = ("username", "email",)
-	def clean_password(self):
-		return "" # This is a temporary fix for a django 1.4 bug
+
 		
 class Impostazioni_notifica(models.Model):
 	utente = models.ForeignKey(User, related_name='impostazioni_notifica_utente', limit_choices_to = {'is_staff':True})
