@@ -1,0 +1,412 @@
+/**
+ * Created by matteo on 25/04/14.
+ */
+
+$.ajaxSetup({
+    crossDomain: false,
+    beforeSend: function(xhr, settings) {
+        var csrftoken = $.cookie('csrftoken');
+        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+    }
+});
+
+var globalWidget = Backbone.View.extend({
+    initialize: function(){
+        var self = this;
+        this.com('init',{},function(d){
+            self.user = d[0];
+        });
+    },
+    com: function(type,data,success_cb,fail_cb){
+        $.ajax({
+            type: 'post',
+            url:'/ajax_request/',
+            data :{
+                control: 'global',
+                type: type,
+                data: JSON.stringify(data)
+            }
+        }).done(success_cb).fail(fail_cb);
+    }
+});
+
+var globalParameters = new globalWidget();
+
+// controllo menu
+
+var MenuItem = Backbone.Model.extend({
+
+});
+
+var MenuItems = Backbone.Collection.extend({
+   model: MenuItem
+});
+
+var menuWidget = Backbone.View.extend({
+    template: Handlebars.compile,
+    initialize: function(){
+        var self = this;
+        _.bindAll(this, "render");
+        this.com('init',{},function(d){
+           var vm;
+           self.collection = new MenuItems();
+           for (vm in d){
+               if (window.location.href.indexOf(d[vm].fields.url) !== -1){
+                   d[vm].fields.selected = true;
+               }
+               self.collection.add(new MenuItem(d[vm].fields));
+           }
+           self.render();
+        });
+    },
+    render: function(){
+        if (this.collection) {
+            var self = this;
+            $.get('/static/partial/menu.htm', function(template) {
+                var html = self.template(template)(self.collection.toJSON());
+                self.$el.html(html);
+            }, 'html');
+        }
+    },
+    com: function(type,data,success_cb,fail_cb){
+        $.ajax({
+            type: 'post',
+            url:'/ajax_request/',
+            data :{
+                control: 'menu',
+                type: type,
+                data: JSON.stringify(data)
+            }
+        }).done(success_cb).fail(fail_cb);
+    }
+});
+
+// controllo utente
+
+var User = Backbone.Model.extend({
+
+});
+
+var userInfoWidget = Backbone.View.extend({
+    template: Handlebars.compile,
+    events: {
+        "click .login-button":  "_login",
+        "focus input": "_remove_error_class",
+        "click .user-logout": "_logout"
+    },
+    render: function(){
+        var self = this;
+        if(!this.model){
+          $.get('/static/partial/user_info_form.htm', function(template) {
+                var html = self.template(template)();
+                self.$el.html(html);
+            }, 'html');
+        } else {
+            $.get('/static/partial/user_info.htm', function(template) {
+                var html = self.template(template)(self.model.toJSON());
+                self.$el.html(html);
+            }, 'html');
+        }
+    },
+    initialize: function(){
+        if (globalParameters.user){
+            this.model = new User(globalParameters.user.fields);}
+        this.render();
+    },
+
+    _login: function(){
+        var self = this;
+        var login_form = {
+            user : $('input.user_input',self.$el).val(),
+            password : $('input.password_input',self.$el).val()
+        };
+        this.com('form_post',login_form,function(d){
+            if (d['responce']==='error'){
+                $('.form-group',self.$el).addClass('has-error');
+                $('.form-group',self.$el).popover({
+                    content: d['error'],
+                    placement: 'bottom',
+                    trigger: 'manual',
+                    html: true
+                });
+                $('.form-group',self.$el).popover('show');
+
+            } else {
+               var user = $.parseJSON(d['user'])[0];
+               globalParameters.initialize();
+               self.model = new User(user.fields);
+               self.render();
+            }
+        });
+    },
+    _logout: function(){
+        var self = this;
+        this.com('logout',{},function(){
+            globalParameters.initialize();
+            delete self.model;
+            self.render();
+            }
+        );
+    },
+    _remove_error_class: function(){
+        $('.form-group',this.$el).removeClass('has-error');
+        $('.form-group',this.$el).popover('destroy');
+    },
+    com: function(type,data,success_cb,fail_cb){
+        $.ajax({
+            type: 'post',
+            url:'/ajax_request/',
+            data :{
+                control: 'user-info',
+                type: type,
+                data: JSON.stringify(data)
+            }
+        }).done(success_cb).fail(fail_cb);
+    }
+
+});
+
+//  controllo grid
+
+var gridWidget = Backbone.View.extend({
+    template: Handlebars.compile,
+    events: {
+        "keyup .filter-column":  "_filter_rows",
+        "change .select-row": "_toggle_checkbox",
+        "click .col-sortable": "_reorder",
+        "click ul.pagination > li": "_change_page"
+    },
+    initialize: function (options) {
+        this.options = _.defaults(options || {}, this.options);
+        this.listenTo( this.collection, 'change reset add remove', this._init_collection);
+        this.selected_rows_id = [];
+        this.orderby = this.options.orderby;
+        this.pagination = this.options.pagination || 25;
+        this.page = 1;
+        this.filter={};
+    },
+    _init_collection:function(){
+        this._sort_collection();
+        this.rows = this.collection.models;
+        this.render();
+    },
+    _toggle_checkbox: function(event){
+        tr_id=$(event.target).parent().parent().attr("model-id");
+        var pos = $.inArray(tr_id,this.selected_rows_id);
+        if (pos !== -1){
+            this.selected_rows_id.splice(pos,1);
+        } else {
+            this.selected_rows_id.push(tr_id);
+        }
+
+    },
+    _filter_rows:function(){
+        var self = this;
+        $('input.filter-column', this.el).each(function(){
+            self.filter[$(this).attr('colname')] = $(this).val();
+        });
+        this.rows =_.filter(this.collection.models, function (model){
+            var f;
+            for (f in self.filter){
+                if (self.filter[f]!=='' && model.attributes[f].toLowerCase().indexOf(self.filter[f].toLowerCase()) === -1){
+                    return false;
+                }
+            }
+            return true;
+        });
+        this.render_tbody();
+        this.render_pagination();
+
+    },
+    _change_page: function(event){
+        var page=$(event.currentTarget).attr("data-page");
+        switch (page){
+            case 'next':
+                this.page++;
+                break;
+            case 'prev':
+                this.page--;
+                break;
+            default :
+                this.page = parseInt(page);
+        }
+        this.render();
+    },
+    _sort_collection: function(){
+        var rows = this.collection.models;
+        var o;
+        for (o in this.orderby.reverse()){
+            rows= _.sortBy(rows,function(model){
+                return model.attributes[this.orderby[o]['column']].toString().toUpperCase();
+            },this);
+            if (this.orderby[o]['order']==='desc'){
+                rows.reverse();}
+        }
+
+        this.collection.models = rows;
+    },
+    render: function(){
+        var ht = '';
+
+        ht += '<table class="table table-striped"><thead>';
+        ht += '</thead><tbody>';
+        ht += '</tbody></table><div class="pagination pull-right"></div>';
+        this.$el.html(ht);
+        this.$el.addClass('table-responsive');
+
+        if (this.rows.length > this.pagination){
+            this.render_pagination();
+        }
+        this.render_header();
+        this.render_tbody();
+        return this;
+    },
+    render_pagination: function(){
+        var ht ='<ul class="pagination ">';
+        ht += '<li data-page="prev" ><a >&laquo;</a></li>';
+        var pages = parseInt(this.rows.length / this.pagination)+1;
+        for (var i = 1; i <= pages; i++) {
+
+            ht += '<li class="'+(this.page===i ? 'active':'') +'" data-page="'+i+'"><a >'+i+'</a></li>';
+        }
+        ht += '<li data-page="next"><a >&raquo;</a></li>';
+        ht += '</ul>'
+        $('.pagination',this.el).html(ht);
+        if (this.page > pages){
+          this.page=pages;
+          this.render();
+        };
+    },
+    render_tbody: function(){
+        var i;
+        var ht='';
+        var rows = this.rows.slice((this.page-1)*this.pagination,this.page*this.pagination);
+        for (i in rows){
+            ht += this.render_row(rows[i]);
+        }
+        $('tbody',this.el).html(ht);
+    },
+    render_header: function(){
+        var cols = this.options.columns;
+        var ht = '<tr>';
+        var c;
+        if (this.options.selectable){
+            ht += '<th></th>';
+        }
+        for (c in cols){
+            var sort='';
+            var sort_type = this.orderby.filter(function(s){ return s.column === cols[c].name });
+            if (sort_type.length>0){
+                sort = '<i class="fa fa-sort"></i>';
+                if (sort_type[0].order === 'desc' ){
+                    sort = '<i class="fa fa-sort-desc"></i>';}
+                else if (sort_type[0].order === 'asc' ){
+                    sort = '<i class="fa fa-sort-asc"></i>';}
+            } else {
+                sort_type = [{order:'none'}];
+            }
+            ht+='<th order="'+sort_type[0].order+'" colname="'+cols[c].name+'" class="'+ (cols[c].sortable ? 'col-sortable': '') +'">'+sort+' '+cols[c].label+'</th>';
+        }
+        ht+='</tr>';
+        if (_.findWhere(cols,{filter:true}) || this.options.selectable){
+            ht += '<tr class="active">';
+            if (this.options.selectable){
+                ht += '<td><input type="checkbox" class="select-all-row"></td>';
+            }
+            for (c in cols){
+                ht+='<td><input type="text" class="form-control filter-column" '+(cols[c].filter ? '' : 'disabled')+' colname="'+cols[c].name+'" value="'+(this.filter[cols[c].name] ? this.filter[cols[c].name]:'')+'"></td>';
+            }
+            ht+='</tr>';
+        }
+        $('thead',this.el).html(ht);
+    },
+
+    render_row: function(model){
+        var cols = this.options.columns;
+        var c;
+        var ht = '<tr model-id="'+model.attributes.id+'">';
+        if (this.options.selectable){
+            ht += '<td><input type="checkbox" class="select-row" '+ (_.contains(this.selected_rows_id,model.attributes.id.toString()) ? 'checked' : '') + '></td>';
+        }
+        for (c in cols){
+            ht+='<td>'+this.render_cell(model,cols[c])+'</td>';
+        }
+        ht += '</tr>';
+        return ht;
+    },
+    render_cell: function(model,column){
+        var ht;
+        switch (column.type){
+            case 'custom':
+                ht = column.fn_render(model);
+                break;
+            case 'select':
+                ht = '<select class="form-control">';
+                for (var o in column.option){
+                    ht += '<option '+(o===model.attributes[column.name] ? 'selected': '')+' >'+column.option[o]+'</option>';
+                }
+                ht += '</select>';
+                break;
+            default:
+                ht = model.attributes[column.name];
+                break;
+        }
+        return ht;
+    },
+    _reorder: function(event){
+        colname=$(event.currentTarget).attr("colname");
+        prev_order_type=$(event.currentTarget).attr("order");
+        var order_type='asc';
+        switch (prev_order_type){
+            case 'asc':
+                order_type='desc';
+                break;
+            case 'desc':
+                order_type='asc';
+                break;
+        }
+        var o;
+        for (o in this.orderby){
+            if (this.orderby[o].column===colname){
+                this.orderby.splice(o,1);
+            }
+        }
+        this.orderby.unshift({column: colname, order: order_type});
+        this._sort_collection();
+        this._filter_rows();
+    },
+    get_selected_rows: function(){
+        return this.selected_rows_id;
+    },
+    set_selected_rows: function(rows){
+        var r;
+        for (r in rows){
+            if ($.inArray(rows[r].toString(),this.selected_rows_id) === -1){
+                this.selected_rows_id.push(rows[r]+'');
+                $('input.select-row','tr[model-id="'+rows[r]+'"]').attr('checked',true);
+            }
+        }
+
+    }
+});
+
+
+// controllo albero
+
+
+
+var treeWidget = Backbone.View.extend({
+    initialize: function (options) {
+        this.options = _.defaults(options || {}, this.options);
+        this.listenTo( this.model, 'change', this.render);
+    },
+    render: function(){
+
+    }
+});
+
+// controllo form
+
+var formWidget = Backbone.View.extend({
+
+})

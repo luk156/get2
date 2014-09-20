@@ -1,0 +1,137 @@
+body {
+    background-color: #ddd;
+    font: 13px/1.7em "Open Sans", "trebuchet ms", arial, sans-serif;
+    margin: 0px;
+    padding:0px;
+}
+
+#loading {
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    opacity: 0.4;
+    filter: alpha(opacity=40); /* For IE8 and earlier */
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 9999;
+}
+
+#loading-inner{
+   height: 160px;
+   left: 50%;
+   margin-top: -80px;
+   margin-left: -80px;
+   position: absolute;
+   top: 50%;
+   width: 160px;
+}
+
+#calendario{
+    width: 100%;
+}
+
+.giorno {
+    padding-left: 3px !important;
+    padding-right: 3px !important;
+    float:left;
+}
+
+div.giorno-titolo {
+    background: rgb(71, 71, 71);
+    margin-bottom: 7px;
+    border-radius: 6px 6px 6px 6px;
+    text-align: center;
+    color: rgb(238, 238, 238);
+    box-shadow: 2px 2px 3px #666;
+}
+
+div.turno {
+	border:1px solid #aaa;
+	margin-bottom: 8px;
+	padding-top: 0px;
+	background-color: rgb(242, 240, 237);
+	border-radius: 4px 4px 4px 4px;
+	box-shadow: 0px 1px 0px 0px rgba(255, 255, 255, 0.5) inset;
+}
+
+.titolo-turno {
+	border-radius: 4px 4px 0px 0px;
+	box-shadow: 0px 0px 2px rgba(255, 255, 255, 0.5) inset;
+	padding:1px;
+	cursor:pointer;
+	position:relative;
+	margin-top:0px;
+	margin-bottom: 2px;
+	padding-left: 3px;
+	color: #ffffff;
+	margin-left: -1px;
+	margin-right: -1px;
+}
+
+.titolo-turno h6{
+	text-align:center;
+}
+
+
+.titolo-turno-ok{
+	border: 1px solid rgb(185, 74, 72);
+	background: none repeat scroll 0% 0% #e55858;
+}
+
+.titolo-turno-err{
+	border: 1px solid rgb(70, 136, 71);
+	background: none repeat scroll 0% 0% #4b9d38;
+}
+
+div.mansione-calendario {
+    padding: 0px 6px;
+    box-shadow: 0px -3px 3px 0px #dedede;
+    border-top: 1px solid #bbb;
+}
+
+div.mansione-calendario h6 {
+    padding-top: 1px;
+    padding-left: 0px;
+    padding-right: 0px;
+    margin-bottom: 4px;
+    margin-top: 7px;
+    font-size: 11px;
+    color: #444;
+}
+
+.persone ul {
+    padding: 0px;
+    margin: 3px 0 3px 15px;
+}
+
+.persona-turno {
+    color: #333;
+    margin-left: -5px;
+    font-size: 14px;
+    list-style-type: none;
+    line-height: 15px;
+}
+
+.footer-turno {
+    border-radius: 0px 0px 4px 4px;
+    box-shadow: 0px 0px 2px rgba(255,255,255,.5) inset;
+    margin-bottom: 4px;
+    padding: 1px;
+    position: relative;
+    margin-bottom: -3px;
+    padding-right: 6px;
+    color: #777;
+    margin-left: -1px;
+    margin-right: -1px;
+    background-color: #ddd;
+    border: 1px solid #999;
+    font-size: 10px;
+    line-height: 10px;
+    text-align: right;
+}
+
+.turno-identificativo{
+	margin:0px;
+	text-transform: uppercase;
+}
