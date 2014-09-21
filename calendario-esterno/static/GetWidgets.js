@@ -155,7 +155,7 @@ var calendarWidget = Backbone.View.extend({
         $.ajax({
             type: 'post',
             dataType: 'jsonp',
-            url:'http://demo.turnionline.it/ajax_request/',
+            url:'http://misecampi.gis3w.it//ajax_request/',
             data :{
                 control: 'calendar',
                 type: type,
