@@ -71,11 +71,34 @@ urlpatterns += patterns('get2.calendario',
 	(r'^stato_installazione/$', 'views.stato_installazione')
 )
 
+from django.conf import settings
+from django.contrib.auth.forms import SetPasswordForm
+from django import forms
+
+class getSetPasswordForm(SetPasswordForm):
+	def clean_new_password1(self):
+		password1 = self.cleaned_data.get("new_password1")
+		digit = False
+		upper = False
+		if getattr(settings, 'GET_SECURE_PASSWORD', False):
+			if len(password1) < 8:
+				raise forms.ValidationError('Inserisci una password di almeno 8 caratteri')
+			for char in password1:
+				if char.isdigit():
+					digit=True
+				if char.isupper():
+						upper=True
+			if not digit:
+				raise forms.ValidationError('Inserisci una password con almeno un numero')
+			if not upper:
+				raise forms.ValidationError('Inserisci una password almeno una maiuscola')
+		return password1
+
 urlpatterns += patterns('django.contrib.auth.views',
     #utente
     #(r'^utente/nuovo/$', 'turni.views.nuovoutente'),
     (r'^utenti/reset/$', 'password_reset'),
-    (r'^utenti/reset/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', 'password_reset_confirm'),
+    (r'^utenti/reset/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', 'password_reset_confirm', {'set_password_form': getSetPasswordForm}),
     (r'^utenti/reset/completa/$', 'password_reset_complete'),
     (r'^utenti/reset/ok/$', 'password_reset_done'),
     )

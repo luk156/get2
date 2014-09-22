@@ -13,8 +13,8 @@ from django.utils.functional import cached_property
 from django.conf import settings
 
 class GetModelManager(models.Manager):
-    def get_query_set(self):
-        return super(GetModelManager, self).get_query_set().filter(cancellata=False)
+	def get_query_set(self):
+		return super(GetModelManager, self).get_query_set().filter(cancellata=False)
 
 
 STATI=(('disponibile','Disponibile'),('ferie','In ferie'),('malattia','In malattia'),('indisponibile','Indisponibile'))
@@ -28,7 +28,7 @@ class Calendario(models.Model):
 		ordering = ['priorita']
 	def __unicode__(self):
 		return '%s' % (self.nome)
-		
+
 class CalendarioForm(forms.ModelForm):
 	class Meta:
 		model = Calendario
@@ -373,12 +373,12 @@ class Disponibilita(models.Model):
 		self.turno.save()
 
 class Cache_requisito(models.Model):
-    turno = models.ForeignKey(Turno)
-    requisito = models.ForeignKey(Requisito)
-    verificato = models.BooleanField(default=False)
-    disponibilita = models.ManyToManyField(Disponibilita, blank=True, null=True, related_name='disponibilita_requisito')
-    class Meta:
-    	ordering = ['requisito']
+	turno = models.ForeignKey(Turno)
+	requisito = models.ForeignKey(Requisito)
+	verificato = models.BooleanField(default=False)
+	disponibilita = models.ManyToManyField(Disponibilita, blank=True, null=True, related_name='disponibilita_requisito')
+	class Meta:
+		ordering = ['requisito']
 
 class Notifica(models.Model):
 	destinatario = models.ForeignKey(User, related_name='destinatario_user')
