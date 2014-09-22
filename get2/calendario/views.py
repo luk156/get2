@@ -576,13 +576,32 @@ def elimina_utente(request,utente_id):
 def modifica_password_utente(request,utente_id):
 	user = User.objects.get(id=utente_id)
 	if request.method == 'POST': # If the form has been submitted...
-		form = AdminPasswordChangeForm(user=user, data=request.POST)
+		form = getAdminPasswordChangeForm(user=user, data=request.POST)
 		if form.is_valid():
 			form.save()
 			return HttpResponseRedirect('/utenti/') # Redirect after POST
 	else:
-		form = AdminPasswordChangeForm(user=user)
+		form = getAdminPasswordChangeForm(user=user)
 	return render(request,'form_password_utente.html',{'request':request, 'form': form, 'user': user,})
+
+class getAdminPasswordChangeForm(AdminPasswordChangeForm):
+	def clean_password1(self):
+		password1 = self.cleaned_data.get("password1")
+		digit = False
+		upper = False
+		if getattr(settings, 'GET_SECURE_PASSWORD', False):
+			if len(password1) < 8:
+				raise forms.ValidationError('Inserisci una password di almeno 8 caratteri')
+			for char in password1:
+				if char.isdigit():
+					digit=True
+				if char.isupper():
+						upper=True
+			if not digit:
+				raise forms.ValidationError('Inserisci una password con almeno un numero')
+			if not upper:
+				raise forms.ValidationError('Inserisci una password almeno una maiuscola')
+		return password1
 
 class getPasswordChangeForm(PasswordChangeForm):
 	def clean_new_password1(self):
@@ -613,7 +632,7 @@ def modifica_password_personale(request,utente_id):
 				form.save()
 				return HttpResponseRedirect('/') # Redirect after POST
 		else:
-			form = PasswordChangeForm(user=user)
+			form = getPasswordChangeForm(user=user)
 		return render(request,'form_password_personale.html',{'request':request, 'form': form, 'user': user,})
 	else:
 		raise PermissionDenied
