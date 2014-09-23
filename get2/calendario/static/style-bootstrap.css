@@ -15,7 +15,10 @@
   text-align: center;
 }
 
-
+.turno-note {
+    line-height: normal !important;
+    padding: 4px !important;
+}
 
 #loading-image {
   position: absolute;

@@ -117,10 +117,13 @@
 	{% endfor %}
 		</ul>
 	</div>
+{% if t.note and t.note != "" %}
+    <div class="mansione-calendario" ><h6> NOTE </h6></div>
+    <div class="turno-note">{{ t.note }}</div>
 	<div class="footer-turno">
 		{{t.tipo}}
 	</div>
-
+{% endif %}
 </div>
 
 {% if request.user.is_staff %}
