@@ -45,3 +45,64 @@ oppure con `pip` con il comando:
 ![Calendario](http://matteo.luccalug.it/wp-content/uploads/2013/03/calendario.png "Calendario")
 
 ![Cerca](http://matteo.luccalug.it/wp-content/uploads/2013/03/cerca.png "Ricerca persone")
+
+##Impostazioni
+
+Titolo e colore dell'installazione
+
+    GET_TITOLO="demo"
+    GET_TITOLO_COLOR="#084B8A"
+
+ Giorni disponibili per creare o eliminare una disponibilita da parte di una persona
+
+    GET_DISP_MIN=1
+    GET_DISP_MAX=60
+    
+    GET_CANC_MIN=2
+    GET_CANC_MAX=0
+
+Id dell' utente amministratore a cui inviare le notifiche che non avrebbero altro destinatario
+
+    GET_ID_ADMIN_NOTIFICHE=1
+Se True vengono inviate all'amministratore anche le notifiche riguardo le disponibilità create dallo staff
+
+    GET_NOTIFICA_ALL=False
+
+Codice e dominio per monitorare l'applicazione con Analytics
+
+    GET_ANALYTICS="UA-1111111-1"
+    GET_DOMINIO="gestionaleturni.it"
+
+Indirizzo mail con cui vengono inviate le notifiche SMS
+
+    GET_MAIL_NOTIFICA = "no@no.it"
+
+Parametro necessario per creare l'url di recupero password
+
+    SITE_ID = 1
+
+Nome del file Javascript che può essere incorporato in un'installazione per sovrascrivere comportamenti standard di GeT
+
+    GET_JS = ""
+
+Informazione relative all'applicazione
+
+    GET_APP_NAME="GeT"
+    GET_LOGO=""
+    GET_FOOTER_SITE="www.gestionaleturni.it"
+    GET_FOOTER_MAIL="matteo@luccalug.it"
+    GET_FOOTER_DOC="documentazione.gestionaleturni.it"
+
+Impostazione per la notifica SMS
+
+    GET_ACTIVATE_SMS=False
+    GET_SKEBBY_USERNAME=""
+    GET_SKEBBY_PASSWORD=""
+
+Impostazione per ignorare il controllo che evita che una medesima persona sia segnata a due turni contemporanei
+
+    GET_IGNORA_CONTEMPORANEI=False
+
+Impostazione per abilitare la validazione della password degli utenti (8caratteri,un numero,una maiscola)
+
+    GET_SECURE_PASSWORD=True
