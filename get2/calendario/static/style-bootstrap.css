@@ -18,6 +18,7 @@
 .turno-note {
     line-height: normal !important;
     padding: 4px !important;
+    font-style: italic;
 }
 
 #loading-image {

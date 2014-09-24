@@ -123,7 +123,7 @@ def ajax_request(request):
 	else:
 		callback = None
 		data = request.POST
-	if data.get('apikey') == settings.GET_API:
+	if data.get('apikey') == getattr(settings, 'GET_API', ""):
 		res = ajax_request_manager(data.get('control'),data.get('type'),json.loads(data.get('data')), request)
 	else:
 		res = "{error: 'non autorizzato'}"
@@ -345,7 +345,7 @@ def cerca_persona(request, turno_id, mansione_id):
 	capacita = []
 	turno = Turno.objects.get(id=turno_id)
 	disp_turno = list(Disponibilita.objects.filter(turno=turno))
-	if settings.GET_IGNORA_CONTEMPORANEI == True:
+	if getattr(settings, 'GET_IGNORA_CONTEMPORANEI', False) == True:
 		impegnati = [] 
 	else:
 		impegnati = Persona.objectsGet.values_list('id').filter( persona_disponibilita__turno__in = turno.contemporanei , persona_disponibilita__tipo = 'Disponibile')
@@ -385,18 +385,18 @@ def verifica_intervallo(turno,persona):
 	if diff.days<0:
 		verifica=False
 		errore='Turno passato'
-	elif persona.persona_disponibilita.filter(turno=turno, tipo="Disponibile") and diff.days<settings.GET_CANC_MIN:
+	elif persona.persona_disponibilita.filter(turno=turno, tipo="Disponibile") and diff.days<getattr(settings, 'GET_CANC_MIN', 2):
 		verifica=False
-		errore='Troppo vicino (intervallo minore di '+str(settings.GET_CANC_MIN)+' giorni)'
-	elif persona.persona_disponibilita.filter(turno=turno, tipo="Disponibile") and diff.days<settings.GET_CANC_MAX:
+		errore='Troppo vicino (intervallo minore di '+str(getattr(settings, 'GET_CANC_MIN', 2))+' giorni)'
+	elif persona.persona_disponibilita.filter(turno=turno, tipo="Disponibile") and diff.days<getattr(settings, 'GET_CANC_MAX', 0):
 		verifica=False
-		errore='Troppo lontano (intervallo maggiore di '+str(settings.GET_CANC_MAX)+' giorni)'
-	elif diff.days<settings.GET_DISP_MIN:
+		errore='Troppo lontano (intervallo maggiore di '+str(getattr(settings, 'GET_CANC_MAX', 0))+' giorni)'
+	elif diff.days<getattr(settings, 'GET_DISP_MIN', 1):
 		verifica=False
-		errore='Troppo vicino (intervallo minore di '+str(settings.GET_DISP_MIN)+' giorni)'
-	elif diff.days>settings.GET_DISP_MAX:
+		errore='Troppo vicino (intervallo minore di '+str(getattr(settings, 'GET_DISP_MIN', 1))+' giorni)'
+	elif diff.days>getattr(settings, 'GET_DISP_MAX', 60):
 		verifica=False
-		errore='Troppo lontano (intervallo maggiore di '+str(settings.GET_DISP_MAX)+' giorni)'
+		errore='Troppo lontano (intervallo maggiore di '+str(getattr(settings, 'GET_DISP_MAX', 60))+' giorni)'
 	else:
 		verifica=True
 		errore=''
@@ -454,7 +454,7 @@ def nuova_disponibilita(request, turno_id, mansione_id, persona_id, disponibilit
 						#if esistente.tipo=='Disponibile':
 							#notifica_disponibilita(request,esistente.persona,esistente.turno,'Non piu disponibile',esistente.mansione)
 						e.delete()
-				if not settings.GET_IGNORA_CONTEMPORANEI == True:
+				if not getattr(settings, 'GET_IGNORA_CONTEMPORANEI', False) == True:
 					#risolvo i conflitti con i turni contemporanei
 					for contemporaneo in disp.turno.contemporanei:
 						if contemporaneo != disp.turno:
@@ -501,13 +501,13 @@ def notifica_disponibilita(request,persona,turno,tipo_disponibilita,mansione):
 				notifica.destinatario_id=i.utente.id
 				notifica.save()
 		else:
-			notifica.destinatario_id=settings.GET_ID_ADMIN_NOTIFICHE # se non c'e regola va al admin
+			notifica.destinatario_id=getattr(settings, 'GET_ID_ADMIN_NOTIFICHE', 1) # se non c'e regola va al admin
 			notifica.pk = None
 			notifica.save()
-	elif (settings.GET_NOTIFICA_ALL and not request.user.id == settings.GET_ID_ADMIN_NOTIFICHE):
+	elif (getattr(settings, 'GET_NOTIFICA_ALL', False) and not request.user.id == getattr(settings, 'GET_ID_ADMIN_NOTIFICHE', 1):
 		messaggio='<b>%s</b> ha reso <b> %s %s</b> con mansione di <b>%s</b> per il turno del<b> %s </b> delle ore<b> %s - %s </b>' % (str(request.user), str(tipo_disponibilita),str(persona),str(mansione), turno.inizio.strftime("%d-%m-%Y"), turno.inizio.strftime("%H:%M"), turno.fine.strftime("%H:%M"))
 		notifica.testo=messaggio
-		notifica.destinatario_id=settings.GET_ID_ADMIN_NOTIFICHE
+		notifica.destinatario_id=getattr(settings, 'GET_ID_ADMIN_NOTIFICHE', 1)
 		notifica.pk = None
 		notifica.save()
 	return True

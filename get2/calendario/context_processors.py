@@ -15,10 +15,9 @@ def notifiche_non_lette(request):
 def get_settings(request):
 	return {
 		'titolo': getattr(settings, 'GET_TITOLO', ''),
-		##084B8A
 		'titolo_color':  getattr(settings, 'GET_TITOLO_COLOR', '#084B8A'),
-		'analytics': settings.GET_ANALYTICS,
-		'dominio': settings.GET_DOMINIO,
+		'analytics': getattr(settings, 'GET_ANALYTICS', ''),
+		'dominio': getattr(settings, 'GET_DOMINIO', ''),
 		'js_personalizzato': getattr(settings, 'GET_JS', ''),
 		'footer_site': getattr(settings, 'GET_FOOTER_SITE', 'www.gestionaleturni.it'),
 		'footer_mail': getattr(settings, 'GET_FOOTER_MAIL', 'matteo@luccalug.it'),
