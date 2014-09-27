@@ -21,7 +21,7 @@ $(document).ready(function() {
 
     if (window.location.pathname.split("/")[0]!="calendario" && $.cookie("touch")==='yes'){
         var id='1';
-        if(document.URL.split('/')[4])=='1'
+        if(document.URL.split('/')[4]=='1')
             id='2';
         else
             id='1';
