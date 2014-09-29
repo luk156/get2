@@ -450,7 +450,7 @@ from django.contrib.auth.signals import user_logged_in
 def log_login(sender, user, request, **kwargs):
 	if (getattr(settings, 'GET_LOG_DEMO', False)):
 		l=Log()
-		l.testo="login: "+ user.username
+		l.testo="login: "+ user.username + " ( " + user.id + " )"
 		l.data=datetime.datetime.now()
 		l.save()
 
