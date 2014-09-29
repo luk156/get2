@@ -202,6 +202,7 @@ class Persona(models.Model):
 	#caratteristiche della persona
 	stato = models.CharField('Stato',max_length=40, choices=STATI, default='disponibile' )
 	competenze = models.ManyToManyField(Mansione, related_name='competenze_persona', blank=True, null=True)
+	dipendente = models.BooleanField('Dipendente', default=False)
 	note = models.TextField( blank=True, null=True, )
 	notificaMail = models.BooleanField('Attiva Mail', default=False )
 	notificaSMS = models.BooleanField('Attiva SMS', default=False )

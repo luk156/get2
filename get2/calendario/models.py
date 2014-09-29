@@ -362,6 +362,7 @@ class Disponibilita(models.Model):
 	turno = models.ForeignKey(Turno, related_name='turno_disponibilita')
 	mansione = models.ForeignKey(Mansione, related_name='mansione_disponibilita', null=True, blank=True, on_delete=models.PROTECT)
 	note =  models.TextField( blank=True, null=True, default="")
+	punteggio = models.IntegerField('Sovrascrivi punteggio',default=-1)
 	class Meta:
 		ordering = ['mansione']
 		unique_together = ('persona', 'turno')
@@ -448,7 +449,7 @@ from django.contrib.auth.signals import user_logged_in
 
 
 def log_login(sender, user, request, **kwargs):
-	if (getattr(settings, 'GET_LOG_DEMO', False):
+	if (getattr(settings, 'GET_LOG_DEMO', False)):
 		l=Log()
 		l.testo="login: "+ user.username
 		l.data=datetime.datetime.now()
