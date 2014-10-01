@@ -166,8 +166,10 @@ def disp(request, turno_id, mansione_id, persona_id, disp):
 		if not d[0]:
 			dajax.script('$(".bottom-right").notify({ message: { text: "Errore'+str(d[1])+'" }}).show();')
 		d=Disponibilita.objects.get(persona=p,turno=t)
-		temp = Template('<div class="input-prepend input-append small"><span class="add-on"><i class="icon-comment"></i></span><input id="note-disp-{{d.id}}" type="text" value="{{d.note}}"><button class="btn" type="button" onclick="nota_disponibilita({{d.id}});">salva</button></div></br>{{d.creata_da}}:{{d.ultima_modifica|date:"d M"}} {{d.ultima_modifica|time:"H:i"}}')
-		c = Context({"d": d,})
+		temp = Template('<div class="input-prepend input-append small span4"><span class="add-on"><i class="icon-comment"></i></span><input id="note-disp-{{d.id}}" type="text" value="{{d.note}}"><button class="btn" type="button" onclick="nota_disponibilita({{d.id}});">salva</button></div>'
+            +'{% if get_sovrascrivi_punteggio %}<div class="input-prepend input-append small span3"><span class="add-on"><i class="icon-trophy"></i></span><input id="punteggio-disp-{{d.id}}" type="number" {% if d.punteggio and d.punteggio != -1 %} value="{{d.punteggio}}" {% else %} placeholder="{{t.valore}}" {%endif %}> <button class="btn" type="button" onclick="punteggio_disponibilita({{d.id}});">salva</button> </div>{% endif %}'
+            +'</br>{{d.creata_da}}:{{d.ultima_modifica|date:"d M"}} {{d.ultima_modifica|time:"H:i"}}')
+		c = Context({"d": d, "t":t, "get_sovrascrivi_punteggio": getattr(settings, 'GET_SOVRASCRIVI_PUNTEGGIO', False)})
 		dajax.assign('#disponibilita-'+str(p.id), 'innerHTML', temp.render(c))	
 	elif request.user.is_staff:
 		d=Disponibilita.objects.get(persona=p,turno=t)
@@ -194,6 +196,18 @@ def disp_nota(request,disp_id,nota):
 	dajax.script('$(".bottom-right").notify({ message: { text: "Nota modificata" }}).show();')
 	return dajax.json()
 
+@dajaxice_register
+def disp_punteggio(request,disp_id,punteggio):
+	dajax = Dajax()
+	d=Disponibilita.objects.get(id=disp_id)
+	if punteggio.isdigit():
+		d.punteggio=int(punteggio)
+	else:
+		d.punteggio=-1
+	d.save()
+	dajax.script('$(".bottom-right").notify({ message: { text: "Punteggio modificato" }}).show();')
+	return dajax.json()
+
 
 @dajaxice_register
 def occorrenze(request,occ_id,turno_id):
@@ -207,49 +221,49 @@ def occorrenze(request,occ_id,turno_id):
 
 @dajaxice_register
 def mansioni_disponibili(request,turno_id):
-    dajax=Dajax()
-    html=''
-    t=Turno.objects.get(id=turno_id)
-    mansioni = []
-    for requisito in t.tipo.req_tipo_turno.all():
-        if requisito.mansione in request.user.get_profile().capacita and requisito.clickabile():
-            if not requisito.mansione in t.mansioni_indisponibili(request.user.get_profile().id):
-                mansioni.append(requisito.mansione)
-    html_disp = render_to_string( 'disponibilita_turno.html', { 't': t, 'mansioni': mansioni, 'request':request } )
-    dajax.assign("#disponibilita-turno-"+str(t.id)+" > .modal-body ", "innerHTML", html_disp)
-    return dajax.json() 
+	dajax=Dajax()
+	html=''
+	t=Turno.objects.get(id=turno_id)
+	mansioni = []
+	for requisito in t.tipo.req_tipo_turno.all():
+		if requisito.mansione in request.user.get_profile().capacita and requisito.clickabile():
+			if not requisito.mansione in t.mansioni_indisponibili(request.user.get_profile().id):
+				mansioni.append(requisito.mansione)
+	html_disp = render_to_string( 'disponibilita_turno.html', { 't': t, 'mansioni': mansioni, 'request':request } )
+	dajax.assign("#disponibilita-turno-"+str(t.id)+" > .modal-body ", "innerHTML", html_disp)
+	return dajax.json()
 
 @dajaxice_register
 def elimina_turno(request,turno_id):
-    dajax=Dajax()
-    t=Turno.objects.get(id=turno_id)
-    html_elimina = render_to_string( 'elimina_turno.html', { 't': t, 'request':request } )
-    dajax.assign('div #elimina-turno-'+str(t.id), 'innerHTML', html_elimina)
-    dajax.script("$('#elimina-turno-"+str(t.id)+"').modal('show');")
-    return dajax.json() 
+	dajax=Dajax()
+	t=Turno.objects.get(id=turno_id)
+	html_elimina = render_to_string( 'elimina_turno.html', { 't': t, 'request':request } )
+	dajax.assign('div #elimina-turno-'+str(t.id), 'innerHTML', html_elimina)
+	dajax.script("$('#elimina-turno-"+str(t.id)+"').modal('show');")
+	return dajax.json()
 
 @dajaxice_register
 def modal_elimina_utente(request,utente_id):
-    dajax=Dajax()
-    u=User.objects.get(id=utente_id)
-    html_elimina = render_to_string( 'elimina_utente.html', { 'utente': u, 'request':request } )
-    dajax.assign('div #elimina-utente-'+str(u.id), 'innerHTML', html_elimina)
-    dajax.script("$('#elimina-utente-"+str(u.id)+"').modal('show');")
-    return dajax.json()
+	dajax=Dajax()
+	u=User.objects.get(id=utente_id)
+	html_elimina = render_to_string( 'elimina_utente.html', { 'utente': u, 'request':request } )
+	dajax.assign('div #elimina-utente-'+str(u.id), 'innerHTML', html_elimina)
+	dajax.script("$('#elimina-utente-"+str(u.id)+"').modal('show');")
+	return dajax.json()
 
 @dajaxice_register
 def auto_utente_persona_search(request,search_term):
-    # Query DB for suggestions to present to user
-    q = Persona.objectsGet.filter(cognome__istartswith=search_term)
-    data = []
-    #pdb.set_trace()
-    for item in q:
-        # Format returned queryset data, if needed
-        #data_item = str(item)
-        data.append({'label': str(item), 'value': item.id})
+	# Query DB for suggestions to present to user
+	q = Persona.objectsGet.filter(cognome__istartswith=search_term)
+	data = []
+	#pdb.set_trace()
+	for item in q:
+		# Format returned queryset data, if needed
+		#data_item = str(item)
+		data.append({'label': str(item), 'value': item.id})
 
-    # Return data to callback function *search_result*
-    return simplejson.dumps(data)
+	# Return data to callback function *search_result*
+	return simplejson.dumps(data)
 
 @dajaxice_register
 def scorri_calendario(request,direction):

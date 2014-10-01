@@ -32,8 +32,13 @@ def aggiorna_statistiche(request,da,al,mansioni,gruppi):
         elif (da!="" and al!=""):
                 data_da=datetime.datetime.strptime(da, "%d/%m/%Y").date()
                 data_al=datetime.datetime.strptime(al, "%d/%m/%Y").date()
-        tot_turni, tot_punti =statistiche_intervallo(request,data_da,data_al,elenco_mansioni,elenco_gruppi,senza_gruppo)
-        html_statistiche = render_to_string( 'statistiche/statistiche.html', { 'tot_turni': tot_turni,'tot_punti': tot_punti, 'request':request } )
+        tot_turni, tot_punti, tot_turni_dipendenti, tot_punti_dipendenti = statistiche_intervallo(request,data_da,data_al,elenco_mansioni,elenco_gruppi,senza_gruppo)
+        html_statistiche = render_to_string( 'statistiche/statistiche.html', { 'tot_turni': tot_turni,
+                'tot_punti': tot_punti,
+                'tot_punti_dipendenti':tot_punti_dipendenti,
+                'tot_turni_dipendenti':tot_turni_dipendenti,
+                'get_distingui_dipendenti':getattr(settings, 'GET_DISTINGUI_DIPENDENTI', False),
+                'request':request } )
         dajax.assign('div #stat', 'innerHTML', html_statistiche)
         dajax.script("$('#loading').addClass('hidden');")
         return dajax.json()

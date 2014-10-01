@@ -450,6 +450,7 @@ def nuova_disponibilita(request, turno_id, mansione_id, persona_id, disponibilit
 					esistenti=Disponibilita.objects.filter(persona=disp.persona, turno=disp.turno )
 					disp.note='';
 					for e in esistenti:
+						disp.punteggio=e.punteggio
 						disp.note+=e.note
 						#if esistente.tipo=='Disponibile':
 							#notifica_disponibilita(request,esistente.persona,esistente.turno,'Non piu disponibile',esistente.mansione)

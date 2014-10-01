@@ -2,7 +2,13 @@
 
 <ul class="nav nav-tabs" id="myTab">
 	<li class="active"><a href="#tabs-tot_turni" data-toggle="tab" >Turni</a></li>
+    {% if get_distingui_dipendenti and request.user.is_staff %}
+        <li ><a href="#tabs-tot_turni_dipendenti" data-toggle="tab" >Turni Dipendenti</a></li>
+    {% endif %}
 	<li ><a href="#tabs-tot_punti" data-toggle="tab" >Punteggio</a></li>
+    {% if get_distingui_dipendenti and request.user.is_staff %}
+        <li ><a href="#tabs-tot_punti_dipendenti" data-toggle="tab" >Punteggio Dipendenti</a></li>
+    {% endif %}
 	<li ><a href="#tabs-generali" data-toggle="tab" onclick="generali();">Generali</a></li>
 </ul>
 
@@ -31,10 +37,34 @@
 		</table>
 
 	</div>
+    {% if get_distingui_dipendenti and request.user.is_staff %}
+    <div class="tab-pane " id="tabs-tot_turni_dipendenti">
 
+        <div id="container-1" style="min-width: 200px; height: 350px; margin: 0 auto"></div>
+    
+        <table id="tabella_turni_dipendenti" class="table table-striped no-more-tables tablesorter">
+
+            <thead> 
+                <tr>
+                    <th>Posizione</th><th>Nome</th><th>Cognome</th><th>Turni effettuati</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for d in tot_turni_dipendenti %}
+                    <tr><td>{{forloop.counter}}</td><td>{{d.nome|safe|escape}}</td><td>{{d.cognome|safe|escape}}</td>
+                    <td>{{d.tot_turni}} <i class="icon-search" style="cursor: pointer;" onclick="dettagli_statistiche({{d.id}}); $('#dettagli-{{d.id}}').slideToggle(); "></i> </br>
+                        <div id="dettagli-{{d.id}}" class="hide">
+                        </div>
+                    </td></tr>
+                {%endfor%}
+            </tbody>
+        </table>
+
+    </div>
+    {% endif %}
 	<div class="tab-pane" id="tabs-tot_punti">
 
-		<div id="container-1" style="min-width: 200px; height: 350px; margin: 0 auto"></div>
+		<div id="container-2" style="min-width: 200px; height: 350px; margin: 0 auto"></div>
 
 		<table id="tabella_punti" class="table table-striped no-more-tables tablesorter">
 
@@ -56,6 +86,32 @@
 		</table>
 
 	</div>
+    {% if get_distingui_dipendenti and request.user.is_staff %}
+    <div class="tab-pane" id="tabs-tot_punti_dipendenti">
+
+        <div id="container-3" style="min-width: 200px; height: 350px; margin: 0 auto"></div>
+
+        <table id="tabella_punti_dipendenti" class="table table-striped no-more-tables tablesorter">
+
+            <thead> 
+                <tr>
+                    <th>Posizione</th><th>Nome</th><th>Cognome</th><th>Punteggio</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for d in tot_punti_dipendenti %}
+                    <tr>
+                        <td>{{forloop.counter}}</td><td>{{d.nome|safe|escape}}</td><td>{{d.cognome|safe|escape}}</td>
+                        <td>{{d.tot_punti}}
+                        </td>
+                    </tr>
+                    <tr>
+                {%endfor%}
+            </tbody>
+        </table>
+
+    </div>
+    {% endif %}
 	<div class="tab-pane" id="tabs-generali">
 	</div>
 </div>
@@ -68,72 +124,139 @@ $(window).load(function(){
 		sortList: [[3,1]],
 		theme : "bootstrap",widthFixed: true,headerTemplate : '{content} {icon}',widgets : [ "uitheme", "filter" ],
 		widgetOptions : { filter_reset : ".reset",}
-		});
+	});
+    $("table#tabella_turni_dipendenti").tablesorter({
+        sortList: [[3,1]],
+        theme : "bootstrap",widthFixed: true,headerTemplate : '{content} {icon}',widgets : [ "uitheme", "filter" ],
+        widgetOptions : { filter_reset : ".reset",}
+    });
 });
 
 
 $(function () {
-        $('#container-0').highcharts({
-            chart: {
-                type: 'column',
-                margin: [ 50, 50, 100, 80]
-            },
+    $('#container-0').highcharts({
+        chart: {
+            type: 'column',
+            margin: [ 50, 50, 100, 80]
+        },
+        title: {
+            text: ''
+        },
+        xAxis: {
+            categories: [
+                {% for d in tot_turni|slice:":10"%}
+					"{{d.nome|safe|escape}} {{d.cognome|safe|escape}}",
+				{% endfor%}
+            ],
+            labels: {
+                rotation: -45,
+                align: 'right',
+                style: {
+                    fontSize: '13px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        },
+        yAxis: {
+            min: 0,
             title: {
-                text: ''
+                text: 'Turni'
             },
-            xAxis: {
-                categories: [
-                    {% for d in tot_turni|slice:":10"%}
-						"{{d.nome|safe|escape}} {{d.cognome|safe|escape}}",
-					{% endfor%}
-                ],
-                labels: {
-                    rotation: -45,
-                    align: 'right',
-                    style: {
-                        fontSize: '13px',
-                        fontFamily: 'Verdana, sans-serif'
-                    }
+            stackLabels: {
+        		enabled: true,
+        		style: {
+            		fontWeight: 'bold',
+            		color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+        			}
+    		}
+        },
+        legend: {
+            enabled: false
+        },
+        series: [{
+            name: 'Totale turni',
+            data: [
+                {% for d in tot_turni|slice:":10"%}
+					{{d.tot_turni}},
+				{% endfor%}
+            ],
+            dataLabels: {
+                enabled: true,
+                rotation: -90,
+                color: '#FFFFFF',
+                align: 'right',
+                x: 4,
+                y: 10,
+                style: {
+                    fontSize: '13px',
+                    fontFamily: 'Verdana, sans-serif'
                 }
-            },
-            yAxis: {
-                min: 0,
-                title: {
-                    text: 'Turni'
-                },
-                stackLabels: {
-            		enabled: true,
-            		style: {
-                		fontWeight: 'bold',
-                		color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-            			}
-        		}
-            },
-            legend: {
-                enabled: false
-            },
-            series: [{
-                name: 'Population',
-                data: [
-                    {% for d in tot_turni|slice:":10"%}
-						{{d.tot_turni}},
-					{% endfor%}
-                ],
-                dataLabels: {
-                    enabled: true,
-                    rotation: -90,
-                    color: '#FFFFFF',
-                    align: 'right',
-                    x: 4,
-                    y: 10,
-                    style: {
-                        fontSize: '13px',
-                        fontFamily: 'Verdana, sans-serif'
-                    }
-                }
-            }]
-        });
+            }
+        }]
     });
+{% if get_distingui_dipendenti and request.user.is_staff %}
+    $('#container-1').highcharts({
+        chart: {
+            type: 'column',
+            margin: [ 50, 50, 100, 80]
+        },
+        title: {
+            text: ''
+        },
+        xAxis: {
+            categories: [
+                {% for d in tot_turni_dipendenti|slice:":10"%}
+                    "{{d.nome|safe|escape}} {{d.cognome|safe|escape}}",
+                {% endfor%}
+            ],
+            labels: {
+                rotation: -45,
+                align: 'right',
+                style: {
+                    fontSize: '13px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Turni'
+            },
+            stackLabels: {
+                enabled: true,
+                style: {
+                    fontWeight: 'bold',
+                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                    }
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        series: [{
+            name: 'Totale turni',
+            data: [
+                {% for d in tot_turni_dipendenti|slice:":10"%}
+                    {{d.tot_turni}},
+                {% endfor%}
+            ],
+            dataLabels: {
+                enabled: true,
+                rotation: -90,
+                color: '#FFFFFF',
+                align: 'right',
+                x: 4,
+                y: 10,
+                style: {
+                    fontSize: '13px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        }]
+    });
+{% endif %}
+});
 
 
 
@@ -142,71 +265,139 @@ $(window).load(function(){
 		sortList: [[3,1]],
 		theme : "bootstrap",widthFixed: true,headerTemplate : '{content} {icon}',widgets : [ "uitheme", "filter"],
 		widgetOptions : {filter_reset : ".reset",}
-		});
+	});
+    $("table#tabella_punti_dipendenti").tablesorter({
+        sortList: [[3,1]],
+        theme : "bootstrap",widthFixed: true,headerTemplate : '{content} {icon}',widgets : [ "uitheme", "filter"],
+        widgetOptions : {filter_reset : ".reset",}
+    });
 });
 
 $(function () {
-        $('#container-1').highcharts({
-            chart: {
-                type: 'column',
-                margin: [ 50, 50, 100, 80],
-                width: $('#tabs-tot_turni').width()
-            },
+    $('#container-2').highcharts({
+        chart: {
+            type: 'column',
+            margin: [ 50, 50, 100, 80],
+            width: $('#tabs-tot_turni').width()
+        },
+        title: {
+            text: ''
+        },
+        xAxis: {
+            categories: [
+                {% for d in tot_punti|slice:":10"%}
+					"{{d.nome|safe|escape}} {{d.cognome|safe|escape}}",
+				{% endfor%}
+            ],
+            labels: {
+                rotation: -45,
+                align: 'right',
+                style: {
+                    fontSize: '13px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        },
+        yAxis: {
+            min: 0,
             title: {
-                text: ''
+                text: 'Turni'
             },
-            xAxis: {
-                categories: [
-                    {% for d in tot_punti|slice:":10"%}
-						"{{d.nome|safe|escape}} {{d.cognome|safe|escape}}",
-					{% endfor%}
-                ],
-                labels: {
-                    rotation: -45,
-                    align: 'right',
-                    style: {
-                        fontSize: '13px',
-                        fontFamily: 'Verdana, sans-serif'
-                    }
+            stackLabels: {
+        		enabled: true,
+        		style: {
+            		fontWeight: 'bold',
+            		color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+        			}
+    		}
+        },
+        legend: {
+            enabled: false
+        },
+        series: [{
+            name: 'Totale punti',
+            data: [
+                {% for d in tot_punti|slice:":10"%}
+					{{d.tot_punti}},
+				{% endfor%}
+            ],
+            dataLabels: {
+                enabled: true,
+                rotation: -90,
+                color: '#FFFFFF',
+                align: 'right',
+                x: 4,
+                y: 10,
+                style: {
+                    fontSize: '13px',
+                    fontFamily: 'Verdana, sans-serif'
                 }
-            },
-            yAxis: {
-                min: 0,
-                title: {
-                    text: 'Turni'
-                },
-                stackLabels: {
-            		enabled: true,
-            		style: {
-                		fontWeight: 'bold',
-                		color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-            			}
-        		}
-            },
-            legend: {
-                enabled: false
-            },
-            series: [{
-                name: 'Population',
-                data: [
-                    {% for d in tot_punti|slice:":10"%}
-						{{d.tot_punti}},
-					{% endfor%}
-                ],
-                dataLabels: {
-                    enabled: true,
-                    rotation: -90,
-                    color: '#FFFFFF',
-                    align: 'right',
-                    x: 4,
-                    y: 10,
-                    style: {
-                        fontSize: '13px',
-                        fontFamily: 'Verdana, sans-serif'
-                    }
-                }
-            }]
-        });
+            }
+        }]
     });
+{% if get_distingui_dipendenti and request.user.is_staff %}
+    $('#container-3').highcharts({
+        chart: {
+            type: 'column',
+            margin: [ 50, 50, 100, 80],
+            width: $('#tabs-tot_turni').width()
+        },
+        title: {
+            text: ''
+        },
+        xAxis: {
+            categories: [
+                {% for d in tot_punti_dipendenti|slice:":10"%}
+                    "{{d.nome|safe|escape}} {{d.cognome|safe|escape}}",
+                {% endfor%}
+            ],
+            labels: {
+                rotation: -45,
+                align: 'right',
+                style: {
+                    fontSize: '13px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Turni'
+            },
+            stackLabels: {
+                enabled: true,
+                style: {
+                    fontWeight: 'bold',
+                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                    }
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        series: [{
+            name: 'Totale punti',
+            data: [
+                {% for d in tot_punti_dipendenti|slice:":10"%}
+                    {{d.tot_punti}},
+                {% endfor%}
+            ],
+            dataLabels: {
+                enabled: true,
+                rotation: -90,
+                color: '#FFFFFF',
+                align: 'right',
+                x: 4,
+                y: 10,
+                style: {
+                    fontSize: '13px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        }]
+    });
+{% endif %}
+});
 
 </script>

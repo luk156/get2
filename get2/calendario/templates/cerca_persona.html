@@ -35,9 +35,15 @@ function disp(selettore){
 }
 
 function nota_disponibilita(disp_id){
-	selettore=$('#note-disp-'+disp_id)
+	selettore=$('#note-disp-'+disp_id);
 	Dajaxice.get2.calendario.disp_nota(Dajax.process,{'disp_id':disp_id,'nota':selettore.val()});
 }
+
+function punteggio_disponibilita(disp_id){
+	selettore=$('#punteggio-disp-'+disp_id);
+	Dajaxice.get2.calendario.disp_punteggio(Dajax.process,{'disp_id':disp_id,'punteggio':selettore.val()});
+}
+
 </script>
 
 <div class="row-fluid">
@@ -58,17 +64,17 @@ function nota_disponibilita(disp_id){
 					<h5><i class="icon-search"></i> Cerca persone</h5>
 			</div>
 			<div class="box-content">
-				<table class="table table-striped no-more-tables" id="cerca_persona">
+				<table class="table table-striped" id="cerca_persona">
 				<thead>
 					<tr>
-					<th>Nome</th><th>Capacita'</th><th>Telefono</th><th>Disponibilita'</th>
+					<th>Nome</th><th class="get-visible-desktop">Capacita'</th><th>Telefono</th><th>Disponibilita'</th>
 					</tr>
 				</thead>
 				{%for persona,capacita,disponibilita in disp%}
 					
 					<tr {%if persona.stato != 'disponibile' %} class="error" {%endif%} id="persona-{{persona.id}}">
 					<td data-title="Nome" class="nome">{{persona}}</td>
-					<td data-title="Mansioni" class="mansioni">{% for m in capacita %}<span class="badge-mansione">{{m}}</span>  {% endfor %}</td>
+					<td data-title="Mansioni" class="get-visible-desktop mansioni">{% for m in capacita %}<span class="badge-mansione">{{m}}</span>  {% endfor %}</td>
 					<td data-title="telefono">{{persona.telefono|safe}}</td>
 					<td data-title="Disponibilita" class="disponibilita">
 					{%if persona.stato = 'disponibile' %}
@@ -100,11 +106,24 @@ function nota_disponibilita(disp_id){
 							{% endif %}
 							</SELECT>
 							<div id="disponibilita-{{persona.id}}">
-								<div class="input-prepend input-append small">
+								<div class="input-prepend input-append small span4">
 									<span class="add-on"><i class="icon-comment"></i></span>
 									<input id="note-disp-{{disponibilita.id}}" type="text" value="{{disponibilita.note}}">
 									<button class="btn" type="button" onclick="nota_disponibilita({{disponibilita.id}});">salva</button>
 								</div>
+								{% if get_sovrascrivi_punteggio %}
+								<div class="input-prepend input-append small span3">
+									<span class="add-on"><i class="icon-trophy"></i></span>
+									<input id="punteggio-disp-{{disponibilita.id}}" type="number"
+									{% if disponibilita.punteggio and disponibilita.punteggio != -1 %} 
+										value="{{disponibilita.punteggio}}"
+									{% else %}
+										placeholder="{{t.valore}}"
+									{%endif %}
+									>
+									<button class="btn" type="button" onclick="punteggio_disponibilita({{disponibilita.id}});">salva</button>
+								</div>
+								{% endif %}
 								</br>{{disponibilita.creata_da}} : {{disponibilita.ultima_modifica|date:"d M"}} {{disponibilita.ultima_modifica|time:"H:i"}}
 							</div>
 						{% endif %}
@@ -145,7 +164,7 @@ $(document).ready(function(){
 				else {
 					return 'zz'+$(node).html().toString();
 				}
-			},
+			}
 		},
 		sortList: [[3,0]],
 		theme : "bootstrap",widthFixed: true,

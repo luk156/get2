@@ -270,6 +270,7 @@ class PersonaForm(forms.ModelForm):
 					'note',
 					),
 				InlineCheckboxes('competenze', css_class="badge-mansione"),
+				Field('dipendente'),
 				css_class="span2"
 			),
 			Div(

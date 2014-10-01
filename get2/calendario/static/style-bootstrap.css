@@ -49,6 +49,16 @@ a {
 		.no-more-tables tr {
 		display: block;
     }
+
+    #cerca_persona .tablesorter-filter-row > td:nth-child(2)  {
+        display: none;
+    }
+
+    #cerca_persona .get-visible-desktop {
+        display: none;
+    }
+
+
      
     /* Hide table headers (but not display: none;, for accessibility) */
     .no-more-tables thead tr {
