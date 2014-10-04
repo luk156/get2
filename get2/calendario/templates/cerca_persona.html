@@ -115,7 +115,7 @@ function punteggio_disponibilita(disp_id){
 								<div class="input-prepend input-append small span3">
 									<span class="add-on"><i class="icon-trophy"></i></span>
 									<input id="punteggio-disp-{{disponibilita.id}}" type="number"
-									{% if disponibilita.punteggio and disponibilita.punteggio != -1 %} 
+									{% if disponibilita.punteggio != -1 %}
 										value="{{disponibilita.punteggio}}"
 									{% else %}
 										placeholder="{{t.valore}}"

@@ -82,7 +82,7 @@ class Command(BaseCommand):
 				if(dis.persona.user.email != '' and dis.persona.notificaMail):
 					listaMessaggi += (('Get 2.0 - Avviso turno', messaggio, settings.GET_MAIL_NOTIFICA, [dis.persona.user.email]),)
 
-				if(getattr(settings, 'GET_ACTIVATE_SMS', False) && cell_rule.search(dis.persona.tel1) and dis.persona.notificaSMS):
+				if(getattr(settings, 'GET_ACTIVATE_SMS', False) and cell_rule.search(dis.persona.tel1) and dis.persona.notificaSMS):
 					recipients=[]
 					recipients.append('39'+dis.persona.tel1)
 					result = skebbyGatewaySendSMS(getattr(settings, 'GET_SKEBBY_USERNAME', ""),getattr(settings, 'GET_SKEBBY_PASSWORD', ""),recipients,messaggio,'classic','',getattr(settings, 'GET_SMS_ALIAS', "GeT"))
