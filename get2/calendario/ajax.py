@@ -166,16 +166,17 @@ def disp(request, turno_id, mansione_id, persona_id, disp):
 		if not d[0]:
 			dajax.script('$(".bottom-right").notify({ message: { text: "Errore'+str(d[1])+'" }}).show();')
 		d=Disponibilita.objects.get(persona=p,turno=t)
-		temp = Template('<div class="input-prepend input-append small span4"><span class="add-on"><i class="icon-comment"></i></span><input id="note-disp-{{d.id}}" type="text" value="{{d.note}}"><button class="btn" type="button" onclick="nota_disponibilita({{d.id}});">salva</button></div>'
-            +'{% if get_sovrascrivi_punteggio %}<div class="input-prepend input-append small span3"><span class="add-on"><i class="icon-trophy"></i></span><input id="punteggio-disp-{{d.id}}" type="number" {% if d.punteggio != -1 %} value="{{d.punteggio}}" {% else %} placeholder="{{t.valore}}" {%endif %}> <button class="btn" type="button" onclick="punteggio_disponibilita({{d.id}});">salva</button> </div>{% endif %}'
-            +'</br>{{d.creata_da}}:{{d.ultima_modifica|date:"d M"}} {{d.ultima_modifica|time:"H:i"}}')
-		c = Context({"d": d, "t":t, "get_sovrascrivi_punteggio": getattr(settings, 'GET_SOVRASCRIVI_PUNTEGGIO', False)})
-		dajax.assign('#disponibilita-'+str(p.id), 'innerHTML', temp.render(c))	
+
 	elif request.user.is_staff:
 		d=Disponibilita.objects.get(persona=p,turno=t)
 		if request.user.is_superuser or request.user==d.creata_da:
 			d.delete()
-			dajax.assign('#disponibilita-'+str(p.id), 'innerHTML', '')
+			d={}
+	temp = Template('<div class="input-prepend input-append small span4"><span class="add-on"><i class="icon-comment"></i></span><input id="note-disp-{{d.id}}" type="text" value="{{d.note}}"><button class="btn" type="button" onclick="nota_disponibilita({{d.id}});">salva</button></div>'
+            +'{% if get_sovrascrivi_punteggio %}<div class="input-prepend input-append small span3"><span class="add-on"><i class="icon-trophy"></i></span><input id="punteggio-disp-{{d.id}}" type="number" {% if d.punteggio != -1 %} value="{{d.punteggio}}" {% else %} placeholder="{{t.valore}}" {% endif %}> <button class="btn" type="button" onclick="punteggio_disponibilita({{d.id}});">salva</button> </div>{% endif %}'
+            +'</br>{{d.creata_da}}:{{d.ultima_modifica|date:"d M"}} {{d.ultima_modifica|time:"H:i"}}')
+	c = Context({"d": d, "t":t, "get_sovrascrivi_punteggio": getattr(settings, 'GET_SOVRASCRIVI_PUNTEGGIO', False)})
+	dajax.assign('#disponibilita-'+str(p.id), 'innerHTML', temp.render(c))
 	t=Turno.objects.get(id=turno_id)
 	html_anteprima = render_to_string( 'turno.html', { 't': t, 'request':request } )
 	dajax.assign('div #anteprima', 'innerHTML', html_anteprima+'<div style="clear:both;"></div>')
