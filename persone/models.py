@@ -191,7 +191,7 @@ class MansioneForm(forms.ModelForm):
 
 
 class Persona(models.Model):
-	user = models.OneToOneField(User, unique=True, blank=True, null=True, related_name='pers_user')
+	user = models.OneToOneField(User, unique=True, blank=True, null=True, related_name='pers_user', on_delete=models.SET_NULL)
 	nome = models.CharField('Nome',max_length=200)
 	cognome = models.CharField('Cognome',max_length=200)
 	indirizzo = models.TextField('Indirizzo', blank=True, null=True, )
