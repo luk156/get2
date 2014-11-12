@@ -1,4 +1,4 @@
-/*! Filter widget formatter functions - updated 2/19/2014 (v2.15)
+/*! Filter widget formatter functions - updated 7/17/2014 (v2.17.5)
  * requires: tableSorter 2.15+ and jQuery 1.4.3+
  *
  * uiSpinner (jQuery UI spinner)
@@ -19,6 +19,7 @@ var ts = $.tablesorter || {},
 
 // compare option selector class name (jQuery selector)
 compareSelect = '.compare-select',
+
 
 tsff = ts.filterFormatter = {
 
@@ -70,15 +71,15 @@ tsff = ts.filterFormatter = {
 			disabled : false
 
 		}, spinnerDef ),
+		c = $cell.closest('table')[0].config,
 		// Add a hidden input to hold the range values
 		$input = $('<input class="filter" type="hidden">')
 			.appendTo($cell)
-			// hidden filter update (.tsfilter) namespace trigger by filter widget
-			.bind('change.tsfilter', function(){
+			// hidden filter update namespace trigger by filter widget
+			.bind('change' + c.namespace + 'filter', function(){
 				updateSpinner({ value: this.value, delayed: false });
 			}),
 		$shcell = [],
-		c = $cell.closest('table')[0].config,
 
 		// this function updates the hidden input and adds the current values to the header cell text
 		updateSpinner = function(ui, notrigger) {
@@ -87,7 +88,7 @@ tsff = ts.filterFormatter = {
 				v = ui && ui.value && ts.formatFloat((ui.value + '').replace(/[><=]/g,'')) ||
 					$cell.find('.spinner').val() || o.value,
 				compare = ($.isArray(o.compare) ? $cell.find(compareSelect).val() || o.compare[ o.selected || 0] : o.compare) || '',
-				searchType = ui && typeof ui.delayed === 'boolean' ? ui.delayed : c.$table[0].hasInitialized ? o.delayed : true;
+				searchType = ui && typeof ui.delayed === 'boolean' ? ui.delayed : c.$table[0].hasInitialized ? o.delayed || '' : true;
 			if (o.addToggle) {
 				chkd = $cell.find('.toggle').is(':checked');
 			}
@@ -144,6 +145,7 @@ tsff = ts.filterFormatter = {
 			var val = tsff.updateCompare($cell, $input, o)[0];
 			$cell.find('.spinner').val( val );
 			updateSpinner({ value: val }, true);
+			ts.filter.formatterUpdated($cell, indx);
 		});
 
 		if (o.compare) {
@@ -227,15 +229,15 @@ tsff = ts.filterFormatter = {
 			step : 1,
 			range : "min"
 		}, sliderDef ),
+		c = $cell.closest('table')[0].config,
 		// Add a hidden input to hold the range values
 		$input = $('<input class="filter" type="hidden">')
 			.appendTo($cell)
-			// hidden filter update (.tsfilter) namespace trigger by filter widget
-			.bind('change.tsfilter', function(){
+			// hidden filter update namespace trigger by filter widget
+			.bind('change' + c.namespace + 'filter', function(){
 				updateSlider({ value: this.value });
 			}),
 		$shcell = [],
-		c = $cell.closest('table')[0].config,
 
 		// this function updates the hidden input and adds the current values to the header cell text
 		updateSlider = function(ui, notrigger) {
@@ -244,7 +246,7 @@ tsff = ts.filterFormatter = {
 				val = o.compare ? v : v === o.min ? o.allText : v,
 				compare = ($.isArray(o.compare) ? $cell.find(compareSelect).val() || o.compare[ o.selected || 0] : o.compare) || '',
 				result = compare + val,
-				searchType = ui && typeof ui.delayed === 'boolean' ? ui.delayed : c.$table[0].hasInitialized ? o.delayed : true;
+				searchType = ui && typeof ui.delayed === 'boolean' ? ui.delayed : c.$table[0].hasInitialized ? o.delayed || '' : true;
 			if (o.valueToHeader) {
 				// add range indication to the header cell above!
 				$cell.closest('thead').find('th[data-column=' + indx + ']').find('.curvalue').html(' (' + result + ')');
@@ -302,6 +304,7 @@ tsff = ts.filterFormatter = {
 			var val = tsff.updateCompare($cell, $input, o)[0];
 			$cell.find('.slider').slider('value', val );
 			updateSlider({ value: val }, false);
+			ts.filter.formatterUpdated($cell, indx);
 		});
 
 		if (o.compare) {
@@ -365,15 +368,15 @@ tsff = ts.filterFormatter = {
 			max : 100,
 			range : true
 		}, rangeDef ),
+		c = $cell.closest('table')[0].config,
 		// Add a hidden input to hold the range values
 		$input = $('<input class="filter" type="hidden">')
 			.appendTo($cell)
-			// hidden filter update (.tsfilter) namespace trigger by filter widget
-			.bind('change.tsfilter', function(){
+			// hidden filter update namespace trigger by filter widget
+			.bind('change' + c.namespace + 'filter', function(){
 				getRange();
 			}),
 		$shcell = [],
-		c = $cell.closest('table')[0].config,
 
 		getRange = function(){
 			var val = $input.val(),
@@ -391,7 +394,7 @@ tsff = ts.filterFormatter = {
 				result = val[0] + ' - ' + val[1],
 				// make range an empty string if entire range is covered so the filter row will hide (if set)
 				range = val[0] === o.min && val[1] === o.max ? '' : result,
-				searchType = ui && typeof ui.delayed === 'boolean' ? ui.delayed : c.$table[0].hasInitialized ? o.delayed : true;
+				searchType = ui && typeof ui.delayed === 'boolean' ? ui.delayed : c.$table[0].hasInitialized ? o.delayed || '': true;
 			if (o.valueToHeader) {
 				// add range indication to the header cell above (if not using the css method)!
 				$cell.closest('thead').find('th[data-column=' + indx + ']').find('.currange').html(' (' + result + ')');
@@ -446,6 +449,7 @@ tsff = ts.filterFormatter = {
 		// update slider from hidden input, in case of saved filters
 		c.$table.bind('filterFomatterUpdate', function(){
 			getRange();
+			ts.filter.formatterUpdated($cell, indx);
 		});
 
 		// on reset
@@ -495,28 +499,28 @@ tsff = ts.filterFormatter = {
 		}, defDate),
 
 		$date,
+		c = $cell.closest('table')[0].config,
 		// make sure we're using parsed dates in the search
 		$hdr = $cell.closest('thead').find('th[data-column=' + indx + ']').addClass('filter-parsed'),
 		// Add a hidden input to hold the range values
 		$input = $('<input class="dateCompare" type="hidden">')
 			.appendTo($cell)
-			// hidden filter update (.tsfilter) namespace trigger by filter widget
-			.bind('change.tsfilter', function(){
+			// hidden filter update namespace trigger by filter widget
+			.bind('change' + c.namespace + 'filter', function(){
 				var v = this.value;
 				if (v) {
 					o.onClose(v);
 				}
 			}),
 		t, $shcell = [],
-		c = $cell.closest('table')[0].config,
 
 		// this function updates the hidden input
-		date1Compare = function(v, notrigger) {
+		date1Compare = function(notrigger) {
 			var date, query,
-				getdate = v || $date.datepicker('getDate') || '',
+				getdate = $date.datepicker('getDate') || '',
 				compare = ($.isArray(o.compare) ? $cell.find(compareSelect).val() || o.compare[ o.selected || 0] : o.compare) || '',
-				searchType = c.$table[0].hasInitialized ? o.delayed : true;
-			$date.datepicker('setDate', getdate === '' ? o.defaultDate || '' : getdate);
+				searchType = c.$table[0].hasInitialized ? o.delayed || '': true;
+			$date.datepicker('setDate', (getdate === '' ? '' : getdate) || null);
 			if (getdate === '') { notrigger = false; }
 			date = $date.datepicker('getDate');
 			query = date ? ( o.endOfDay && /<=/.test(compare) ? date.setHours(23, 59, 59) : date.getTime() ) || '' : '';
@@ -539,7 +543,7 @@ tsff = ts.filterFormatter = {
 
 		// Add date range picker
 		t = '<input type="text" class="date date' + indx + '" placeholder="' +
-			($hdr.data('placeholder') || $hdr.attr('data-placeholder') || '') + '" />';
+			($hdr.data('placeholder') || $hdr.attr('data-placeholder') || c.widgetOptions.filter_placeholder.search || '') + '" />';
 		$date = $(t).appendTo($cell);
 
 		// add callbacks; preserve added callbacks
@@ -556,7 +560,7 @@ tsff = ts.filterFormatter = {
 			if ($.isArray(o.compare)) {
 				$cell.add($shcell).find(compareSelect).val( o.compare[ o.selected || 0 ] );
 			}
-			$cell.add($shcell).find('.date').val(o.defaultDate).datepicker('setDate', '');
+			$cell.add($shcell).find('.date').val(o.defaultDate).datepicker('setDate', o.defaultDate || null);
 			setTimeout(function(){
 				date1Compare();
 			}, 0);
@@ -568,15 +572,18 @@ tsff = ts.filterFormatter = {
 			if (/\s+-\s+/.test(v)) {
 				// date range found; assume an exact match on one day
 				$cell.find(compareSelect).val('=');
-				num = new Date ( Number( v.split(/\s+-\s+/)[0] ) );
-				$date.datepicker( 'setDate', num );
+				num = v.split(/\s+-\s+/)[0];
+				$date.datepicker( 'setDate', num || null );
 			} else {
 				num = (tsff.updateCompare($cell, $input, o)[1]).toString() || '';
 				// differeniate 1388556000000 from 1/1/2014 using \d{5} regex
-				num = num !== '' ? new Date( /\d{5}/g.test(num) ? Number(num) : num ) || '' : '';
+				num = num !== '' ? /\d{5}/g.test(num) ? new Date(Number(num)) : num || '' : '';
 			}
-			$cell.add($shcell).find('.date').datepicker( 'setDate', num );
-			date1Compare(num, true);
+			$cell.add($shcell).find('.date').datepicker( 'setDate', num || null );
+			setTimeout(function(){
+				date1Compare(true);
+				ts.filter.formatterUpdated($cell, indx);
+			}, 0);
 		});
 
 		if (o.compare) {
@@ -628,80 +635,74 @@ tsff = ts.filterFormatter = {
 			changeYear : true,
 			numberOfMonths : 1
 		}, defDate),
-		t, closeTo, closeFrom, $shcell = [],
+		t, closeDate, $shcell = [],
+		c = $cell.closest('table')[0].config,
+		validDate = function(d){
+			return d instanceof Date && isFinite(d);
+		},
 		// Add a hidden input to hold the range values
 		$input = $('<input class="dateRange" type="hidden">')
 			.appendTo($cell)
-			// hidden filter update (.tsfilter) namespace trigger by filter widget
-			.bind('change.tsfilter', function(){
+			// hidden filter update namespace trigger by filter widget
+			.bind('change' + c.namespace + 'filter', function(){
 				var v = this.value;
 				if (v.match(' - ')) {
 					v = v.split(' - ');
 					$cell.find('.dateTo').val(v[1]);
-					closeFrom(v[0]);
+					closeDate(v[0]);
 				} else if (v.match('>=')) {
-					closeFrom( v.replace('>=', '') );
+					closeDate( v.replace('>=', '') );
 				} else if (v.match('<=')) {
-					closeTo( v.replace('<=', '') );
+					closeDate( v.replace('<=', '') );
 				}
 			}),
-		c = $cell.closest('table')[0].config;
 
 		// make sure we're using parsed dates in the search
-		$cell.closest('thead').find('th[data-column=' + indx + ']').addClass('filter-parsed');
+		$hdr = $cell.closest('thead').find('th[data-column=' + indx + ']').addClass('filter-parsed');
 		// Add date range picker
-		t = '<label>' + o.textFrom + '</label><input type="text" class="dateFrom" /><label>' + o.textTo + '</label><input type="text" class="dateTo" />';
+		t = '<label>' + o.textFrom + '</label><input type="text" class="dateFrom" placeholder="' +
+			($hdr.data('placeholderFrom') || $hdr.attr('data-placeholder-from') || c.widgetOptions.filter_placeholder.from || '') + '" />' +
+			'<label>' + o.textTo + '</label><input type="text" class="dateTo" placeholder="' +
+			($hdr.data('placeholderTo') || $hdr.attr('data-placeholder-to') || c.widgetOptions.filter_placeholder.to || '') + '" />';
 		$(t).appendTo($cell);
 
 		// add callbacks; preserve added callbacks
 		o.oldonClose = o.onClose;
 
-		var localfrom = o.defaultDate = o.from || o.defaultDate;
-
-		closeFrom = o.onClose = function( selectedDate, ui ) {
+		closeDate = o.onClose = function( selectedDate, ui ) {
 			var range,
-				from = new Date( $cell.find('.dateFrom').datepicker('getDate') ).getTime() || '',
-				to = $cell.find('.dateTo').datepicker('getDate') || '';
-			to = to ? ( o.endOfDay ? to.setHours(23, 59, 59) : to.getTime() ) || '' : '';
+				from = $cell.find('.dateFrom').datepicker('getDate'),
+				to = $cell.find('.dateTo').datepicker('getDate');
+			from = validDate(from) ? from.getTime() : '';
+			to = validDate(to) ? ( o.endOfDay ? to.setHours(23, 59, 59) : to.getTime() ) || '' : '';
 			range = from ? ( to ? from + ' - ' + to : '>=' + from ) : (to ? '<=' + to : '');
-			$cell
+			$cell.add( $shcell )
 				.find('.dateRange').val(range)
-				.trigger('search').end()
-				.find('.dateTo').datepicker('option', 'minDate', selectedDate ).end()
-				.find('.dateFrom').val(selectedDate);
+				.trigger('search');
+			// date picker needs date objects
+			from = from ? new Date(from) : '';
+			to = to ? new Date(to) : '';
 
-			// update sticky header cell
-			if ($shcell.length) {
-				$shcell
-					.find('.dateTo').datepicker('option', 'minDate', selectedDate ).end()
-					.find('.dateFrom').val(selectedDate);
+			if (/<=/.test(range)) {
+				$cell.add( $shcell )
+					.find('.dateFrom').datepicker('option', 'maxDate', to || null ).end()
+					.find('.dateTo').datepicker('option', 'minDate', null).datepicker('setDate', to || null);
+			} else if (/>=/.test(range)) {
+				$cell.add( $shcell )
+					.find('.dateFrom').datepicker('option', 'maxDate', null).datepicker('setDate', from || null).end()
+					.find('.dateTo').datepicker('option', 'minDate', from || null );
+			} else {
+				$cell.add( $shcell )
+					.find('.dateFrom').datepicker('option', 'maxDate', null).datepicker('setDate', from || null ).end()
+					.find('.dateTo').datepicker('option', 'minDate', null).datepicker('setDate', to || null);
 			}
+
 			if (typeof o.oldonClose === 'function') { o.oldonClose(selectedDate, ui); }
 		};
 
+		o.defaultDate = o.from || '';
 		$cell.find('.dateFrom').datepicker(o);
-
 		o.defaultDate = o.to || '+7d'; // set to date +7 days from today (if not defined)
-		closeTo = o.onClose = function( selectedDate, ui ) {
-			var range,
-				from = new Date( $cell.find('.dateFrom').datepicker('getDate') ).getTime() || '',
-				to = $cell.find('.dateTo').datepicker('getDate') || '';
-			to = to ? ( o.endOfDay ? to.setHours(23, 59, 59) : to.getTime() ) || '' : '';
-			range = from ? ( to ? from + ' - ' + to : '>=' + from ) : (to ? '<=' + to : '');
-			$cell
-				.find('.dateRange').val(range)
-				.trigger('search').end()
-				.find('.dateFrom').datepicker('option', 'maxDate', selectedDate ).end()
-				.find('.dateTo').val(selectedDate);
-
-			// update sticky header cell
-			if ($shcell.length) {
-				$shcell
-					.find('.dateFrom').datepicker('option', 'maxDate', selectedDate ).end()
-					.find('.dateTo').val(selectedDate);
-			}
-			if (typeof o.oldonClose === 'function') { o.oldonClose(selectedDate, ui); }
-		};
 		$cell.find('.dateTo').datepicker(o);
 
 		// update date compare from hidden input, in case of saved filters
@@ -709,7 +710,6 @@ tsff = ts.filterFormatter = {
 			var val = $input.val() || '',
 				from = '',
 				to = '';
-
 			// date range
 			if (/\s+-\s+/.test(val)){
 				val = val.split(/\s+-\s+/) || [];
@@ -717,14 +717,23 @@ tsff = ts.filterFormatter = {
 				to = val[1] || '';
 			} else if (/>=/.test(val)) {
 				// greater than date (to date empty)
-				from = new Date(Number( val.replace(/>=/, '') )) || '';
+				from = val.replace(/>=/, '') || '';
 			} else if (/<=/.test(val)) {
 				// less than date (from date empty)
-				to = new Date(Number( val.replace(/<=/, '') )) || '';
+				to = val.replace(/<=/, '') || '';
 			}
-			$cell.add($shcell).find('.dateFrom').datepicker('setDate', from);
-			$cell.add($shcell).find('.dateTo').datepicker('setDate', to);
-			closeTo(to);
+
+			// differeniate 1388556000000 from 1/1/2014 using \d{5} regex
+			from = from !== '' ? /\d{5}/g.test(from) ? new Date(Number(from)) : from || '' : '';
+			to = to !== '' ? /\d{5}/g.test(to) ? new Date(Number(to)) : to || '' : '';
+
+			$cell.add($shcell).find('.dateFrom').datepicker('setDate', from || null);
+			$cell.add($shcell).find('.dateTo').datepicker('setDate', to || null);
+			// give datepicker time to process
+			setTimeout(function(){
+				closeDate();
+				ts.filter.formatterUpdated($cell, indx);
+			}, 0);
 		});
 
 		// has sticky headers?
@@ -733,18 +742,21 @@ tsff = ts.filterFormatter = {
 			$shcell.append(t);
 
 			// add a jQuery datepicker!
-			o.onClose = closeTo;
+			o.defaultDate = o.from || '';
+			$shcell.find('.dateFrom').datepicker(o);
+
+			o.defaultDate = o.to || '+7d';
 			$shcell.find('.dateTo').datepicker(o);
 
-			o.defaultDate = localfrom;
-			o.onClose = closeFrom;
-			$shcell.find('.dateFrom').datepicker(o);
 		});
 
 		// on reset
 		$cell.closest('table').bind('filterReset', function(){
-			$cell.add($shcell).find('.dateFrom').val('').datepicker('setDate', o.from );
-			$cell.add($shcell).find('.dateTo').val('').datepicker('setDate', o.to );
+			$cell.add($shcell).find('.dateFrom').val('').datepicker('setDate', o.from || null );
+			$cell.add($shcell).find('.dateTo').val('').datepicker('setDate', o.to || null );
+			setTimeout(function(){
+				closeDate();
+			}, 0);
 		});
 
 		// return the hidden input so the filter widget has a reference to it
@@ -781,7 +793,7 @@ tsff = ts.filterFormatter = {
 			var chkd = o.addToggle ? $cell.find('.toggle').is(':checked') : true,
 				v = $cell.find('.number').val(),
 				compare = ($.isArray(o.compare) ? $cell.find(compareSelect).val() || o.compare[ o.selected || 0] : o.compare) || '',
-				searchType = c.$table[0].hasInitialized ? (delayed ? delayed : o.delayed) : true;
+				searchType = c.$table[0].hasInitialized ? (delayed ? delayed : o.delayed) || '' : true;
 			$input
 				// add equal to the beginning, so we filter exact numbers
 				.val( !o.addToggle || chkd ? (compare ? compare : o.exactMatch ? '=' : '') + v : '' )
@@ -841,6 +853,7 @@ tsff = ts.filterFormatter = {
 				var val = tsff.updateCompare($cell, $input, o)[0] || o.value;
 				$cell.find('.number').val( ((val || '') + '').replace(/[><=]/g,'') );
 				updateNumber(false, true);
+				ts.filter.formatterUpdated($cell, indx);
 			});
 
 			if (o.compare) {
@@ -913,7 +926,7 @@ tsff = ts.filterFormatter = {
 			v = ( typeof v === "undefined" ? $input.val() : v ).toString().replace(/[<>=]/g,'') || o.value;
 			var compare = ($.isArray(o.compare) ? $cell.find(compareSelect).val() || o.compare[ o.selected || 0] : o.compare) || '',
 				t = ' (' + (compare ? compare + v : v == o.min ? o.allText : v) + ')',
-				searchType =  c.$table[0].hasInitialized ? (delayed ? delayed : o.delayed) : true;
+				searchType =  c.$table[0].hasInitialized ? (delayed ? delayed : o.delayed) || '' : true;
 			$cell.find('input[type=hidden]')
 				// add equal to the beginning, so we filter exact numbers
 				.val( ( compare ? compare + v : ( v == o.min ? '' : ( o.exactMatch ? '=' : '' ) + v ) ) )
@@ -940,8 +953,8 @@ tsff = ts.filterFormatter = {
 				.addClass('filter-parsed') // get exact numbers from column
 				// add span to header for the current slider value
 				.find('.tablesorter-header-inner').append('<span class="curvalue" />');
-			// hidden filter update (.tsfilter) namespace trigger by filter widget
-			$input = $cell.find('input[type=hidden]').bind('change.tsfilter', function(){
+			// hidden filter update namespace trigger by filter widget
+			$input = $cell.find('input[type=hidden]').bind('change' + c.namespace + 'filter', function(){
 				/*jshint eqeqeq:false */
 				var v = this.value,
 					compare = ($.isArray(o.compare) ? $cell.find(compareSelect).val() || o.compare[ o.selected || 0] : o.compare) || '';
@@ -961,6 +974,7 @@ tsff = ts.filterFormatter = {
 				var val = tsff.updateCompare($cell, $input, o)[0];
 				$cell.find('.range').val( val );
 				updateRange(val, false, true);
+				ts.filter.formatterUpdated($cell, indx);
 			});
 
 			if (o.compare) {
@@ -1085,14 +1099,15 @@ tsff = ts.filterFormatter = {
 				updateColor( $cell.find('.colorpicker').val() );
 			});
 
-			// hidden filter update (.tsfilter) namespace trigger by filter widget
-			$input = $cell.find('input[type=hidden]').bind('change.tsfilter', function(){
+			// hidden filter update namespace trigger by filter widget
+			$input = $cell.find('input[type=hidden]').bind('change' + c.namespace + 'filter', function(){
 				updateColor( this.value );
 			});
 
 			// update slider from hidden input, in case of saved filters
 			c.$table.bind('filterFomatterUpdate', function(){
 				updateColor( $input.val(), true );
+				ts.filter.formatterUpdated($cell, indx);
 			});
 
 			// on reset

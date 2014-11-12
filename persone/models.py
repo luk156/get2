@@ -202,6 +202,7 @@ class Persona(models.Model):
 	#caratteristiche della persona
 	stato = models.CharField('Stato',max_length=40, choices=STATI, default='disponibile' )
 	competenze = models.ManyToManyField(Mansione, related_name='competenze_persona', blank=True, null=True)
+	dipendente = models.BooleanField('Dipendente', default=False)
 	note = models.TextField( blank=True, null=True, )
 	notificaMail = models.BooleanField('Attiva Mail', default=False )
 	notificaSMS = models.BooleanField('Attiva SMS', default=False )
@@ -269,6 +270,7 @@ class PersonaForm(forms.ModelForm):
 					'note',
 					),
 				InlineCheckboxes('competenze', css_class="badge-mansione"),
+				Field('dipendente'),
 				css_class="span2"
 			),
 			Div(

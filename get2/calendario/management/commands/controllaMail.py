@@ -80,7 +80,7 @@ class Command(BaseCommand):
 			if(dis.persona.user and int(dis.persona.giorniNotificaMail) == differenzaGiorni):
 				messaggio = 'Salve ' + dis.persona.nome + ', ti ricordo che in data ' + dis.turno.inizio.date().strftime('%d/%m/%Y') + ' dalle ore ' + dis.turno.inizio.time().strftime('%H:%M') + ' alle ore ' + dis.turno.fine.time().strftime('%H:%M') + ' dovrai effettuare un turno.'
 				if(dis.persona.user.email != '' and dis.persona.notificaMail):
-					listaMessaggi += (('Get 2.0 - Avviso turno', messaggio, settings.GET_MAIL_NOTIFICA, [dis.persona.user.email]),)
+					listaMessaggi += ((getattr(settings,'GET_APP_NAME','') + ' - Avviso turno', messaggio, settings.GET_MAIL_NOTIFICA, [dis.persona.user.email]),)
 
 				if(getattr(settings, 'GET_ACTIVATE_SMS', False) and cell_rule.search(dis.persona.tel1) and dis.persona.notificaSMS):
 					recipients=[]

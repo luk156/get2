@@ -181,7 +181,7 @@ class Turno(models.Model):
 					if (requisito.mansione in f):
 						contatore+=1
 				else:
-				 	if (requisito.mansione in d.persona.capacita ):
+					if (requisito.mansione in d.persona.capacita ):
 						contatore+=1
 				if contatore>requisito.massimo and requisito.massimo!=0:
 					return False
@@ -362,6 +362,7 @@ class Disponibilita(models.Model):
 	turno = models.ForeignKey(Turno, related_name='turno_disponibilita')
 	mansione = models.ForeignKey(Mansione, related_name='mansione_disponibilita', null=True, blank=True, on_delete=models.PROTECT)
 	note =  models.TextField( blank=True, null=True, default="")
+	punteggio = models.IntegerField('Sovrascrivi punteggio',default=-1)
 	class Meta:
 		ordering = ['mansione']
 		unique_together = ('persona', 'turno')

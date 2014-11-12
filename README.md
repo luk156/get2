@@ -106,3 +106,11 @@ Impostazione per ignorare il controllo che evita che una medesima persona sia se
 Impostazione per abilitare la validazione della password degli utenti (8caratteri,un numero,una maiscola)
 
     GET_SECURE_PASSWORD=True
+
+Possibilità di distinguere le persone tra dipendenti e non, per il momento permette solo di avere delle statistiche separate
+
+    GET_DISTINGUI_DIPENDENTI=False
+
+Possibilità di sovrascrivere il punteggio raccolto da una persone per lo svolgimento di un servizio
+
+    GET_SOVRASCRIVI_PUNTEGGIO=False
