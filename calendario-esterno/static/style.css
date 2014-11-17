@@ -135,3 +135,10 @@ div.mansione-calendario h6 {
 	margin:0px;
 	text-transform: uppercase;
 }
+
+.turno-note {
+line-height: normal !important;
+padding: 4px !important;
+font-style: italic;
+}
+

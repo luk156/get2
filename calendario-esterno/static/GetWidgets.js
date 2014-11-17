@@ -44,12 +44,19 @@ var turnoWidget = Backbone.View.extend({
                 ht.push('<li class="persona-turno"><i class="fa '+icona+'" style="color:'+req.mansione.colore+'"></i> '+persona+'</li>');
             }
             ht.push('</ul></div>');
+	    
         }
+	if(typeof(req.note) != 'undefined'){
+		ht.push('<div class="mansione-calendario"><h6> NOTE </h6></div>');
+		ht.push('<div class="turno-note">'+req.note+'</div>');		
+	}
         ht.push('<div class="footer-turno">'+attr.tipo+'</div>');
         this.$el.html(ht.join(""));
         return this;
     }
 });
+
+
 
 var Giorno = Backbone.Collection.extend({
     model: Turno
