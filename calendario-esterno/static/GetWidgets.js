@@ -29,9 +29,9 @@ var turnoWidget = Backbone.View.extend({
         this.$el.addClass('turno');
         var ht = [''];
         ht.push('<div class="titolo-turno '+(attr.coperto? 'titolo-turno-err':'titolo-turno-ok')+'"><i class="fa fa-clock-o"></i> '+inizio+'-'+fine);
-		if(attr.identificativo!='')
-			ht.push('<h6 class="turno-identificativo">'+attr.identificativo+'</h6>');
-		ht.push('</div>');
+        if(attr.identificativo!='')
+            ht.push('<h6 class="turno-identificativo">'+attr.identificativo+'</h6>');
+        ht.push('</div>');
         for (var r in attr.requisiti){
             var req = attr.requisiti[r];
             var icona = "fa-"+req.mansione.icona.split("-")[1];
@@ -44,12 +44,12 @@ var turnoWidget = Backbone.View.extend({
                 ht.push('<li class="persona-turno"><i class="fa '+icona+'" style="color:'+req.mansione.colore+'"></i> '+persona+'</li>');
             }
             ht.push('</ul></div>');
-	    
+        
         }
-	if(typeof(req.note) != 'undefined'){
-		ht.push('<div class="mansione-calendario"><h6> NOTE </h6></div>');
-		ht.push('<div class="turno-note">'+req.note+'</div>');		
-	}
+    if(typeof(attr.note) != 'undefined' && attr.note!= ''){
+        ht.push('<div class="mansione-calendario"><h6> NOTE </h6></div>');
+        ht.push('<div class="turno-note">'+attr.note+'</div>');      
+    }
         ht.push('<div class="footer-turno">'+attr.tipo+'</div>');
         this.$el.html(ht.join(""));
         return this;
@@ -98,7 +98,7 @@ var calendarWidget = Backbone.View.extend({
         var self = this;
         this.options = {};
         this.options.n_giorni = 7;
-        this.options.cal_id = 1;
+        this.options.cal_id = 3;
         this.options = _.defaults(options || {}, this.options);
         this.giorni = {};
         this.start = new moment();
@@ -162,7 +162,7 @@ var calendarWidget = Backbone.View.extend({
         $.ajax({
             type: 'post',
             dataType: 'jsonp',
-            url:'http://misecampi.gis3w.it//ajax_request/',
+            url:'http://get.misericordiamontemurlo.it/ajax_request/',
             data :{
                 control: 'calendar',
                 type: type,
