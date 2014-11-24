@@ -4,11 +4,11 @@
 <head lang="en">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
-    <script src="/static/get-lib.js"></script>
-    <script src="/static/GetWidgets.js"></script>
-    <link href="/static/style.css" rel="stylesheet" type="text/css">
-    <link href="/static/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+    <script src="static/get-lib.js"></script>
+    <script src="static/GetWidgets.js"></script>
+    <link href="static/style.css" rel="stylesheet" type="text/css">
+    <link href="static/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="static/bootstrap/css/bootstrap.min.css">
 
     <title>Calendario</title>
 </head>
