@@ -6,12 +6,15 @@ from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Field, M
 from crispy_forms.bootstrap import *
 import calendar,datetime,locale
 from persone.models import Mansione, Gruppo
+from get2.calendario.models import TipoTurno
 from dateutil.relativedelta import relativedelta
 class FiltroStatistiche(forms.Form):
 	lista_gruppi = [('all','senza gruppo')]
 	lista_mansioni = Mansione.objects.exclude(escludi_stat=True).values_list('id','nome')
 	lista_gruppi += Gruppo.objects.exclude(escludi_stat=True).values_list('id','nome')
+	lista_tipi_turno = TipoTurno.objectsGet.all().values_list('id','identificativo')
 	mansioni = forms.MultipleChoiceField( label = "",	choices = lista_mansioni, initial = [x[0] for x in lista_mansioni], required = False,  widget = forms.CheckboxSelectMultiple,)
+	tipi_turno = forms.MultipleChoiceField( label = "",	choices = lista_tipi_turno,initial = [x[0] for x in lista_tipi_turno],  required = False,  widget = forms.CheckboxSelectMultiple,)
 	gruppi = forms.MultipleChoiceField( label = "",	choices = lista_gruppi,initial = [x[0] for x in lista_gruppi],  required = False,  widget = forms.CheckboxSelectMultiple,)
 	start =  forms.DateField(label = "dal:", required = False, initial=(datetime.datetime.now() + relativedelta( years = -1 )).strftime("%d/%m/%Y"))
 	stop = forms.DateField(label = "al:", required = False, initial=datetime.datetime.now().date().strftime("%d/%m/%Y"))
@@ -23,6 +26,12 @@ class FiltroStatistiche(forms.Form):
 			Field('start', type="hidden"),
 			Field('stop', type="hidden"),
 			HTML('<div class="row">'),
+			Div(
+				Fieldset('<h7>Tipologie di turno</h7>',
+					InlineCheckboxes('tipi_turno', css_class="mansioni"),
+				),
+				css_class="span4",
+			),
 			Div(
 				Fieldset('<h7>Mansioni</h7>',
 					InlineCheckboxes('mansioni', css_class="mansioni"),
