@@ -38,8 +38,14 @@ function aggiorna_statistiche(){
     }});
     gruppi = gruppi.substr(1);
     if (gruppi==""){alert("seleziona almeno un gruppo!"); return;}
+    tipi_turno='';
+    $('.tipi_turno:checkbox').each(function() {if (this.checked) {
+        tipi_turno = tipi_turno + '_' + this.value;
+    }});
+    tipi_turno = tipi_turno.substr(1);
+    if (tipi_turno==""){alert("seleziona almeno un tipo di turno!"); return;}
     $('#loading').removeClass('hidden');
-	Dajaxice.statistiche.aggiorna_statistiche(Dajax.process,{'da':$("#id_start").val(),'al':$("#id_stop").val(),'mansioni':mansioni,'gruppi':gruppi});
+	Dajaxice.statistiche.aggiorna_statistiche(Dajax.process,{'da':$("#id_start").val(),'al':$("#id_stop").val(),'mansioni':mansioni,'gruppi':gruppi,'tipi_turno':tipi_turno});
 
 };
 
@@ -62,8 +68,9 @@ function reset(){
 	$("#id_stop").val('');
 	$('.mansioni').prop('checked',true);
 	$('.gruppi').prop('checked',true);
+    $('.tipi_turno').prop('checked',true);
 	$('#loading').removeClass('hidden');
-	Dajaxice.statistiche.aggiorna_statistiche(Dajax.process,{'da':'0','al':'0','mansioni':'all','gruppi':'all'});
+	Dajaxice.statistiche.aggiorna_statistiche(Dajax.process,{'da':'0','al':'0','mansioni':'all','gruppi':'all','tipi_turno':'all'});
 };
 </script>
 

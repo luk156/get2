@@ -28,7 +28,7 @@ def statistiche(request):
 import operator
 from dateutil.relativedelta import relativedelta
 
-def statistiche_intervallo(request, inizio = datetime.datetime(datetime.datetime.now().year , 1 , 1 ), fine = datetime.datetime.now().date(), mansioni = Mansione.objects.all(), gruppi = Gruppo.objects.all(), senza_gruppo = True):
+def statistiche_intervallo(request, inizio = datetime.datetime(datetime.datetime.now().year , 1 , 1 ), fine = datetime.datetime.now().date() + datetime.timedelta( days=1 ), mansioni = Mansione.objects.all(), gruppi = Gruppo.objects.all(), tipi_turno = TipoTurno.objectsGet.all(), senza_gruppo = True):
 	tot_turni = []
 	tot_punti = []
 	tot_turni_dipendenti = []
@@ -51,7 +51,7 @@ def statistiche_intervallo(request, inizio = datetime.datetime(datetime.datetime
 			dipendenti = dipendenti.exclude(componenti_gruppo__escludi_stat=True).filter(componenti_gruppo__in=gruppi).values('id','nome','cognome')
 	
 	for p in persone:
-		disp = Disponibilita.objects.values('turno__valore','punteggio').filter(persona_id = p["id"], tipo = "Disponibile", turno__inizio__gte=inizio, turno__fine__lte=fine, mansione__in=mansioni.exclude(escludi_stat=True))
+		disp = Disponibilita.objects.values('turno__valore','punteggio').filter(persona_id = p["id"], tipo = "Disponibile", turno__inizio__gte=inizio, turno__fine__lte=fine, turno__tipo__in=tipi_turno ,mansione__in=mansioni.exclude(escludi_stat=True))
 		p['tot_turni'] = disp.count()
 		p['tot_punti'] = 0
 		for d in disp:
@@ -64,7 +64,7 @@ def statistiche_intervallo(request, inizio = datetime.datetime(datetime.datetime
 
 	if getattr(settings, 'GET_DISTINGUI_DIPENDENTI', False):
 		for p in dipendenti:
-			disp = Disponibilita.objects.values('turno__valore','punteggio').filter(persona_id = p["id"], tipo = "Disponibile", turno__inizio__gte=inizio, turno__fine__lte=fine, mansione__in=mansioni.exclude(escludi_stat=True))
+			disp = Disponibilita.objects.values('turno__valore','punteggio').filter(persona_id = p["id"], tipo = "Disponibile", turno__inizio__gte=inizio, turno__fine__lte=fine, turno__tipo__in=tipi_turno ,mansione__in=mansioni.exclude(escludi_stat=True))
 			p['tot_turni'] = disp.count()
 			p['tot_punti'] = 0
 			for d in disp:

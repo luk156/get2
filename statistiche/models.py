@@ -8,6 +8,7 @@ import calendar,datetime,locale
 from persone.models import Mansione, Gruppo
 from get2.calendario.models import TipoTurno
 from dateutil.relativedelta import relativedelta
+
 class FiltroStatistiche(forms.Form):
 	lista_gruppi = [('all','senza gruppo')]
 	lista_mansioni = Mansione.objects.exclude(escludi_stat=True).values_list('id','nome')
@@ -28,21 +29,21 @@ class FiltroStatistiche(forms.Form):
 			HTML('<div class="row">'),
 			Div(
 				Fieldset('<h7>Tipologie di turno</h7>',
-					InlineCheckboxes('tipi_turno', css_class="mansioni"),
+					InlineCheckboxes('tipi_turno', css_class="tipi_turno"),
 				),
-				css_class="span4",
+				css_class="span2",
 			),
 			Div(
 				Fieldset('<h7>Mansioni</h7>',
 					InlineCheckboxes('mansioni', css_class="mansioni"),
 				),
-				css_class="span4",
+				css_class="span2",
 			),	
 			Div(
 				Fieldset('<h7>Gruppi</h7>',
 					InlineCheckboxes('gruppi', css_class="gruppi"),
 				),
-				css_class="span3",
+				css_class="span2",
 			),
 			HTML('</div></br>'),
 			

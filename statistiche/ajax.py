@@ -8,10 +8,11 @@ from django.template.loader import render_to_string
 from django.template import Context, Template
 
 @dajaxice_register
-def aggiorna_statistiche(request,da,al,mansioni,gruppi):
+def aggiorna_statistiche(request,da,al,mansioni,gruppi,tipi_turno):
         dajax=Dajax()
         elenco_mansioni=Mansione.objects.filter(id__in=mansioni.rsplit('_'))
         senza_gruppo=False
+        print tipi_turno
         #import pdb; pdb.set_trace()
         if "all_" in gruppi:
                 senza_gruppo=True
@@ -19,20 +20,27 @@ def aggiorna_statistiche(request,da,al,mansioni,gruppi):
         if "all" in gruppi:
                 senza_gruppo=True
                 gruppi=gruppi.replace("all","")
+        if "all" in tipi_turno:
+                tipi_turno=tipi_turno.replace("all","")
         if gruppi != "":
                 elenco_gruppi=Gruppo.objects.filter(id__in=gruppi.rsplit('_'))
         else:
                 elenco_gruppi=Gruppo.objects.all()
+        if tipi_turno != "":
+                elenco_tipi_turno=TipoTurno.objectsGet.filter(id__in=tipi_turno.rsplit('_'))
+        else:
+                elenco_tipi_turno=TipoTurno.objectsGet.all()
 
         data_da=datetime.date(datetime.datetime.today().year,1,1)
         data_al=datetime.datetime.now().date()
         if (da=="0"):
-                elenco_mansioni=Mansione.objects.all()
-                elenco_gruppi=Gruppo.objects.all()
+                elenco_mansioni = Mansione.objects.all()
+                elenco_gruppi = Gruppo.objects.all()
+                elenco_tipi_turno = TipoTurno.objectsGet.all()
         elif (da!="" and al!=""):
                 data_da=datetime.datetime.strptime(da, "%d/%m/%Y").date()
                 data_al=datetime.datetime.strptime(al, "%d/%m/%Y").date() + datetime.timedelta( days=1 ) 
-        tot_turni, tot_punti, tot_turni_dipendenti, tot_punti_dipendenti = statistiche_intervallo(request,data_da,data_al,elenco_mansioni,elenco_gruppi,senza_gruppo)
+        tot_turni, tot_punti, tot_turni_dipendenti, tot_punti_dipendenti = statistiche_intervallo(request,data_da,data_al,elenco_mansioni,elenco_gruppi, elenco_tipi_turno, senza_gruppo)
         html_statistiche = render_to_string( 'statistiche/statistiche.html', { 'tot_turni': tot_turni,
                 'tot_punti': tot_punti,
                 'tot_punti_dipendenti':tot_punti_dipendenti,
@@ -63,10 +71,10 @@ def dettaglio_turni(request,da,al,mansioni,id):
 def statistiche_generali(request,da,al,):
 	dajax=Dajax()
 	data_da=datetime.date(datetime.datetime.today().year,1,1)
-	data_al=datetime.datetime.now().date()
+	data_al=datetime.datetime.now().date() + datetime.timedelta( days=1 )
 	if (da!="" and al!=""):
 		data_da=datetime.datetime.strptime(da, "%d/%m/%Y").date()
-		data_al=datetime.datetime.strptime(al, "%d/%m/%Y").date()
+		data_al=datetime.datetime.strptime(al, "%d/%m/%Y").date() + datetime.timedelta( days=1 )
 	stato_turno=Turno.objects.filter(inizio__gte=data_da, fine__lte=data_al,).values('coperto').annotate(dcount=Count('coperto'))
 	tipi_turno=Turno.objects.filter(inizio__gte=data_da, fine__lte=data_al,).values('tipo','tipo__identificativo').annotate(dcount=Count('tipo'))
 	html_generali = render_to_string( 'statistiche/generali.html', { 'tipi_turno': tipi_turno, 'stato_turno': stato_turno} )
