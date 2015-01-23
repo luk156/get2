@@ -1,14 +1,14 @@
 $(document).ready(function() {
     var div_persone = $('#persone');
 
-    $("select[name='azione'] option[value='aggiungi_m']").remove();
-    $("select[name='azione'] option[value='rimuovi_m']").remove();
-    $('.box-header.persone > .btn-group', div_persone).html('<a href="#" class="btn" onclick="Dajaxice.persone.sync_misecampi(Dajax.process,{});"><i class="icon-refresh"> </i> Sincronizza</a>"')
-    $('td[data-title=Operazioni]', div_persone).html('');
+    //$("select[name='azione'] option[value='aggiungi_m']").remove();
+    //$("select[name='azione'] option[value='rimuovi_m']").remove();
+    //$('.box-header.persone > .btn-group', div_persone).html('<a href="#" class="btn" onclick="Dajaxice.persone.sync_misecampi(Dajax.process,{});"><i class="icon-refresh"> </i> Sincronizza</a>"')
+    //$('td[data-title=Operazioni]', div_persone).html('');
     var div_utenti = $('#utenti');
-    $('.utente_persona', div_utenti).attr('disabled', 'disabled');
-    $('td[data-title=Operazioni]', div_utenti).html('');
-    $('.btn', div_utenti).remove();
+    //$('.utente_persona', div_utenti).attr('disabled', 'disabled');
+    //$('td[data-title=Operazioni]', div_utenti).html('');
+    //$('.btn', div_utenti).remove();
     if(!window.staff)
         $('li.statistiche').hide();
 
