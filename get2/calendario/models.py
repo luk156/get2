@@ -420,7 +420,9 @@ class UserChangeForm2(UserChangeForm):
     class Meta:
         model = User
         fields = ("username", "email",)
-
+        exclude = ('password',)
+    def clean_password(self):
+        return "" # This is a temporary fix for a django 1.4 bug
 
 class Impostazioni_notifica(models.Model):
     utente = models.ForeignKey(User, related_name='impostazioni_notifica_utente', limit_choices_to = {'is_staff':True})
