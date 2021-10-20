@@ -1,3 +1,5 @@
+# Il progetto è deprecato in favore di https://www.apptome.it
+
 #get2
 
 GeT nasce per semplificare la gestione di tutte quelle attività che prevedono dei turni, in particolare nasce da un lavoro congiunto con una pubblica assistenza.
